@@ -1,25 +1,26 @@
 [gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scripts/Player.gd" type="Script" id=1]
-[ext_resource path="res://assets/images/icon.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 32, 32 )
+extents = Vector2( 32, 8 )
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 32, 32 )
+extents = Vector2( 5, 8.5 )
 
 [node name="Gameplay" type="Node2D"]
 
 [node name="Floor" type="StaticBody2D" parent="."]
-position = Vector2( 95.617, 198.875 )
-scale = Vector2( 3, 1 )
+position = Vector2( 89.6364, 124.317 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="Sprite" type="Sprite" parent="Floor"]
-texture = ExtResource( 2 )
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 48, 64, 16 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 shape = SubResource( 1 )
@@ -32,8 +33,16 @@ __meta__ = {
 "_edit_group_": true
 }
 
-[node name="Sprite" type="Sprite" parent="Player"]
-texture = ExtResource( 2 )
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2( 0, 6.5 )
 shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="Player"]
+texture = ExtResource( 3 )
+region_enabled = true
+region_rect = Rect2( 0, 64, 32, 32 )
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+scale = Vector2( 2, 2 )
+current = true
+zoom = Vector2( 0.25, 0.25 )

@@ -7,7 +7,7 @@ export var gravity_acceleration = 256.0
 var velocity = Vector2.ZERO
 
 
-func _process(delta):
+func _physics_process(delta):
 	
 	# Add the gravity acceleration to velocity.
 	velocity.y += gravity_acceleration * delta
@@ -24,4 +24,4 @@ func _process(delta):
 	velocity.x = hor_input * movement_speed
 	
 	# Move by the velocity.
-	var _result = move_and_slide(velocity, Vector2.UP)
+	velocity = move_and_slide(velocity, Vector2.UP)
