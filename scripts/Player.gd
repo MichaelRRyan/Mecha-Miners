@@ -72,6 +72,8 @@ func _physics_process(delta):
 	__handle_vertical_movement(delta)
 	__handle_horizontal_movement(delta)
 	
+	__handle_sprite_flip()
+	
 	# Move by the velocity.
 	velocity = move_and_slide(velocity, Vector2.UP)
 
@@ -96,12 +98,36 @@ func __handle_horizontal_movement(delta):
 	if direction == 0.0:
 		# Applies deceleration.
 		velocity.x -= min(deceleration * delta, abs(velocity.x)) * sign(velocity.x)
+		
+		# Play the appropriate no movement animation.
+		if is_on_floor():
+			$AnimatedSprite.play("idle")
+		else:
+			$AnimatedSprite.play("jump")		
 	
 	# If there is input.
 	else:
 		# Applies acceleration in the movement direction.
 		velocity.x += acceleration * direction * delta
+		
+		# Play the appropriate movement animation.
+		if is_on_floor():
+			var dir_to_mouse = get_global_mouse_position().x - global_position.x
+			var reversed = sign(dir_to_mouse) != sign(direction)
+			
+			if reversed:
+				$AnimatedSprite.play("walk_reversed")
+			else:
+				$AnimatedSprite.play("walk")				
+		else:
+			$AnimatedSprite.play("jump")
 	
 	# Clamps the horizontal movement to the max speed.
 	if abs(velocity.x) > max_speed:
 		velocity.x = max_speed * sign(velocity.x)
+
+
+func __handle_sprite_flip():
+	var dir_to_mouse = get_global_mouse_position().x - global_position.x
+	$AnimatedSprite.flip_h = dir_to_mouse < 0.0
+

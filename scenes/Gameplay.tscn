@@ -23,5 +23,9 @@ region_rect = Rect2( 0, 48, 64, 16 )
 shape = SubResource( 1 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-vertical_movement/jump_height = 32.0
-vertical_movement/time_to_jump_peak = 0.6
+position = Vector2( 93.0989, 97.9989 )
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+scale = Vector2( 2, 2 )
+current = true
+zoom = Vector2( 0.25, 0.25 )
