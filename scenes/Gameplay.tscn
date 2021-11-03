@@ -1,13 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://scripts/Player.gd" type="Script" id=1]
+[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=3]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 32, 8 )
-
-[sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 5, 8.5 )
 
 [node name="Gameplay" type="Node2D"]
 
@@ -25,26 +22,6 @@ region_rect = Rect2( 0, 48, 64, 16 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Floor"]
 shape = SubResource( 1 )
 
-[node name="Player" type="KinematicBody2D" parent="."]
-position = Vector2( 90.8532, 96.1433 )
-script = ExtResource( 1 )
-__meta__ = {
-"_edit_group_": true
-}
-horizontal_movement/max_speed = 100.0
-horizontal_movement/time_to_max_speed = 0.1
-horizontal_movement/time_to_full_stop = 0.1
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
-position = Vector2( 0, 6.5 )
-shape = SubResource( 2 )
-
-[node name="Sprite" type="Sprite" parent="Player"]
-texture = ExtResource( 3 )
-region_enabled = true
-region_rect = Rect2( 0, 64, 32, 32 )
-
-[node name="Camera2D" type="Camera2D" parent="Player"]
-scale = Vector2( 2, 2 )
-current = true
-zoom = Vector2( 0.25, 0.25 )
+[node name="Player" parent="." instance=ExtResource( 1 )]
+vertical_movement/jump_height = 32.0
+vertical_movement/time_to_jump_peak = 0.6
