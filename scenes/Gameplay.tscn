@@ -26,12 +26,14 @@ region_rect = Rect2( 0, 48, 64, 16 )
 shape = SubResource( 1 )
 
 [node name="Player" type="KinematicBody2D" parent="."]
-position = Vector2( 89.4342, 105.786 )
-scale = Vector2( 0.5, 0.5 )
+position = Vector2( 90.8532, 96.1433 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
+horizontal_movement/max_speed = 100.0
+horizontal_movement/time_to_max_speed = 0.1
+horizontal_movement/time_to_full_stop = 0.1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
 position = Vector2( 0, 6.5 )
