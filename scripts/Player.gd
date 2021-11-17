@@ -76,6 +76,8 @@ func _physics_process(delta):
 	
 	# Move by the velocity.
 	velocity = move_and_slide(velocity, Vector2.UP)
+	
+	__handle_interacton()
 
 
 func __handle_vertical_movement(delta):
@@ -131,3 +133,15 @@ func __handle_sprite_flip():
 	var dir_to_mouse = get_global_mouse_position().x - global_position.x
 	$AnimatedSprite.flip_h = dir_to_mouse < 0.0
 
+
+func __handle_interacton():
+	var direction_to_mouse = (get_global_mouse_position() - position).normalized()
+	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
+	
+	var flip = direction_to_mouse.x < 0.0
+	$Gun.scale.x = sign(direction_to_mouse.x)
+	$Gun.position.x = abs($Gun.position.x) * -sign(direction_to_mouse.x)
+	$Gun.rotation = angle - (deg2rad(180.0) if flip else 0.0)
+	
+	if Input.is_action_pressed("shoot"):
+		$Gun.shoot()

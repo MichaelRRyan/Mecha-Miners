@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/Gun.gd" type="Script" id=1]
+[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=2]
+
+[node name="Gun" type="Sprite"]
+texture = ExtResource( 2 )
+offset = Vector2( 4, 0 )
+region_enabled = true
+region_rect = Rect2( 32, 80, 16, 16 )
+script = ExtResource( 1 )
+
+[node name="Tip" type="Node2D" parent="."]
+position = Vector2( 7.5, -0.5 )
+
+[node name="CooldownTimer" type="Timer" parent="."]
+one_shot = true
