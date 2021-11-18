@@ -12,7 +12,7 @@ func _ready():
 	start_position = position
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	var _result = move_and_slide(velocity)
 	
 	if get_slide_count() > 0:

@@ -85,10 +85,19 @@ func __handle_vertical_movement(delta):
 	# Add the gravity acceleration to velocity.
 	velocity.y += gravity_acceleration * delta
 	
-	# Add jump speed to velocity on jump input if on the ground.
-	if Input.is_action_pressed("jump") and is_on_floor():
-		velocity.y = jump_speed
+	# If the jump input was just pressed.
+	if Input.is_action_just_pressed("jump"):
+		
+		# Adds the jump speed to velocity if on the ground.
+		if is_on_floor(): velocity.y = jump_speed
+		
+		# If not on the ground, begin flying.
+		else: $Jetpack.activate(delta)
 	
+	# If already flying and the jump button is down, keep flying.
+	elif Input.is_action_pressed("jump") and $Jetpack.is_flying():
+		$Jetpack.activate(delta)
+		
 
 func __handle_horizontal_movement(delta):
 	
@@ -145,3 +154,7 @@ func __handle_interacton():
 	
 	if Input.is_action_pressed("shoot"):
 		$Gun.shoot()
+
+
+func accelerate(_acceleration : Vector2):
+	velocity += _acceleration
