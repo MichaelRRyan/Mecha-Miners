@@ -1,4 +1,4 @@
-# Mecha Mining
+# Mecha Miners
 Descend into the depths of volatile planets to claim the crypto treasures of its core before it explodes!
 
 ## Useful Links
