@@ -12,7 +12,7 @@ func _ready():
 	equip(get_parent())
 
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	flying_last_frame = flying
 	flying = false
 
