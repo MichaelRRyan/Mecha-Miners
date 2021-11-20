@@ -25,7 +25,6 @@ func _on_player_disconnected(peer_id):
 # -----------------------------------------------------------------------------
 func _on_connection_succeeded():
 	setup_player_for_network()
-	create_server_players()
 
 
 # -----------------------------------------------------------------------------
@@ -41,13 +40,6 @@ func setup_player_for_network():
 		player.set_name(str(id))
 		player.set_network_master(id)
 		player.is_online = true
-
-
-# -----------------------------------------------------------------------------
-func create_server_players():
-	var peer_ids = get_tree().get_network_connected_peers()
-	for peer_id in peer_ids:
-		create_player(peer_id)
 	
 	
 # -----------------------------------------------------------------------------
