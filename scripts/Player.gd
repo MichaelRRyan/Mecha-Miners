@@ -16,6 +16,8 @@ var jump_speed = 0.0
 var gravity_acceleration = 0.0
 var velocity = Vector2.ZERO
 
+var is_online = false
+
 # -- Param Map --
 var params = {
 	"horizontal_movement/max_speed": max_speed,
@@ -72,6 +74,9 @@ func _get_property_list():
 func _physics_process(delta):
 	if Engine.editor_hint:
 		return
+	
+	if is_online and is_network_master():
+		return
 		
 	__handle_vertical_movement(delta)
 	__handle_horizontal_movement(delta)
@@ -82,6 +87,8 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	__handle_interacton()
+	
+	if is_online: rpc_unreliable("set_puppet_position", position)
 
 
 # -----------------------------------------------------------------------------
@@ -167,6 +174,11 @@ func __handle_interacton():
 # -----------------------------------------------------------------------------
 func accelerate(_acceleration : Vector2):
 	velocity += _acceleration
+
+
+# -----------------------------------------------------------------------------
+puppet func set_puppet_position(_position):
+	position = _position
 
 
 # -----------------------------------------------------------------------------
