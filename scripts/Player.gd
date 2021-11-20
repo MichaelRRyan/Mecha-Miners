@@ -75,7 +75,7 @@ func _physics_process(delta):
 	if Engine.editor_hint:
 		return
 	
-	if is_online and is_network_master():
+	if is_online and not is_network_master():
 		return
 		
 	__handle_vertical_movement(delta)

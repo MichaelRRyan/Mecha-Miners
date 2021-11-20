@@ -19,8 +19,7 @@ func _on_player_connected(peer_id):
 # -----------------------------------------------------------------------------
 func _on_player_disconnected(peer_id):
 	var player = $Players.get_node(str(peer_id))
-	if player:
-		player.queue_free()
+	if player: player.queue_free()
 
 
 # -----------------------------------------------------------------------------
@@ -58,3 +57,6 @@ func create_player(peer_id):
 	player.set_network_master(peer_id)
 	player.is_online = true
 	$Players.add_child(player)
+
+
+# -----------------------------------------------------------------------------
