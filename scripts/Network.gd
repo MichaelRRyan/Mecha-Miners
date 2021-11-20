@@ -1,5 +1,11 @@
 extends Node
 
+signal player_connected(peer_id)
+signal player_disconnected(peer_id)
+signal connection_succeeded
+signal server_opened
+
+
 enum State {
 	Offline,
 	Connecting,
@@ -32,6 +38,7 @@ func start_server():
 		network.create_server(port, max_players)
 		get_tree().set_network_peer(network)
 		state = State.Hosting
+		emit_signal("server_opened")
 		print("Server Started")
 
 
@@ -45,14 +52,14 @@ func close_connection():
 # -----------------------------------------------------------------------------
 func _peer_connected(peer_id):
 	# TODO: Create player instance.
-	
+	emit_signal("player_connected", peer_id)
 	print("Peer " + str(peer_id) + " Connected")
 
 
 # -----------------------------------------------------------------------------
 func _peer_disconnected(peer_id):
 	# TODO: Remove player instance.
-	
+	emit_signal("player_disconnected", peer_id)
 	print("Peer " + str(peer_id) + " Disconnected")
 
 
@@ -71,6 +78,7 @@ func connect_to_server(ip : String):
 # -----------------------------------------------------------------------------
 func _on_connection_succeeded():
 	state = State.Connected
+	emit_signal("connection_succeeded")
 	print("Succesfully Connected")
 
 
