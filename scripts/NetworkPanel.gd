@@ -29,7 +29,7 @@ func _input(event):
 # -----------------------------------------------------------------------------
 func _on_HostButton_pressed():
 	# If we're already hosting, do nothing.
-	if Network.state != Network.State.Hosting: return
+	if Network.state == Network.State.Hosting: return
 	
 	# If we're not offline, close the connection first.
 	if Network.state != Network.State.Offline:
