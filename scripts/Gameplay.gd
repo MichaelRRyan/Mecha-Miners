@@ -41,7 +41,7 @@ func setup_player_for_network():
 		var id = get_tree().get_network_unique_id()
 		player.set_name(str(id))
 		player.set_network_master(id)
-		player.is_online
+		player.is_online = true
 
 
 # -----------------------------------------------------------------------------
