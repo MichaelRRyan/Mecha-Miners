@@ -1,6 +1,7 @@
 extends ColorRect
 
 
+# -----------------------------------------------------------------------------
 func _ready():
 	var ip_adress : String = "Unknown"
 
@@ -17,6 +18,7 @@ func _ready():
 	$Content/IPLabel.text = "Private IP: " + ip_adress
 	
 
+# -----------------------------------------------------------------------------
 func _input(event):
 	if event is InputEventKey:
 		if event.is_action_pressed("toggle_network_panel"):
@@ -24,12 +26,30 @@ func _input(event):
 			get_tree().paused = visible
 
 
+# -----------------------------------------------------------------------------
 func _on_HostButton_pressed():
-	pass # Replace with function body.
+	# If we're already hosting, do nothing.
+	if Network.state != Network.State.Hosting: return
+	
+	# If we're not offline, close the connection first.
+	if Network.state != Network.State.Offline:
+		Network.close_connection()
+	
+	Network.start_server()
+	$Content/HostingStatus.text = "Status: Hosting on private IP."
 
 
+# -----------------------------------------------------------------------------
 func _on_JoinButton_pressed():
+	if Network.state == Network.State.Connecting: return
+	
+	if Network.state != Network.State.Offline:
+		Network.close_server()
+		
 	if $Content/IPInput.text.is_valid_ip_address():
-		Network.initialise_client($Content/IPInput.text)
+		Network.connect_to_server($Content/IPInput.text)
 	else:
 		$Content/InvalidIP.show()
+
+
+# -----------------------------------------------------------------------------

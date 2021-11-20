@@ -1,7 +1,13 @@
 extends Node
 
-const FIRST_LOCAL_PLAYER_NUMBER = 0
+enum State {
+	Offline,
+	Connecting,
+	Connected,
+	Hosting
+}
 
+var state = State.Offline
 
 var network = NetworkedMultiplayerENet.new()
 var port = 1909
@@ -9,18 +15,32 @@ var max_players = 50
 
 
 # -----------------------------------------------------------------------------
+func _ready():
+	network.connect("peer_connected", self, "_peer_connected")
+	network.connect("peer_disconnected", self, "_peer_disconnected")
+	network.connect("connection_succeeded", self, "_on_connection_succeeded")
+	network.connect("connection_failed", self, "_on_connection_failed")
+	
+
+# -----------------------------------------------------------------------------
 
 # =========================== HOST FUNCTIONALITY ============================
 
 # -----------------------------------------------------------------------------
 func start_server():
-	network.create_server(port, max_players)
-	get_tree().set_network_peer(network)
-	print("Server Started")
-	
-	network.connect("peer_connected", self, "_peer_connected")
-	network.connect("peer_disconnected", self, "_peer_disconnected")
+	if state == State.Offline:
+		network.create_server(port, max_players)
+		get_tree().set_network_peer(network)
+		state = State.Hosting
+		print("Server Started")
 
+
+# -----------------------------------------------------------------------------
+func close_connection():
+	if state == State.Hosting or state == State.Connected:
+		network.close_connection()
+		state = State.Offline
+	
 
 # -----------------------------------------------------------------------------
 func _peer_connected(peer_id):
@@ -42,18 +62,22 @@ func _peer_disconnected(peer_id):
 
 # -----------------------------------------------------------------------------
 func connect_to_server(ip : String):
-	network.create_client(ip, port)
-	get_tree().set_network_peer(network)
-	
-	network.connect("connection_succeeded", self, "_on_connection_succeeded")
-	network.connect("connection_failed", self, "_on_connection_failed")
+	if state == State.Offline:
+		network.create_client(ip, port)
+		get_tree().set_network_peer(network)
+		state = State.Connecting
 
 
 # -----------------------------------------------------------------------------
 func _on_connection_succeeded():
+	state = State.Connected
 	print("Succesfully Connected")
 
 
 # -----------------------------------------------------------------------------
 func _on_connection_failed():
+	state = State.Offline
 	print("Failed to Connect")
+
+
+# -----------------------------------------------------------------------------

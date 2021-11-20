@@ -27,6 +27,7 @@ var params = {
 
 
 # -- Handle Public Properties --
+# -----------------------------------------------------------------------------
 func _set(property, value):
 	if params.has(property):
 		params[property] = value
@@ -50,11 +51,13 @@ func _set(property, value):
 		return true
 
 
+# -----------------------------------------------------------------------------
 func _get(property):
 	if params.has(property):
 		return params[property]
 
 
+# -----------------------------------------------------------------------------
 func _get_property_list():
 	return [
 		{ name = "horizontal_movement/max_speed", type = TYPE_REAL },
@@ -65,6 +68,7 @@ func _get_property_list():
 	]
 
 
+# -----------------------------------------------------------------------------
 func _physics_process(delta):
 	if Engine.editor_hint:
 		return
@@ -80,6 +84,7 @@ func _physics_process(delta):
 	__handle_interacton()
 
 
+# -----------------------------------------------------------------------------
 func __handle_vertical_movement(delta):
 	
 	# Add the gravity acceleration to velocity.
@@ -99,6 +104,7 @@ func __handle_vertical_movement(delta):
 		$Jetpack.activate(delta)
 		
 
+# -----------------------------------------------------------------------------
 func __handle_horizontal_movement(delta):
 	
 	# Get the horizontal input.
@@ -138,11 +144,13 @@ func __handle_horizontal_movement(delta):
 		velocity.x = max_speed * sign(velocity.x)
 
 
+# -----------------------------------------------------------------------------
 func __handle_sprite_flip():
 	var dir_to_mouse = get_global_mouse_position().x - global_position.x
 	$AnimatedSprite.flip_h = dir_to_mouse < 0.0
 
 
+# -----------------------------------------------------------------------------
 func __handle_interacton():
 	var direction_to_mouse = (get_global_mouse_position() - position).normalized()
 	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
@@ -156,5 +164,9 @@ func __handle_interacton():
 		$Gun.shoot()
 
 
+# -----------------------------------------------------------------------------
 func accelerate(_acceleration : Vector2):
 	velocity += _acceleration
+
+
+# -----------------------------------------------------------------------------
