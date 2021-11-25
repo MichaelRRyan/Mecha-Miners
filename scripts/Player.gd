@@ -18,6 +18,22 @@ var velocity = Vector2.ZERO
 
 var is_online = false
 
+var animation_id = 0
+
+enum AnimationName {
+	Idle = 0,
+	Jump = 1,
+	Walk = 2,
+	WalkReversed = 3
+}
+
+var animation_names = [
+	"idle",
+	"jump",
+	"walk",
+	"walk_reversed"
+]
+
 # -- Param Map --
 var params = {
 	"horizontal_movement/max_speed": max_speed,
@@ -88,7 +104,11 @@ func _physics_process(delta):
 	
 	__handle_interacton()
 	
-	if is_online: rpc_unreliable("set_puppet_position", position)
+	if is_online: rpc_unreliable("set_puppet_state", {
+		position = position,
+		flip_h = $AnimatedSprite.flip_h,
+		animation_id = animation_id
+	})
 
 
 # -----------------------------------------------------------------------------
@@ -125,9 +145,9 @@ func __handle_horizontal_movement(delta):
 		
 		# Play the appropriate no movement animation.
 		if is_on_floor():
-			$AnimatedSprite.play("idle")
+			__set_animation(AnimationName.Idle)
 		else:
-			$AnimatedSprite.play("jump")		
+			__set_animation(AnimationName.Jump)	
 	
 	# If there is input.
 	else:
@@ -140,11 +160,11 @@ func __handle_horizontal_movement(delta):
 			var reversed = sign(dir_to_mouse) != sign(direction)
 			
 			if reversed:
-				$AnimatedSprite.play("walk_reversed")
+				__set_animation(AnimationName.WalkReversed)
 			else:
-				$AnimatedSprite.play("walk")				
+				__set_animation(AnimationName.Walk)
 		else:
-			$AnimatedSprite.play("jump")
+			__set_animation(AnimationName.Jump)
 	
 	# Clamps the horizontal movement to the max speed.
 	if abs(velocity.x) > max_speed:
@@ -172,6 +192,12 @@ func __handle_interacton():
 
 
 # -----------------------------------------------------------------------------
+func __set_animation(id):
+	animation_id = id
+	$AnimatedSprite.play(animation_names[id])
+
+
+# -----------------------------------------------------------------------------
 func accelerate(_acceleration : Vector2):
 	velocity += _acceleration
 
@@ -181,4 +207,11 @@ puppet func set_puppet_position(_position):
 	position = _position
 
 
+# -----------------------------------------------------------------------------
+puppet func set_puppet_state(state):
+	position = state.position
+	$AnimatedSprite.flip_h = state.flip_h
+	__set_animation(state.animation_id)
+	
+	
 # -----------------------------------------------------------------------------
