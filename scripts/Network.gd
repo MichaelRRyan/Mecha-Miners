@@ -6,6 +6,8 @@ signal connection_succeeded
 signal server_opened
 
 
+const SERVER_ID = 1
+
 enum State {
 	Offline,
 	Connecting,
@@ -18,6 +20,7 @@ var state = State.Offline
 var network = NetworkedMultiplayerENet.new()
 var port = 1909
 var max_players = 50
+var is_online = false # Stored as an alternative to state for quick checks.
 
 
 # -----------------------------------------------------------------------------
@@ -40,6 +43,7 @@ func start_server():
 		state = State.Hosting
 		emit_signal("server_opened")
 		print("Server Started")
+		is_online = true
 
 
 # -----------------------------------------------------------------------------
@@ -47,6 +51,7 @@ func close_connection():
 	if state == State.Hosting or state == State.Connected:
 		network.close_connection()
 		state = State.Offline
+		is_online = false
 	
 
 # -----------------------------------------------------------------------------
@@ -80,7 +85,8 @@ func _on_connection_succeeded():
 	state = State.Connected
 	emit_signal("connection_succeeded")
 	print("Succesfully Connected")
-
+	is_online = true
+	
 
 # -----------------------------------------------------------------------------
 func _on_connection_failed():

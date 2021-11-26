@@ -16,8 +16,6 @@ var jump_speed = 0.0
 var gravity_acceleration = 0.0
 var velocity = Vector2.ZERO
 
-var is_online = false
-
 var animation_id = 0
 
 enum AnimationName {
@@ -88,10 +86,12 @@ func _get_property_list():
 
 # -----------------------------------------------------------------------------
 func _physics_process(delta):
+	# Don't process if in the editor.
 	if Engine.editor_hint:
 		return
 	
-	if is_online and not is_network_master():
+	# Don't process if online and not the network master, is updated instead.
+	if Network.is_online and not is_network_master():
 		return
 		
 	__handle_vertical_movement(delta)
@@ -103,15 +103,7 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	__handle_interacton()
-	
-	if is_online: rpc_unreliable("set_puppet_state", {
-		position = position,
-		flip_h = $AnimatedSprite.flip_h,
-		animation_id = animation_id,
-		gun_scale_x = $Gun.scale.x,
-		gun_position_x = $Gun.position.x,
-		gun_rotation = $Gun.rotation
-	})
+	__handle_network_syncing()
 
 
 # -----------------------------------------------------------------------------
@@ -194,6 +186,18 @@ func __handle_interacton():
 	
 	if Input.is_action_pressed("shoot"):
 		$Gun.shoot()
+
+
+# -----------------------------------------------------------------------------
+func __handle_network_syncing():
+	if Network.is_online: rpc_unreliable("set_puppet_state", {
+		position = position,
+		flip_h = $AnimatedSprite.flip_h,
+		animation_id = animation_id,
+		gun_scale_x = $Gun.scale.x,
+		gun_position_x = $Gun.position.x,
+		gun_rotation = $Gun.rotation
+	})
 
 
 # -----------------------------------------------------------------------------

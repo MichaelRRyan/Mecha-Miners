@@ -39,7 +39,6 @@ func setup_player_for_network():
 		var id = get_tree().get_network_unique_id()
 		player.set_name(str(id))
 		player.set_network_master(id)
-		player.is_online = true
 	
 	
 # -----------------------------------------------------------------------------
@@ -47,7 +46,6 @@ func create_player(peer_id):
 	var player = PlayerScene.instance()
 	player.set_name(str(peer_id))
 	player.set_network_master(peer_id)
-	player.is_online = true
 	$Players.add_child(player)
 
 
