@@ -16,6 +16,22 @@ var jump_speed = 0.0
 var gravity_acceleration = 0.0
 var velocity = Vector2.ZERO
 
+var animation_id = 0
+
+enum AnimationName {
+	Idle = 0,
+	Jump = 1,
+	Walk = 2,
+	WalkReversed = 3
+}
+
+var animation_names = [
+	"idle",
+	"jump",
+	"walk",
+	"walk_reversed"
+]
+
 # -- Param Map --
 var params = {
 	"horizontal_movement/max_speed": max_speed,
@@ -27,6 +43,7 @@ var params = {
 
 
 # -- Handle Public Properties --
+# -----------------------------------------------------------------------------
 func _set(property, value):
 	if params.has(property):
 		params[property] = value
@@ -50,11 +67,13 @@ func _set(property, value):
 		return true
 
 
+# -----------------------------------------------------------------------------
 func _get(property):
 	if params.has(property):
 		return params[property]
 
 
+# -----------------------------------------------------------------------------
 func _get_property_list():
 	return [
 		{ name = "horizontal_movement/max_speed", type = TYPE_REAL },
@@ -65,8 +84,14 @@ func _get_property_list():
 	]
 
 
+# -----------------------------------------------------------------------------
 func _physics_process(delta):
+	# Don't process if in the editor.
 	if Engine.editor_hint:
+		return
+	
+	# Don't process if online and not the network master, is updated instead.
+	if Network.is_online and not is_network_master():
 		return
 		
 	__handle_vertical_movement(delta)
@@ -78,8 +103,10 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	__handle_interacton()
+	__handle_network_syncing()
 
 
+# -----------------------------------------------------------------------------
 func __handle_vertical_movement(delta):
 	
 	# Add the gravity acceleration to velocity.
@@ -99,6 +126,7 @@ func __handle_vertical_movement(delta):
 		$Jetpack.activate(delta)
 		
 
+# -----------------------------------------------------------------------------
 func __handle_horizontal_movement(delta):
 	
 	# Get the horizontal input.
@@ -112,9 +140,9 @@ func __handle_horizontal_movement(delta):
 		
 		# Play the appropriate no movement animation.
 		if is_on_floor():
-			$AnimatedSprite.play("idle")
+			__set_animation(AnimationName.Idle)
 		else:
-			$AnimatedSprite.play("jump")		
+			__set_animation(AnimationName.Jump)	
 	
 	# If there is input.
 	else:
@@ -127,34 +155,70 @@ func __handle_horizontal_movement(delta):
 			var reversed = sign(dir_to_mouse) != sign(direction)
 			
 			if reversed:
-				$AnimatedSprite.play("walk_reversed")
+				__set_animation(AnimationName.WalkReversed)
 			else:
-				$AnimatedSprite.play("walk")				
+				__set_animation(AnimationName.Walk)
 		else:
-			$AnimatedSprite.play("jump")
+			__set_animation(AnimationName.Jump)
 	
 	# Clamps the horizontal movement to the max speed.
 	if abs(velocity.x) > max_speed:
 		velocity.x = max_speed * sign(velocity.x)
 
 
+# -----------------------------------------------------------------------------
 func __handle_sprite_flip():
 	var dir_to_mouse = get_global_mouse_position().x - global_position.x
 	$AnimatedSprite.flip_h = dir_to_mouse < 0.0
 
 
+# -----------------------------------------------------------------------------
 func __handle_interacton():
 	var direction_to_mouse = (get_global_mouse_position() - position).normalized()
 	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
 	
 	var flip = direction_to_mouse.x < 0.0
-	$Gun.scale.x = sign(direction_to_mouse.x)
-	$Gun.position.x = abs($Gun.position.x) * -sign(direction_to_mouse.x)
+	var dir_sign = sign(direction_to_mouse.x)
+	if dir_sign == 0: dir_sign = 1
+	$Gun.scale.x = dir_sign
+	$Gun.position.x = abs($Gun.position.x) * -dir_sign
 	$Gun.rotation = angle - (deg2rad(180.0) if flip else 0.0)
 	
 	if Input.is_action_pressed("shoot"):
 		$Gun.shoot()
 
 
+# -----------------------------------------------------------------------------
+func __handle_network_syncing():
+	if Network.is_online: rpc_unreliable("set_puppet_state", {
+		position = position,
+		flip_h = $AnimatedSprite.flip_h,
+		animation_id = animation_id,
+		gun_scale_x = $Gun.scale.x,
+		gun_position_x = $Gun.position.x,
+		gun_rotation = $Gun.rotation
+	})
+
+
+# -----------------------------------------------------------------------------
+func __set_animation(id):
+	animation_id = id
+	$AnimatedSprite.play(animation_names[id])
+
+
+# -----------------------------------------------------------------------------
 func accelerate(_acceleration : Vector2):
 	velocity += _acceleration
+	
+
+# -----------------------------------------------------------------------------
+puppet func set_puppet_state(state):
+	position = state.position
+	$AnimatedSprite.flip_h = state.flip_h
+	__set_animation(state.animation_id)
+	$Gun.scale.x = state.gun_scale_x
+	$Gun.position.x = state.gun_position_x
+	$Gun.rotation = state.gun_rotation
+	
+	
+# -----------------------------------------------------------------------------

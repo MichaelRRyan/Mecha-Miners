@@ -22,6 +22,7 @@ export var tile_heal_time = 1.0
 var damaged_tiles = {}
 
 
+# -----------------------------------------------------------------------------
 func _physics_process(_delta):
 	var deletion_queue = []
 	
@@ -46,6 +47,7 @@ func _physics_process(_delta):
 		damaged_tiles.erase(tile_position)
 
 
+# -----------------------------------------------------------------------------
 func damage_tile(tile_position : Vector2, damage : float):
 	# If the tile is not empty.
 	var tile_type = get_cellv(tile_position)
@@ -78,8 +80,12 @@ func damage_tile(tile_position : Vector2, damage : float):
 			__set_damage_indicator(tile_position)
 
 
+# -----------------------------------------------------------------------------
 func __set_damage_indicator(tile_position : Vector2):
 	var tile_type = get_cellv(tile_position)
 	var damage = damaged_tiles[tile_position].damage
 	var damage_stage = floor(damage / MAX_TILE_HEALTHS[tile_type] * DAMAGE_STAGES)
 	$DamageIndicators.set_cellv(tile_position, damage_stage)
+
+
+# -----------------------------------------------------------------------------

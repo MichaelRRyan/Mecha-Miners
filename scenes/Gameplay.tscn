@@ -1,22 +1,29 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Terrain.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/GUIManager.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scripts/BulletManager.gd" type="Script" id=4]
+[ext_resource path="res://scripts/Gameplay.gd" type="Script" id=5]
 
 [node name="Gameplay" type="Node2D"]
+script = ExtResource( 5 )
 
 [node name="Terrain" parent="." instance=ExtResource( 2 )]
 
-[node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( 90.4262, 116.708 )
-horizontal_movement/time_to_max_speed = 0.2
-horizontal_movement/time_to_full_stop = 0.2
+[node name="Players" type="Node2D" parent="."]
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Player" parent="Players" instance=ExtResource( 1 )]
+position = Vector2( 90.4262, 116.708 )
+
+[node name="Camera2D" type="Camera2D" parent="Players/Player"]
 scale = Vector2( 2, 2 )
 current = true
 zoom = Vector2( 0.25, 0.25 )
 
-[node name="BulletContainer" type="Node2D" parent="." groups=[
-"bullet_container",
+[node name="BulletManager" type="Node2D" parent="." groups=[
+"bullet_manager",
 ]]
+script = ExtResource( 4 )
+
+[node name="GUIManager" parent="." instance=ExtResource( 3 )]
