@@ -107,7 +107,10 @@ func _physics_process(delta):
 	if is_online: rpc_unreliable("set_puppet_state", {
 		position = position,
 		flip_h = $AnimatedSprite.flip_h,
-		animation_id = animation_id
+		animation_id = animation_id,
+		gun_scale_x = $Gun.scale.x,
+		gun_position_x = $Gun.position.x,
+		gun_rotation = $Gun.rotation
 	})
 
 
@@ -183,8 +186,10 @@ func __handle_interacton():
 	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
 	
 	var flip = direction_to_mouse.x < 0.0
-	$Gun.scale.x = sign(direction_to_mouse.x)
-	$Gun.position.x = abs($Gun.position.x) * -sign(direction_to_mouse.x)
+	var dir_sign = sign(direction_to_mouse.x)
+	if dir_sign == 0: dir_sign = 1
+	$Gun.scale.x = dir_sign
+	$Gun.position.x = abs($Gun.position.x) * -dir_sign
 	$Gun.rotation = angle - (deg2rad(180.0) if flip else 0.0)
 	
 	if Input.is_action_pressed("shoot"):
@@ -200,18 +205,16 @@ func __set_animation(id):
 # -----------------------------------------------------------------------------
 func accelerate(_acceleration : Vector2):
 	velocity += _acceleration
-
-
-# -----------------------------------------------------------------------------
-puppet func set_puppet_position(_position):
-	position = _position
-
+	
 
 # -----------------------------------------------------------------------------
 puppet func set_puppet_state(state):
 	position = state.position
 	$AnimatedSprite.flip_h = state.flip_h
 	__set_animation(state.animation_id)
+	$Gun.scale.x = state.gun_scale_x
+	$Gun.position.x = state.gun_position_x
+	$Gun.rotation = state.gun_rotation
 	
 	
 # -----------------------------------------------------------------------------
