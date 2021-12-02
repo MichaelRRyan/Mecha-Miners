@@ -4,20 +4,20 @@
 [ext_resource path="res://scripts/Bullet.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 2.5
-height = 6.0
+radius = 1.0
+height = 2.0
 
 [node name="Bullet" type="KinematicBody2D"]
 collision_layer = 2
 collision_mask = 2
 script = ExtResource( 2 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-rotation = 1.5708
-shape = SubResource( 1 )
-
 [node name="Sprite" type="Sprite" parent="."]
 position = Vector2( 0, -0.5 )
 texture = ExtResource( 1 )
 region_enabled = true
 region_rect = Rect2( 128, 80, 16, 16 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource( 1 )

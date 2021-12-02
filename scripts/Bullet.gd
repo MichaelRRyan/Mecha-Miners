@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+onready var HitParticleScene = preload("res://scenes/BulletHitParticle.tscn")
+
 export var speed = 250.0
 export var max_distance = 200.0
 
@@ -38,8 +40,8 @@ func _physics_process(_delta):
 			# Tells the terrain to damage that tile.
 			terrain.damage_tile(tile_pos, 1)
 		
-			# Delete the bullet and stop looping.
-			queue_free()
+			# Call on_impact stop looping.
+			__on_impact()
 			break;
 		
 
@@ -48,3 +50,17 @@ func _physics_process(_delta):
 
 
 # -----------------------------------------------------------------------------
+func __on_impact():
+	queue_free()
+	create_hit_particles()
+	
+
+# -----------------------------------------------------------------------------
+func create_hit_particles():
+	var containers = get_tree().get_nodes_in_group("particle_container")
+	if containers and not containers.empty():
+		var container = containers[0]
+		var particle = HitParticleScene.instance()
+		container.add_child(particle)
+		particle.position = global_position
+		particle.rotation = global_rotation
