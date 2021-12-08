@@ -62,5 +62,5 @@ func create_hit_particles():
 		var container = containers[0]
 		var particle = HitParticleScene.instance()
 		container.add_child(particle)
-		particle.position = global_position
+		particle.position = global_position + velocity.normalized() * 2.0
 		particle.rotation = global_rotation
