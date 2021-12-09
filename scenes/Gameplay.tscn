@@ -22,15 +22,11 @@ scale = Vector2( 2, 2 )
 current = true
 zoom = Vector2( 0.25, 0.25 )
 
-[node name="BulletManager" type="Node2D" parent="." groups=[
-"bullet_manager",
-]]
+[node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
 script = ExtResource( 4 )
 
 [node name="GUIManager" parent="." instance=ExtResource( 3 )]
 
 [node name="Cursor" parent="." instance=ExtResource( 6 )]
 
-[node name="Particles" type="Node2D" parent="." groups=[
-"particle_container",
-]]
+[node name="Particles" type="Node2D" parent="." groups=["particle_container"]]

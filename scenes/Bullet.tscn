@@ -4,8 +4,8 @@
 [ext_resource path="res://scripts/Bullet.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 1.0
-height = 2.0
+radius = 2.5
+height = 6.0
 
 [node name="Bullet" type="KinematicBody2D"]
 collision_layer = 2
