@@ -55,12 +55,12 @@ align = 1
 margin_top = 34.0
 margin_right = 388.0
 margin_bottom = 48.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/hover = ExtResource( 1 )
 custom_styles/pressed = ExtResource( 1 )
 custom_styles/focus = ExtResource( 1 )
 custom_styles/disabled = SubResource( 1 )
 custom_styles/normal = ExtResource( 1 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Host"
 
 [node name="HostingStatus" type="Label" parent="NetworkPanel/Content"]
@@ -79,19 +79,19 @@ margin_bottom = 116.0
 margin_top = 136.0
 margin_right = 388.0
 margin_bottom = 150.0
-custom_styles/normal = SubResource( 2 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_styles/normal = SubResource( 2 )
 align = 1
 
 [node name="JoinButton" type="Button" parent="NetworkPanel/Content"]
 margin_top = 170.0
 margin_right = 388.0
 margin_bottom = 184.0
+custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_styles/hover = ExtResource( 1 )
 custom_styles/pressed = ExtResource( 1 )
 custom_styles/focus = ExtResource( 1 )
 custom_styles/normal = ExtResource( 1 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "Join"
 
 [node name="InvalidIP" type="Label" parent="NetworkPanel/Content"]
