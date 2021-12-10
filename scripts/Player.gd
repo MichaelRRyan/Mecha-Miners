@@ -2,6 +2,8 @@ extends KinematicBody2D
 
 tool
 
+export var health : float = 5.0
+
 # -- Configurable Properties --
 var max_speed = 50.0 # Pixels / Second
 var time_to_max_speed = 0.1 # Seconds
@@ -221,4 +223,12 @@ puppet func set_puppet_state(state):
 	$Gun.rotation = state.gun_rotation
 	
 	
+# -----------------------------------------------------------------------------
+func take_damage(damage):
+	health -= damage
+	
+	if health <= 0:
+		queue_free()
+
+
 # -----------------------------------------------------------------------------

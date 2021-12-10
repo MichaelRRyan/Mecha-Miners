@@ -2,8 +2,12 @@ extends KinematicBody2D
 
 onready var HitParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 
-export var speed = 250.0
-export var max_distance = 200.0
+export var damage : float = 1.0
+export var speed : float = 250.0
+export var max_distance : float = 200.0
+
+# The peer id to ignore in collisions.
+var ignore_id
 
 var velocity = Vector2.ZERO
 var start_position = Vector2.ZERO
@@ -56,6 +60,17 @@ func __on_impact():
 	
 
 # -----------------------------------------------------------------------------
+func __on_player_impact(player):
+	# If online and the collided player is not the ignored peer id.
+	if Network.is_online and player.get_network_master() != ignore_id:
+		if player.has_method("take_damage"):
+			player.take_damage(damage)
+		
+		queue_free()
+		create_hit_particles()
+
+
+# -----------------------------------------------------------------------------
 func create_hit_particles():
 	var containers = get_tree().get_nodes_in_group("particle_container")
 	if containers and not containers.empty():
@@ -66,3 +81,12 @@ func create_hit_particles():
 		var impact_direction = -Vector3(cos(global_rotation), 
 										sin(global_rotation), 0.0)
 		particle.process_material.direction = impact_direction
+
+
+# -----------------------------------------------------------------------------
+func _on_PlayerDetector_body_entered(body):
+	if body.is_in_group("player"):
+		__on_player_impact(body)
+
+
+# -----------------------------------------------------------------------------

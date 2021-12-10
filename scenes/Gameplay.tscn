@@ -28,5 +28,6 @@ script = ExtResource( 4 )
 [node name="GUIManager" parent="." instance=ExtResource( 3 )]
 
 [node name="Cursor" parent="." instance=ExtResource( 6 )]
+pause_mode = 2
 
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
