@@ -54,6 +54,12 @@ func _physics_process(_delta):
 
 
 # -----------------------------------------------------------------------------
+func _on_PlayerDetector_body_entered(body):
+	if body.is_in_group("player"):
+		__on_player_impact(body)
+
+
+# -----------------------------------------------------------------------------
 func __on_impact():
 	queue_free()
 	create_hit_particles()
@@ -81,12 +87,6 @@ func create_hit_particles():
 		var impact_direction = -Vector3(cos(global_rotation), 
 										sin(global_rotation), 0.0)
 		particle.process_material.direction = impact_direction
-
-
-# -----------------------------------------------------------------------------
-func _on_PlayerDetector_body_entered(body):
-	if body.is_in_group("player"):
-		__on_player_impact(body)
 
 
 # -----------------------------------------------------------------------------

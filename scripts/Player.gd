@@ -2,6 +2,9 @@ extends KinematicBody2D
 
 tool
 
+signal died
+
+
 export var health : float = 5.0
 
 # -- Configurable Properties --
@@ -228,7 +231,8 @@ func take_damage(damage):
 	health -= damage
 	
 	if health <= 0:
-		queue_free()
+		emit_signal("died")
+		#queue_free()
 
 
 # -----------------------------------------------------------------------------
