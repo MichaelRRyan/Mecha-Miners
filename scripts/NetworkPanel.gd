@@ -24,6 +24,9 @@ func _input(event):
 		if event.is_action_pressed("toggle_network_panel"):
 			visible = !visible
 			get_tree().paused = visible
+		
+		if event.is_action_pressed("exit"):
+			get_tree().quit()
 
 
 # -----------------------------------------------------------------------------

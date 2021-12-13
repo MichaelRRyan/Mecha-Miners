@@ -19,6 +19,12 @@ config/icon="res://assets/images/icon.png"
 
 Network="*res://scripts/Network.gd"
 
+[display]
+
+window/size/fullscreen=true
+window/stretch/mode="2d"
+window/stretch/aspect="expand"
+
 [input]
 
 move_left={
@@ -46,6 +52,11 @@ toggle_network_panel={
 "events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":72,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
  ]
 }
+exit={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777217,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
 
 [physics]
 
@@ -53,5 +64,6 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+quality/subsurface_scattering/quality=2
 environment/default_clear_color=Color( 0.572549, 0.792157, 0.898039, 1 )
 environment/default_environment="res://default_env.tres"
