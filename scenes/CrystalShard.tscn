@@ -48,7 +48,7 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( -2, -0.7, 0, 0.7, 0, -6, -0.7, 0, 0.7, 0, -2, -0.7, 0, 0.7, 0 ),
+"points": PoolRealArray( -1, -0.7, 0, 0.7, 0, -5, -0.7, 0, 0.7, 0, -1, -0.7, 0, 0.7, 0 ),
 "times": PoolRealArray( 0, 1.5, 3 )
 }
 tracks/1/type = "value"
@@ -65,8 +65,8 @@ tracks/1/keys = {
 }
 
 [sub_resource type="CapsuleShape2D" id=3]
-radius = 6.0
-height = 8.0
+radius = 4.0
+height = 7.0
 
 [sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 0.926758, 0.633526, 0.825024, 0.862745, 0.981445, 0.977612, 0.980095, 0 )
@@ -76,14 +76,14 @@ gradient = SubResource( 4 )
 
 [sub_resource type="Curve" id=6]
 min_value = -1.0
-_data = [ Vector2( 0, -0.0954545 ), 0.0, -3.62338, 0, 0, Vector2( 0.5, 0.0681819 ), -2.52371, -2.52371, 0, 0, Vector2( 1, 0.0318183 ), -1.71818, 0.0, 0, 0 ]
+_data = [ Vector2( 0, -0.0954545 ), 0.0, -4.53886, 0, 0, Vector2( 0.503311, 0.00227273 ), -4.0953, -4.0953, 0, 0, Vector2( 1, 0.0318183 ), -4.16108, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=7]
 curve = SubResource( 6 )
 
 [sub_resource type="ParticlesMaterial" id=8]
 emission_shape = 1
-emission_sphere_radius = 6.0
+emission_sphere_radius = 4.0
 flag_disable_z = true
 spread = 180.0
 gravity = Vector3( 0, -20, 0 )
@@ -106,6 +106,7 @@ modulate = Color( 1.05, 1.05, 1.05, 1 )
 position = Vector2( 0, -4 )
 z_index = 1
 texture = ExtResource( 1 )
+offset = Vector2( 0.5, 0.5 )
 region_enabled = true
 region_rect = Rect2( 144, 80, 16, 16 )
 
@@ -121,18 +122,19 @@ anims/RESET = SubResource( 1 )
 anims/bob = SubResource( 2 )
 
 [node name="Area2D" type="Area2D" parent="."]
-visible = false
 z_index = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 0, -4 )
+visible = false
+position = Vector2( 0, -3 )
 shape = SubResource( 3 )
 
 [node name="PickupParticles" type="Particles2D" parent="."]
+position = Vector2( 0, -3 )
 z_index = 2
 emitting = false
-amount = 16
-lifetime = 0.8
+amount = 12
+lifetime = 0.6
 one_shot = true
 explosiveness = 1.0
 process_material = SubResource( 8 )
