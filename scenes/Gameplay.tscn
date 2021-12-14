@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Terrain.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/GUIManager.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/BulletManager.gd" type="Script" id=4]
+[ext_resource path="res://scenes/CrystalShard.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/Cursor.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scripts/PlayerManager.gd" type="Script" id=7]
 
@@ -35,3 +36,6 @@ script = ExtResource( 4 )
 pause_mode = 2
 
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
+
+[node name="CrystalShard" parent="." instance=ExtResource( 5 )]
+position = Vector2( 45, 121 )

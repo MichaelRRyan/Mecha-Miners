@@ -91,3 +91,20 @@ func __set_damage_indicator(tile_position : Vector2):
 
 
 # -----------------------------------------------------------------------------
+func __destroy_tile(tile_position : Vector2):
+	
+	var type = get_cellv(tile_position)
+	
+	if TileType.Crystal == type:
+		pass
+	
+	# Removes the cell and updates the surrounding cells.
+	set_cellv(tile_position, -1)
+	update_bitmask_area(tile_position)
+	
+	# Removes the damage information and visual.
+	damaged_tiles.erase(tile_position)
+	$DamageIndicators.set_cellv(tile_position, -1)
+
+
+# -----------------------------------------------------------------------------
