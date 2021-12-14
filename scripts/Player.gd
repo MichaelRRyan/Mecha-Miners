@@ -21,7 +21,10 @@ var jump_speed = 0.0
 var gravity_acceleration = 0.0
 var velocity = Vector2.ZERO
 
+# -- Private Variables --
 var animation_id = 0
+var crystals = 0
+
 
 enum AnimationName {
 	Idle = 0,
@@ -233,6 +236,11 @@ func take_damage(damage):
 	if health <= 0:
 		emit_signal("died")
 		#queue_free()
+
+
+# -----------------------------------------------------------------------------
+func pickup_crystal():
+	crystals += 1
 
 
 # -----------------------------------------------------------------------------
