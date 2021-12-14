@@ -97,7 +97,7 @@ func __destroy_tile(tile_position : Vector2):
 	
 	if TileType.Crystal == type:
 		var crystal = CrystalShard.instance()
-		crystal.position = tile_position * 16.0 + Vector2(8.0, 8.0)
+		crystal.position = tile_position * 16.0 + Vector2(8.0, 9.0)
 		add_child(crystal)
 	
 	# Removes the cell and updates the surrounding cells.

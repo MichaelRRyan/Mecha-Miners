@@ -2,6 +2,7 @@ extends Node2D
 
 func _ready():
 	$Animator.play("bob")
+	$PickupParticles.restart()
 
 
 func _on_Area2D_body_entered(body):
@@ -12,10 +13,11 @@ func _on_Area2D_body_entered(body):
 
 
 func __on_picked_up():
-	$Sprite.hide()
-	$ShadowSprite.hide()
-	$PickupParticles.emitting = true
-	$DestroyTimer.start()
+	if $Sprite.visible:
+		$Sprite.hide()
+		$ShadowSprite.hide()
+		$PickupParticles.restart()
+		$DestroyTimer.start()
 
 func _on_DestroyTimer_timeout():
 	queue_free()
