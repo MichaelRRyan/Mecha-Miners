@@ -1,5 +1,8 @@
 extends TileMap
 
+onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
+
+
 enum TileType {
 	Empty = -1,
 	Solid = 0,
@@ -65,10 +68,7 @@ func damage_tile(tile_position : Vector2, damage : float):
 			
 			# If the damage is greater than or equal to the health, remove it.
 			if tile.damage >= MAX_TILE_HEALTHS[tile_type]:
-				set_cellv(tile_position, -1)
-				$DamageIndicators.set_cellv(tile_position, -1)
-				damaged_tiles.erase(tile_position)
-				update_bitmask_area(tile_position)
+				__destroy_tile(tile_position)
 				
 			else:
 				__set_damage_indicator(tile_position)
@@ -96,7 +96,9 @@ func __destroy_tile(tile_position : Vector2):
 	var type = get_cellv(tile_position)
 	
 	if TileType.Crystal == type:
-		pass
+		var crystal = CrystalShard.instance()
+		crystal.position = tile_position * 16.0 + Vector2(8.0, 8.0)
+		add_child(crystal)
 	
 	# Removes the cell and updates the surrounding cells.
 	set_cellv(tile_position, -1)

@@ -69,30 +69,31 @@ radius = 6.0
 height = 8.0
 
 [sub_resource type="Gradient" id=4]
-colors = PoolColorArray( 0.911133, 0.256256, 0.683931, 0.862745, 0.944336, 0.704563, 0.859909, 0 )
+colors = PoolColorArray( 0.926758, 0.633526, 0.825024, 0.862745, 0.981445, 0.977612, 0.980095, 0 )
 
 [sub_resource type="GradientTexture" id=5]
 gradient = SubResource( 4 )
 
 [sub_resource type="Curve" id=6]
 min_value = -1.0
-_data = [ Vector2( 0, -0.0954545 ), 0.0, -3.62338, 0, 0, Vector2( 0.5, 0.0681819 ), -2.82645, -2.82645, 0, 0, Vector2( 1, 0.0318183 ), -1.71818, 0.0, 0, 0 ]
+_data = [ Vector2( 0, -0.0954545 ), 0.0, -3.62338, 0, 0, Vector2( 0.5, 0.0681819 ), -2.52371, -2.52371, 0, 0, Vector2( 1, 0.0318183 ), -1.71818, 0.0, 0, 0 ]
 
 [sub_resource type="CurveTexture" id=7]
 curve = SubResource( 6 )
 
 [sub_resource type="ParticlesMaterial" id=8]
 emission_shape = 1
-emission_sphere_radius = 4.0
+emission_sphere_radius = 6.0
 flag_disable_z = true
-direction = Vector3( 0, -1, 0 )
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 30.0
-initial_velocity_random = 0.8
+spread = 180.0
+gravity = Vector3( 0, -20, 0 )
+initial_velocity = 35.0
 orbit_velocity = 0.0
 orbit_velocity_random = 1.0
 orbit_velocity_curve = SubResource( 7 )
 linear_accel = -1.0
+radial_accel = 35.34
+damping = 60.0
 color_ramp = SubResource( 5 )
 hue_variation = 0.1
 hue_variation_random = 0.5
@@ -102,7 +103,7 @@ script = ExtResource( 2 )
 
 [node name="Sprite" type="Sprite" parent="."]
 modulate = Color( 1.05, 1.05, 1.05, 1 )
-position = Vector2( 0, -2 )
+position = Vector2( 0, -4 )
 z_index = 1
 texture = ExtResource( 1 )
 region_enabled = true
@@ -131,8 +132,9 @@ shape = SubResource( 3 )
 z_index = 2
 emitting = false
 amount = 16
+lifetime = 0.8
 one_shot = true
-explosiveness = 0.9
+explosiveness = 1.0
 process_material = SubResource( 8 )
 texture = ExtResource( 3 )
 
