@@ -2,12 +2,14 @@ extends TileMap
 
 enum TileType {
 	Empty = -1,
-	Solid = 0
+	Solid = 0,
+	Crystal = 1,
 }
 
 # A mapping of tile type to tile max health.
 const MAX_TILE_HEALTHS = [
-	10.0
+	10.0,
+	5.0
 ]
 
 # The number of damage stages visually displayed.
