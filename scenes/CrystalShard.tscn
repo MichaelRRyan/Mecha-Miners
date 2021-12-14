@@ -25,6 +25,16 @@ tracks/1/keys = {
 "points": PoolRealArray( -4, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0 )
 }
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("ShadowSprite:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
 
 [sub_resource type="Animation" id=2]
 resource_name = "bob"
@@ -40,6 +50,18 @@ tracks/0/keys = {
 "points": PoolRealArray( -2, -0.7, 0, 0.7, 0, -6, -0.7, 0, 0.7, 0, -2, -0.7, 0, 0.7, 0 ),
 "times": PoolRealArray( 0, 1.5, 3 )
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("ShadowSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4, 1, 1.6, 2.3, 2.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 2, 1, 0 ]
+}
 
 [node name="CrystalShard" type="Node2D"]
 script = ExtResource( 2 )
@@ -53,10 +75,11 @@ region_enabled = true
 region_rect = Rect2( 144, 80, 16, 16 )
 
 [node name="ShadowSprite" type="Sprite" parent="."]
-position = Vector2( 0, 8 )
+position = Vector2( 0, 8.5 )
 texture = ExtResource( 1 )
+vframes = 3
 region_enabled = true
-region_rect = Rect2( 160, 80, 16, 16 )
+region_rect = Rect2( 160, 80, 16, 9 )
 
 [node name="Animator" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 1 )
