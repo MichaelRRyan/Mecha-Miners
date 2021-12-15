@@ -1,9 +1,36 @@
-extends Node2D
+extends KinematicBody2D
+
+export var gravity = 200.0
+
+var velocity = Vector2.ZERO
+var was_on_floor = false
 
 func _ready():
-	$Animator.play("bob")
+	$ShadowSprite.hide()
 	$PickupParticles.restart()
 
+
+func _physics_process(delta):
+	velocity.y += gravity * delta
+	velocity = move_and_slide(velocity, Vector2.UP)
+	__check_for_floor()
+	
+
+func __check_for_floor():
+	var on_floor = is_on_floor()
+	
+	# If the on_floor state has changed since last check.
+	if was_on_floor != on_floor:
+		if not was_on_floor and on_floor:
+			$Animator.play("bob")
+			$ShadowSprite.show()
+			
+		elif was_on_floor and not on_floor:
+			$Animator.stop(true)
+			$ShadowSprite.hide()
+		
+		was_on_floor = on_floor
+	
 
 func _on_Area2D_body_entered(body):
 	if body.is_in_group("player"):
@@ -18,6 +45,7 @@ func __on_picked_up():
 		$ShadowSprite.hide()
 		$PickupParticles.restart()
 		$DestroyTimer.start()
+
 
 func _on_DestroyTimer_timeout():
 	queue_free()

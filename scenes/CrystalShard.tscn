@@ -1,8 +1,12 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
 [ext_resource path="res://scripts/CrystalShard.gd" type="Script" id=2]
 [ext_resource path="res://assets/images/particle_small.png" type="Texture" id=3]
+
+[sub_resource type="CapsuleShape2D" id=9]
+radius = 4.0
+height = 4.0
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -65,8 +69,8 @@ tracks/1/keys = {
 }
 
 [sub_resource type="CapsuleShape2D" id=3]
-radius = 4.0
-height = 7.0
+radius = 5.0
+height = 6.0
 
 [sub_resource type="Gradient" id=4]
 colors = PoolColorArray( 0.926758, 0.633526, 0.825024, 0.862745, 0.981445, 0.977612, 0.980095, 0 )
@@ -98,8 +102,13 @@ color_ramp = SubResource( 5 )
 hue_variation = 0.1
 hue_variation_random = 0.5
 
-[node name="CrystalShard" type="Node2D"]
+[node name="CrystalShard" type="KinematicBody2D"]
+collision_layer = 8
 script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 1 )
+shape = SubResource( 9 )
 
 [node name="Sprite" type="Sprite" parent="."]
 modulate = Color( 1.05, 1.05, 1.05, 1 )
@@ -122,10 +131,10 @@ anims/RESET = SubResource( 1 )
 anims/bob = SubResource( 2 )
 
 [node name="Area2D" type="Area2D" parent="."]
+visible = false
 z_index = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-visible = false
 position = Vector2( 0, -3 )
 shape = SubResource( 3 )
 
