@@ -3,6 +3,7 @@ extends KinematicBody2D
 tool
 
 signal died
+signal crystal_amount_changed(total_crystals)
 
 
 export var health : float = 5.0
@@ -241,6 +242,7 @@ func take_damage(damage):
 # -----------------------------------------------------------------------------
 func pickup_crystal():
 	crystals += 1
+	emit_signal("crystal_amount_changed", crystals)
 
 
 # -----------------------------------------------------------------------------

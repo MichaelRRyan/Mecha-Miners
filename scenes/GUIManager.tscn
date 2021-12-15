@@ -1,107 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Resources/StyleBoxes/StandardButton.tres" type="StyleBox" id=1]
-[ext_resource path="res://scripts/NetworkPanel.gd" type="Script" id=2]
-
-[sub_resource type="StyleBoxFlat" id=1]
-bg_color = Color( 0.384314, 0.384314, 0.384314, 1 )
-expand_margin_left = 10.0
-expand_margin_right = 10.0
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
-
-[sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 1, 1, 1, 1 )
-expand_margin_top = 5.0
-expand_margin_bottom = 5.0
+[ext_resource path="res://scenes/CrystalsAmount.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scenes/NetworkPanel.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/GUIManager.gd" type="Script" id=3]
 
 [node name="GUIManager" type="CanvasLayer"]
 pause_mode = 2
+script = ExtResource( 3 )
 
-[node name="NetworkPanel" type="ColorRect" parent="."]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 50.0
-margin_top = 49.2509
-margin_right = -50.0
-margin_bottom = -50.7491
-color = Color( 0.129412, 0.145098, 0.211765, 0.784314 )
-script = ExtResource( 2 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="NetworkPanel" parent="." instance=ExtResource( 2 )]
 
-[node name="Content" type="VBoxContainer" parent="NetworkPanel"]
-anchor_left = 0.5
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -194.0
-margin_top = 144.0
-margin_right = 194.0
-margin_bottom = -120.0
-custom_constants/separation = 20
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="IPLabel" type="Label" parent="NetworkPanel/Content"]
-margin_right = 388.0
-margin_bottom = 14.0
-text = "Private IP: 127.0.0.1"
-align = 1
-
-[node name="HostButton" type="Button" parent="NetworkPanel/Content"]
-margin_top = 34.0
-margin_right = 388.0
-margin_bottom = 48.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/hover = ExtResource( 1 )
-custom_styles/pressed = ExtResource( 1 )
-custom_styles/focus = ExtResource( 1 )
-custom_styles/disabled = SubResource( 1 )
-custom_styles/normal = ExtResource( 1 )
-text = "Host"
-
-[node name="HostingStatus" type="Label" parent="NetworkPanel/Content"]
-margin_top = 68.0
-margin_right = 388.0
-margin_bottom = 82.0
-text = "Status: Not Hosting."
-align = 1
-
-[node name="Spacing" type="Label" parent="NetworkPanel/Content"]
-margin_top = 102.0
-margin_right = 388.0
-margin_bottom = 116.0
-
-[node name="IPInput" type="LineEdit" parent="NetworkPanel/Content"]
-margin_top = 136.0
-margin_right = 388.0
-margin_bottom = 150.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/normal = SubResource( 2 )
-align = 1
-
-[node name="JoinButton" type="Button" parent="NetworkPanel/Content"]
-margin_top = 170.0
-margin_right = 388.0
-margin_bottom = 184.0
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_styles/hover = ExtResource( 1 )
-custom_styles/pressed = ExtResource( 1 )
-custom_styles/focus = ExtResource( 1 )
-custom_styles/normal = ExtResource( 1 )
-text = "Join"
-
-[node name="InvalidIP" type="Label" parent="NetworkPanel/Content"]
-visible = false
-margin_top = 204.0
-margin_right = 388.0
-margin_bottom = 218.0
-custom_colors/font_color = Color( 1, 0.372549, 0.372549, 1 )
-text = "The entered IP is not valid."
-align = 1
-
-[connection signal="pressed" from="NetworkPanel/Content/HostButton" to="NetworkPanel" method="_on_HostButton_pressed"]
-[connection signal="pressed" from="NetworkPanel/Content/JoinButton" to="NetworkPanel" method="_on_JoinButton_pressed"]
+[node name="CrystalsAmount" parent="." instance=ExtResource( 1 )]
