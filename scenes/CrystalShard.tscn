@@ -150,7 +150,7 @@ shape = SubResource( 3 )
 
 [node name="PickupParticles" type="Particles2D" parent="."]
 position = Vector2( 0, -3 )
-z_index = 2
+z_index = 100
 emitting = false
 amount = 12
 lifetime = 0.6
@@ -160,6 +160,7 @@ process_material = SubResource( 8 )
 texture = ExtResource( 3 )
 
 [node name="DestroyTimer" type="Timer" parent="."]
+wait_time = 0.6
 one_shot = true
 
 [connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]

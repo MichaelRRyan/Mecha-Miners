@@ -59,9 +59,10 @@ func create_player(peer_id):
 
 
 # -----------------------------------------------------------------------------
-func _on_player_died(player):
+func _on_player_died(player : Node2D):
 	player.position = spawn_point
 	player.health = base_player_health
+	player.call_deferred("set_respawning", false)
 
 
 # -----------------------------------------------------------------------------

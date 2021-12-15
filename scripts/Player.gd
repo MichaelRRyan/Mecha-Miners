@@ -25,6 +25,7 @@ var velocity = Vector2.ZERO
 # -- Private Variables --
 var animation_id = 0
 var crystals = 0
+var respawning = false
 
 
 enum AnimationName {
@@ -235,14 +236,44 @@ func take_damage(damage):
 	health -= damage
 	
 	if health <= 0:
-		emit_signal("died")
-		#queue_free()
+		die()
+
+
+# -----------------------------------------------------------------------------
+func die():
+	respawning = true
+	
+	var terrains = get_tree().get_nodes_in_group("terrain")
+	if terrains and not terrains.empty():
+		
+		var terrain = terrains[0]
+		
+		if (terrain.has_method("spawn_crystals")):
+			terrain.spawn_crystals(position, crystals)
+			
+	crystals = 0
+	emit_signal("crystal_amount_changed", crystals)
+	emit_signal("died")
+	
+	
+# -----------------------------------------------------------------------------
+func _input(event):
+	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
+		die()
 
 
 # -----------------------------------------------------------------------------
 func pickup_crystal():
-	crystals += 1
-	emit_signal("crystal_amount_changed", crystals)
+	if not respawning:
+		crystals += 1
+		emit_signal("crystal_amount_changed", crystals)
+		return true
+	return false
+
+
+# -----------------------------------------------------------------------------
+func set_respawning(flag):
+	respawning = flag
 
 
 # -----------------------------------------------------------------------------
