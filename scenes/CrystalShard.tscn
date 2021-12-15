@@ -11,7 +11,7 @@ height = 4.0
 [sub_resource type="Animation" id=1]
 length = 0.001
 tracks/0/type = "bezier"
-tracks/0/path = NodePath("Sprite:position:x")
+tracks/0/path = NodePath("Sprite:position:y")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -21,17 +21,17 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 )
 }
 tracks/1/type = "bezier"
-tracks/1/path = NodePath("Sprite:position:y")
+tracks/1/path = NodePath("ShadowSprite:frame")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
 tracks/1/enabled = true
 tracks/1/keys = {
-"points": PoolRealArray( -4, -0.25, 0, 0.25, 0 ),
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
 "times": PoolRealArray( 0 )
 }
 tracks/2/type = "bezier"
-tracks/2/path = NodePath("ShadowSprite:frame")
+tracks/2/path = NodePath("Sprite:rotation_degrees")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/imported = false
@@ -52,8 +52,8 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"points": PoolRealArray( -1, -0.7, 0, 0.7, 0, -5, -0.7, 0, 0.7, 0, -1, -0.7, 0, 0.7, 0 ),
-"times": PoolRealArray( 0, 1.5, 3 )
+"points": PoolRealArray( 0, -0.7, 0, 0.7, 0, -4, -0.7, 0, 0.7, 0, 0, -0.7, 0, 0.7, 0 ),
+"times": PoolRealArray( 0, 1.5, 3.1 )
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("ShadowSprite:frame")
@@ -66,6 +66,16 @@ tracks/1/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 2, 1, 0 ]
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Sprite:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 10, -0.25, 0, 0.25, 0, -10, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.7, 2.3, 3.1 )
 }
 
 [sub_resource type="CapsuleShape2D" id=3]
@@ -107,12 +117,12 @@ collision_layer = 8
 script = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, 1 )
 shape = SubResource( 9 )
 
 [node name="Sprite" type="Sprite" parent="."]
 modulate = Color( 1.05, 1.05, 1.05, 1 )
-position = Vector2( 0, -4 )
 z_index = 1
 texture = ExtResource( 1 )
 offset = Vector2( 0.5, 0.5 )
@@ -135,7 +145,7 @@ visible = false
 z_index = 1
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
-position = Vector2( 0, -3 )
+position = Vector2( 0, -2 )
 shape = SubResource( 3 )
 
 [node name="PickupParticles" type="Particles2D" parent="."]

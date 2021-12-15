@@ -1,6 +1,7 @@
 extends KinematicBody2D
 
 export var gravity = 200.0
+export var friction_multiplier = 0.96
 
 var velocity = Vector2.ZERO
 var was_on_floor = false
@@ -13,6 +14,7 @@ func _ready():
 func _physics_process(delta):
 	velocity.y += gravity * delta
 	velocity = move_and_slide(velocity, Vector2.UP)
+	velocity.x *= friction_multiplier
 	__check_for_floor()
 	
 

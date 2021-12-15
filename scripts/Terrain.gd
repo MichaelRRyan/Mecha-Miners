@@ -96,9 +96,11 @@ func __destroy_tile(tile_position : Vector2):
 	var type = get_cellv(tile_position)
 	
 	if TileType.Crystal == type:
-		var crystal = CrystalShard.instance()
-		crystal.position = tile_position * 16.0 + Vector2(8.0, 9.0)
-		add_child(crystal)
+		for i in range(1, 5):
+			var crystal = CrystalShard.instance()
+			crystal.position = tile_position * 16.0 + Vector2(8.0, 9.0)
+			crystal.velocity = Vector2(rand_range(-50, 50), rand_range(-10, -70))
+			add_child(crystal)
 	
 	# Removes the cell and updates the surrounding cells.
 	set_cellv(tile_position, -1)
