@@ -7,6 +7,7 @@ enum TileType {
 	Empty = -1,
 	Solid = 0,
 	Crystal = 1,
+	Background = 2,
 }
 
 # A mapping of tile type to tile max health.
@@ -56,7 +57,7 @@ func _physics_process(_delta):
 func damage_tile(tile_position : Vector2, damage : float):
 	# If the tile is not empty.
 	var tile_type = get_cellv(tile_position)
-	if tile_type != TileType.Empty:
+	if tile_type != TileType.Empty and tile_type != TileType.Background:
 		
 		# If the tile has been damaged recently.
 		if damaged_tiles.has(tile_position):
@@ -100,7 +101,10 @@ func __destroy_tile(tile_position : Vector2):
 			randi() % 5 + 1)
 	
 	# Removes the cell and updates the surrounding cells.
-	set_cellv(tile_position, -1)
+	if tile_position.y > 10:
+		set_cellv(tile_position, TileType.Background)
+	else:
+		set_cellv(tile_position, TileType.Empty)
 	update_bitmask_area(tile_position)
 	
 	# Removes the damage information and visual.
