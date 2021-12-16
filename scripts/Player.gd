@@ -243,6 +243,10 @@ func take_damage(damage):
 func die():
 	respawning = true
 	
+	set_process(false)
+	set_physics_process(false)
+	hide()
+	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
 		
@@ -272,8 +276,12 @@ func pickup_crystal():
 
 
 # -----------------------------------------------------------------------------
-func set_respawning(flag):
-	respawning = flag
+func respawn_complete():
+	respawning = false
+	
+	set_process(true)
+	set_physics_process(true)
+	show()
 
 
 # -----------------------------------------------------------------------------

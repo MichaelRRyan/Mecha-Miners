@@ -96,7 +96,8 @@ func __destroy_tile(tile_position : Vector2):
 	var type = get_cellv(tile_position)
 	
 	if TileType.Crystal == type:
-		spawn_crystals(tile_position * 16.0 + Vector2(8.0, 9.0), randi() % 5 + 1)
+		spawn_crystals(tile_position * 16.0 + Vector2(8.0, 9.0), 
+			randi() % 5 + 1)
 	
 	# Removes the cell and updates the surrounding cells.
 	set_cellv(tile_position, -1)
@@ -111,8 +112,9 @@ func __destroy_tile(tile_position : Vector2):
 func spawn_crystals(_position, amount):
 	for _i in range(amount):
 		var crystal = CrystalShard.instance()
-		crystal.spawn(_position)
 		add_child(crystal)
+		crystal.position = _position
+		crystal.velocity = Vector2(rand_range(-50, 50), rand_range(-100, -10))
 		
 
 # -----------------------------------------------------------------------------

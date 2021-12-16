@@ -62,7 +62,18 @@ func create_player(peer_id):
 func _on_player_died(player : Node2D):
 	player.position = spawn_point
 	player.health = base_player_health
-	player.call_deferred("set_respawning", false)
+	
+	var respawn_timer = Timer.new()
+	add_child(respawn_timer)
+	respawn_timer.connect("timeout", self, "_on_respawn_timer_timout", 
+		[player, respawn_timer])
+	respawn_timer.start(3.0)
+
+
+# -----------------------------------------------------------------------------
+func _on_respawn_timer_timout(player : Node2D, respawn_timer : Timer):
+	player.respawn_complete()
+	respawn_timer.queue_free()
 
 
 # -----------------------------------------------------------------------------

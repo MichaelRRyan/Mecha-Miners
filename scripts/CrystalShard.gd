@@ -9,12 +9,7 @@ var was_on_floor = false
 func _ready():
 	$ShadowSprite.hide()
 	$PickupParticles.restart()
-
-
-func spawn(_position):
-	position = _position
-	velocity = Vector2(rand_range(-50, 50), rand_range(-10, -70))
-
+	
 
 func _physics_process(delta):
 	velocity.y += gravity * delta
