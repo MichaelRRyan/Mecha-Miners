@@ -18,10 +18,12 @@ region_enabled = true
 region_rect = Rect2( 128, 80, 16, 16 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 rotation = 1.5708
 shape = SubResource( 1 )
 
 [node name="PlayerDetector" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
 rotation = 1.5708

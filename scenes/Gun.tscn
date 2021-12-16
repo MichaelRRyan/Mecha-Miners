@@ -5,13 +5,13 @@
 
 [node name="Gun" type="Sprite"]
 texture = ExtResource( 2 )
-offset = Vector2( 4, 0 )
+offset = Vector2( 4, -1 )
 region_enabled = true
 region_rect = Rect2( 32, 80, 16, 16 )
 script = ExtResource( 1 )
 
 [node name="Tip" type="Node2D" parent="."]
-position = Vector2( 7.5, -0.5 )
+position = Vector2( 7, -2 )
 
 [node name="CooldownTimer" type="Timer" parent="."]
 one_shot = true

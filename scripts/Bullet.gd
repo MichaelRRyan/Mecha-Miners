@@ -5,6 +5,7 @@ onready var HitParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 export var damage : float = 1.0
 export var speed : float = 250.0
 export var max_distance : float = 200.0
+export var width : float = 6.0
 
 # The peer id to ignore in collisions.
 var ignore_id

@@ -300,7 +300,7 @@ func __create_landing_particles():
 		var container = containers[0]
 		var particle = LandingParticleScene.instance()
 		container.add_child(particle)
-		particle.position = global_position# + velocity.normalized() * 5.0
+		particle.position = $Feet.global_position# + velocity.normalized() * 5.0
 		var impact_direction = Vector3.DOWN
 		particle.process_material.direction = impact_direction
 		

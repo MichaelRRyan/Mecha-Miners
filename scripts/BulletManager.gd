@@ -6,28 +6,35 @@ var number_of_local_bullets = 0
 
 
 # -----------------------------------------------------------------------------
-remote func create_bullet(_position, _rotation, _z_index, bullet_name = null):
+remote func create_bullet(_position, _rotation, _z_index, _name = null):
 	var bullet = BulletScene.instance()
 	
-	bullet.position = _position
+	var unit_direction = Vector2(cos(_rotation), sin(_rotation)).normalized()
+	bullet.position = _position + unit_direction * bullet.width
 	bullet.rotation = _rotation
 	bullet.z_index = _z_index
 	
-	if Network.is_online:
-		var peer_id
-		
-		if not bullet_name:
-			peer_id = get_tree().get_network_unique_id()
-			bullet_name = str(peer_id) + str(number_of_local_bullets)
-			rpc("create_bullet", _position, _rotation, _z_index, bullet_name)
-		else:
-			peer_id = get_tree().get_rpc_sender_id()
-			
-		bullet.set_name(bullet_name)
-		bullet.set_network_master(Network.SERVER_ID)
-		bullet.ignore_id = peer_id
+	if Network.is_online: 
+		setup_networking_attributes(bullet, _position, _rotation, _z_index, _name)
 	
 	add_child(bullet)
+
+
+# -----------------------------------------------------------------------------
+func setup_networking_attributes(bullet, _position, _rotation, _z_index, _name):
+	
+	var peer_id
+		
+	if not _name:
+		peer_id = get_tree().get_network_unique_id()
+		_name = str(peer_id) + str(number_of_local_bullets)
+		rpc("create_bullet", _position, _rotation, _z_index, _name)
+	else:
+		peer_id = get_tree().get_rpc_sender_id()
+		
+	bullet.set_name(_name)
+	bullet.set_network_master(Network.SERVER_ID)
+	bullet.ignore_id = peer_id
 
 
 # -----------------------------------------------------------------------------
