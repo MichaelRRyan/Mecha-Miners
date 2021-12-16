@@ -3,6 +3,7 @@ extends KinematicBody2D
 tool
 
 signal died
+signal crystal_amount_changed(total_crystals)
 
 
 export var health : float = 5.0
@@ -21,7 +22,11 @@ var jump_speed = 0.0
 var gravity_acceleration = 0.0
 var velocity = Vector2.ZERO
 
+# -- Private Variables --
 var animation_id = 0
+var crystals = 0
+var respawning = false
+
 
 enum AnimationName {
 	Idle = 0,
@@ -231,8 +236,52 @@ func take_damage(damage):
 	health -= damage
 	
 	if health <= 0:
-		emit_signal("died")
-		#queue_free()
+		die()
+
+
+# -----------------------------------------------------------------------------
+func die():
+	respawning = true
+	
+	set_process(false)
+	set_physics_process(false)
+	hide()
+	
+	var terrains = get_tree().get_nodes_in_group("terrain")
+	if terrains and not terrains.empty():
+		
+		var terrain = terrains[0]
+		
+		if (terrain.has_method("spawn_crystals")):
+			terrain.spawn_crystals(position, crystals)
+			
+	crystals = 0
+	emit_signal("crystal_amount_changed", crystals)
+	emit_signal("died")
+	
+	
+# -----------------------------------------------------------------------------
+func _input(event):
+	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
+		die()
+
+
+# -----------------------------------------------------------------------------
+func pickup_crystal():
+	if not respawning:
+		crystals += 1
+		emit_signal("crystal_amount_changed", crystals)
+		return true
+	return false
+
+
+# -----------------------------------------------------------------------------
+func respawn_complete():
+	respawning = false
+	
+	set_process(true)
+	set_physics_process(true)
+	show()
 
 
 # -----------------------------------------------------------------------------

@@ -1,13 +1,18 @@
 extends TileMap
 
+onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
+
+
 enum TileType {
 	Empty = -1,
-	Solid = 0
+	Solid = 0,
+	Crystal = 1,
 }
 
 # A mapping of tile type to tile max health.
 const MAX_TILE_HEALTHS = [
-	10.0
+	10.0,
+	5.0
 ]
 
 # The number of damage stages visually displayed.
@@ -63,10 +68,7 @@ func damage_tile(tile_position : Vector2, damage : float):
 			
 			# If the damage is greater than or equal to the health, remove it.
 			if tile.damage >= MAX_TILE_HEALTHS[tile_type]:
-				set_cellv(tile_position, -1)
-				$DamageIndicators.set_cellv(tile_position, -1)
-				damaged_tiles.erase(tile_position)
-				update_bitmask_area(tile_position)
+				__destroy_tile(tile_position)
 				
 			else:
 				__set_damage_indicator(tile_position)
@@ -87,5 +89,32 @@ func __set_damage_indicator(tile_position : Vector2):
 	var damage_stage = floor(damage / MAX_TILE_HEALTHS[tile_type] * DAMAGE_STAGES)
 	$DamageIndicators.set_cellv(tile_position, damage_stage)
 
+
+# -----------------------------------------------------------------------------
+func __destroy_tile(tile_position : Vector2):
+	
+	var type = get_cellv(tile_position)
+	
+	if TileType.Crystal == type:
+		spawn_crystals(tile_position * 16.0 + Vector2(8.0, 9.0), 
+			randi() % 5 + 1)
+	
+	# Removes the cell and updates the surrounding cells.
+	set_cellv(tile_position, -1)
+	update_bitmask_area(tile_position)
+	
+	# Removes the damage information and visual.
+	damaged_tiles.erase(tile_position)
+	$DamageIndicators.set_cellv(tile_position, -1)
+
+
+# -----------------------------------------------------------------------------
+func spawn_crystals(_position, amount):
+	for _i in range(amount):
+		var crystal = CrystalShard.instance()
+		add_child(crystal)
+		crystal.position = _position
+		crystal.velocity = Vector2(rand_range(-50, 50), rand_range(-100, -10))
+		
 
 # -----------------------------------------------------------------------------

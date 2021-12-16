@@ -9,6 +9,8 @@
 
 [node name="Gameplay" type="Node2D"]
 
+[node name="GUIManager" parent="." instance=ExtResource( 3 )]
+
 [node name="Terrain" parent="." instance=ExtResource( 2 )]
 
 [node name="PlayerManager" type="Node2D" parent="."]
@@ -23,14 +25,15 @@ position = Vector2( 90.4262, 116.708 )
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player"]
 scale = Vector2( 2, 2 )
 current = true
-zoom = Vector2( 0.25, 0.25 )
+zoom = Vector2( 0.5, 0.5 )
+smoothing_enabled = true
 
 [node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
 script = ExtResource( 4 )
-
-[node name="GUIManager" parent="." instance=ExtResource( 3 )]
 
 [node name="Cursor" parent="." instance=ExtResource( 6 )]
 pause_mode = 2
 
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
+
+[connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
