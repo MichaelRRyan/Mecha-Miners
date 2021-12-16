@@ -26,6 +26,9 @@ var velocity = Vector2.ZERO
 var animation_id = 0
 var crystals = 0
 var respawning = false
+var was_on_floor = false
+
+onready var LandingParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 
 
 enum AnimationName {
@@ -119,6 +122,12 @@ func _physics_process(delta):
 # -----------------------------------------------------------------------------
 func __handle_vertical_movement(delta):
 	
+	# Checks for landing.
+	var on_floor = is_on_floor()
+	if not was_on_floor and on_floor:
+		__create_landing_particles()
+	was_on_floor = on_floor
+	
 	# Add the gravity acceleration to velocity.
 	velocity.y += gravity_acceleration * delta
 	
@@ -126,7 +135,7 @@ func __handle_vertical_movement(delta):
 	if Input.is_action_just_pressed("jump"):
 		
 		# Adds the jump speed to velocity if on the ground.
-		if is_on_floor(): velocity.y = jump_speed
+		if on_floor: velocity.y = jump_speed
 		
 		# If not on the ground, begin flying.
 		else: $Jetpack.activate(delta)
@@ -284,4 +293,16 @@ func respawn_complete():
 	show()
 
 
+# -----------------------------------------------------------------------------
+func __create_landing_particles():
+	var containers = get_tree().get_nodes_in_group("particle_container")
+	if containers and not containers.empty():
+		var container = containers[0]
+		var particle = LandingParticleScene.instance()
+		container.add_child(particle)
+		particle.position = global_position# + velocity.normalized() * 5.0
+		var impact_direction = Vector3.DOWN
+		particle.process_material.direction = impact_direction
+		
+		
 # -----------------------------------------------------------------------------

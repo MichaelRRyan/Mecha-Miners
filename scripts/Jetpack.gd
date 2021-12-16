@@ -17,6 +17,8 @@ func _ready():
 func _physics_process(_delta):
 	flying_last_frame = flying
 	flying = false
+	$ParticlesLarge.emitting = flying_last_frame
+	$ParticlesSmall.emitting = flying_last_frame
 
 
 # -----------------------------------------------------------------------------
