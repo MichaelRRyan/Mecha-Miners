@@ -115,7 +115,7 @@ func _physics_process(delta):
 	# Move by the velocity.
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
-	__handle_interacton()
+	#__handle_interacton()
 	__handle_network_syncing()
 
 
@@ -193,7 +193,7 @@ func __handle_sprite_flip():
 
 # -----------------------------------------------------------------------------
 func __handle_interacton():
-	var direction_to_mouse = (get_global_mouse_position() - position).normalized()
+	var direction_to_mouse = (get_global_mouse_position() - global_position).normalized()
 	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
 	
 	var flip = direction_to_mouse.x < 0.0
@@ -300,7 +300,7 @@ func __create_landing_particles():
 		var container = containers[0]
 		var particle = LandingParticleScene.instance()
 		container.add_child(particle)
-		particle.position = $Feet.global_position# + velocity.normalized() * 5.0
+		particle.position = $Feet.global_position
 		var impact_direction = Vector3.DOWN
 		particle.process_material.direction = impact_direction
 		

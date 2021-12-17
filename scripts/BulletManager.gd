@@ -6,11 +6,11 @@ var number_of_local_bullets = 0
 
 
 # -----------------------------------------------------------------------------
-remote func create_bullet(_position, _rotation, _z_index, _name = null):
+remote func create_bullet(_position, _rotation, _z_index, root_position, _name = null):
 	var bullet = BulletScene.instance()
 	
-	var unit_direction = Vector2(cos(_rotation), sin(_rotation)).normalized()
-	bullet.position = _position + unit_direction * bullet.width
+	bullet.position = _position
+	bullet.start_position = root_position
 	bullet.rotation = _rotation
 	bullet.z_index = _z_index
 	

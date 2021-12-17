@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends Node2D
 
 onready var HitParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 
@@ -11,48 +11,60 @@ export var width : float = 6.0
 var ignore_id
 
 var velocity = Vector2.ZERO
-var start_position = Vector2.ZERO
+var start_position = null
 
 
 # -----------------------------------------------------------------------------
 func _ready():
 	velocity = Vector2(cos(rotation), sin(rotation)) * speed
+	
+	if start_position:
+		$RayCast2D.global_position = start_position
+		$RayCast2D.cast_to.x = (position - start_position).length()
+		__check_for_collision()
+		$RayCast2D.position = Vector2.ZERO
+	
 	start_position = position
 
 
 # -----------------------------------------------------------------------------
-func _physics_process(_delta):
-	var _result = move_and_slide(velocity)
+func _physics_process(delta):
 	
-	# Loops through all/any collisions from the last movement.
-	for i in range(get_slide_count()):
+	var frame_movement = velocity * delta
+	$RayCast2D.cast_to.x = frame_movement.length()
+	__check_for_collision()
 		
-		# Gets the collision info.
-		var collision = get_slide_collision(i)
+	position += frame_movement
+
+	if (start_position - position).length_squared() > max_distance * max_distance:
+		queue_free()
+
+
+# -----------------------------------------------------------------------------
+func __check_for_collision():
+	$RayCast2D.force_raycast_update()
+	
+	if $RayCast2D.is_colliding():
+		var collider = $RayCast2D.get_collider()
 		
-		# Checks if the colliding node is in the "terrain" group.
-		if collision.collider.is_in_group("terrain"):
+		if collider.is_in_group("terrain"):
+			
+			var normal = $RayCast2D.get_collision_normal()
 			
 			# Gets the terrain as a tilemap.
-			var terrain : TileMap = collision.collider
+			var terrain : TileMap = collider
 			
 			# Works out the position of the tile hit.
 			var tile_pos = terrain.world_to_map(terrain.to_local(position))
 			
-			tile_pos -= Vector2(round(collision.normal.x), 
-								round(collision.normal.y))
+			tile_pos -= Vector2(round(normal.x), round(normal.y))
 			
 			# Tells the terrain to damage that tile.
 			terrain.damage_tile(tile_pos, 1)
 		
 			# Call on_impact stop looping.
 			__on_impact()
-			break;
-		
-
-	if (start_position - position).length_squared() > max_distance * max_distance:
-		queue_free()
-
+	
 
 # -----------------------------------------------------------------------------
 func _on_PlayerDetector_body_entered(body):
