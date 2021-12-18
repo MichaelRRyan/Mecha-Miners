@@ -69,13 +69,10 @@ func __check_for_collision():
 		
 			# Call on_impact stop looping.
 			__on_impact()
+			
+		elif collider.is_in_group("player"):
+			__on_player_impact(collider)
 	
-
-# -----------------------------------------------------------------------------
-func _on_PlayerDetector_body_entered(body):
-	if body.is_in_group("player"):
-		__on_player_impact(body)
-
 
 # -----------------------------------------------------------------------------
 func __on_impact():
