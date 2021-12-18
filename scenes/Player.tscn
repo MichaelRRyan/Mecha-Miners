@@ -95,6 +95,11 @@ shape = SubResource( 13 )
 position = Vector2( -1.5, 1 )
 z_index = 2
 
+[node name="Gun2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 6, 1 )
+z_index = -1
+region_rect = Rect2( 48, 80, 16, 16 )
+
 [node name="Jetpack" parent="." instance=ExtResource( 4 )]
 
 [node name="Feet" type="Node2D" parent="."]

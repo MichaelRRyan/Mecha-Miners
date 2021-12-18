@@ -100,6 +100,7 @@ func _get_property_list():
 # -----------------------------------------------------------------------------
 func _ready():
 	$Gun.holder_rid = get_rid()
+	$Gun2.holder_rid = get_rid()
 	
 
 # -----------------------------------------------------------------------------
@@ -120,7 +121,6 @@ func _physics_process(delta):
 	# Move by the velocity.
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
-	#__handle_interacton()
 	__handle_network_syncing()
 
 
@@ -197,30 +197,17 @@ func __handle_sprite_flip():
 
 
 # -----------------------------------------------------------------------------
-func __handle_interacton():
-	var direction_to_mouse = (get_global_mouse_position() - global_position).normalized()
-	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
-	
-	var flip = direction_to_mouse.x < 0.0
-	var dir_sign = sign(direction_to_mouse.x)
-	if dir_sign == 0: dir_sign = 1
-	$Gun.scale.x = dir_sign
-	$Gun.position.x = abs($Gun.position.x) * -dir_sign
-	$Gun.rotation = angle - (deg2rad(180.0) if flip else 0.0)
-	
-	if Input.is_action_pressed("shoot"):
-		$Gun.shoot()
-
-
-# -----------------------------------------------------------------------------
 func __handle_network_syncing():
 	if Network.is_online: rpc_unreliable("set_puppet_state", {
 		position = position,
 		flip_h = $AnimatedSprite.flip_h,
 		animation_id = animation_id,
-		gun_scale_x = $Gun.scale.x,
-		gun_position_x = $Gun.position.x,
-		gun_rotation = $Gun.rotation
+		gun1_scale_x = $Gun.scale.x,
+		gun1_position_x = $Gun.position.x,
+		gun1_rotation = $Gun.rotation,
+		gun2_scale_x = $Gun2.scale.x,
+		gun2_position_x = $Gun2.position.x,
+		gun2_rotation = $Gun2.rotation
 	})
 
 
@@ -240,9 +227,12 @@ puppet func set_puppet_state(state):
 	position = state.position
 	$AnimatedSprite.flip_h = state.flip_h
 	__set_animation(state.animation_id)
-	$Gun.scale.x = state.gun_scale_x
-	$Gun.position.x = state.gun_position_x
-	$Gun.rotation = state.gun_rotation
+	$Gun.scale.x = state.gun1_scale_x
+	$Gun.position.x = state.gun1_position_x
+	$Gun.rotation = state.gun1_rotation
+	$Gun2.scale.x = state.gun2_scale_x
+	$Gun2.position.x = state.gun2_position_x
+	$Gun2.rotation = state.gun2_rotation
 	
 	
 # -----------------------------------------------------------------------------
@@ -262,6 +252,7 @@ func die():
 	hide()
 	
 	$Gun.set_process(false)
+	$Gun2.set_process(false)
 	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
@@ -300,6 +291,7 @@ func respawn_complete():
 	show()
 	
 	$Gun.set_process(true)
+	$Gun2.set_process(true)
 
 
 # -----------------------------------------------------------------------------

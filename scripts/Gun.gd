@@ -28,7 +28,7 @@ func _process(_delta):
 	var dir_sign = sign(direction_to_mouse.x)
 	if dir_sign == 0.0: dir_sign = 1
 	scale.x = dir_sign
-	position.x = abs(position.x) * -dir_sign
+	position.x = abs(position.x) * -dir_sign * sign(z_index)
 	rotation = angle - (deg2rad(180.0) if flip else 0.0)
 	
 	if (automatic and Input.is_action_pressed("shoot")
