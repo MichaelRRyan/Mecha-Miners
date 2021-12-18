@@ -5,6 +5,7 @@ onready var PlayerScene = preload("res://scenes/Player.tscn")
 export var base_player_health : float = 5.0
 
 var spawn_point : Vector2 = Vector2.ZERO
+var players = {} # Peer id: player instance
 
 
 # -----------------------------------------------------------------------------
@@ -47,6 +48,7 @@ func setup_player_for_network():
 		var id = get_tree().get_network_unique_id()
 		player.set_name(str(id))
 		player.set_network_master(id)
+		players[id] = player
 	
 	
 # -----------------------------------------------------------------------------
@@ -54,6 +56,7 @@ func create_player(peer_id):
 	var player = PlayerScene.instance()
 	player.set_name(str(peer_id))
 	player.set_network_master(peer_id)
+	players[peer_id] = player
 	var _r = player.connect("died", self, "_on_player_died", [player])
 	add_child(player)
 
@@ -74,6 +77,11 @@ func _on_player_died(player : Node2D):
 func _on_respawn_timer_timout(player : Node2D, respawn_timer : Timer):
 	player.respawn_complete()
 	respawn_timer.queue_free()
+
+
+# -----------------------------------------------------------------------------
+func get_player_by_peer_id(peer_id):
+	return players[peer_id]
 
 
 # -----------------------------------------------------------------------------

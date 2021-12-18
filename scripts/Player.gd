@@ -98,6 +98,11 @@ func _get_property_list():
 
 
 # -----------------------------------------------------------------------------
+func _ready():
+	$Gun.holder_rid = get_rid()
+	
+
+# -----------------------------------------------------------------------------
 func _physics_process(delta):
 	# Don't process if in the editor.
 	if Engine.editor_hint:
@@ -115,7 +120,7 @@ func _physics_process(delta):
 	# Move by the velocity.
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
-	__handle_interacton()
+	#__handle_interacton()
 	__handle_network_syncing()
 
 
@@ -193,7 +198,7 @@ func __handle_sprite_flip():
 
 # -----------------------------------------------------------------------------
 func __handle_interacton():
-	var direction_to_mouse = (get_global_mouse_position() - position).normalized()
+	var direction_to_mouse = (get_global_mouse_position() - global_position).normalized()
 	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
 	
 	var flip = direction_to_mouse.x < 0.0
@@ -256,6 +261,8 @@ func die():
 	set_physics_process(false)
 	hide()
 	
+	$Gun.set_process(false)
+	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
 		
@@ -270,9 +277,9 @@ func die():
 	
 	
 # -----------------------------------------------------------------------------
-func _input(event):
-	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
-		die()
+#func _input(event):
+#	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
+#		die()
 
 
 # -----------------------------------------------------------------------------
@@ -291,6 +298,8 @@ func respawn_complete():
 	set_process(true)
 	set_physics_process(true)
 	show()
+	
+	$Gun.set_process(true)
 
 
 # -----------------------------------------------------------------------------
@@ -300,7 +309,7 @@ func __create_landing_particles():
 		var container = containers[0]
 		var particle = LandingParticleScene.instance()
 		container.add_child(particle)
-		particle.position = global_position# + velocity.normalized() * 5.0
+		particle.position = $Feet.global_position
 		var impact_direction = Vector3.DOWN
 		particle.process_material.direction = impact_direction
 		
