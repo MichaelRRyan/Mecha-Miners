@@ -58,11 +58,14 @@ func __check_for_collision():
 			var terrain : TileMap = collider
 			
 			# Works out the position of the tile hit.
+			var collision_point = raycast.get_collision_point()
 			var tile_pos = terrain.world_to_map(terrain.to_local(
-				raycast.get_collision_point() - normal * 0.5))
+				collision_point - normal * 0.5))
 			
 			# Tells the terrain to damage that tile.
 			terrain.damage_tile(tile_pos, 1)
+		
+			position = collision_point
 		
 			# Call on_impact stop looping.
 			__on_impact()
@@ -98,7 +101,7 @@ func create_hit_particles():
 		var container = containers[0]
 		var particle = HitParticleScene.instance()
 		container.add_child(particle)
-		particle.position = global_position + velocity.normalized() * 5.0
+		particle.position = global_position
 		var impact_direction = -Vector3(cos(global_rotation), 
 										sin(global_rotation), 0.0)
 		particle.process_material.direction = impact_direction

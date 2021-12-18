@@ -16,6 +16,10 @@ func _ready():
 # -----------------------------------------------------------------------------
 func _process(_delta):
 	
+	# Don't process if online and not the network master, is updated instead.
+	if Network.is_online and not is_network_master():
+		return
+	
 	var origin = global_position - position
 	var direction_to_mouse = (get_global_mouse_position() - origin).normalized()
 	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)

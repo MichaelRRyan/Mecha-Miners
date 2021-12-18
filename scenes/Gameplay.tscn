@@ -13,7 +13,7 @@
 
 [node name="Terrain" parent="." instance=ExtResource( 2 )]
 
-[node name="PlayerManager" type="Node2D" parent="."]
+[node name="PlayerManager" type="Node2D" parent="." groups=["player_manager"]]
 script = ExtResource( 7 )
 
 [node name="SpawnPoint" type="Node2D" parent="PlayerManager"]
