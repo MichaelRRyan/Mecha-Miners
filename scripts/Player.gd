@@ -261,6 +261,8 @@ func die():
 	set_physics_process(false)
 	hide()
 	
+	$Gun.set_process(false)
+	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
 		
@@ -275,9 +277,9 @@ func die():
 	
 	
 # -----------------------------------------------------------------------------
-func _input(event):
-	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
-		die()
+#func _input(event):
+#	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
+#		die()
 
 
 # -----------------------------------------------------------------------------
@@ -296,6 +298,8 @@ func respawn_complete():
 	set_process(true)
 	set_physics_process(true)
 	show()
+	
+	$Gun.set_process(true)
 
 
 # -----------------------------------------------------------------------------
