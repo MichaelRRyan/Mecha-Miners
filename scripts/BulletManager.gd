@@ -6,13 +6,14 @@ var number_of_local_bullets = 0
 
 
 # -----------------------------------------------------------------------------
-remote func create_bullet(_position, _rotation, _z_index, root_position, _name = null):
+remote func create_bullet(_position, _rotation, _z_index, root_position, ignore_rid, _name = null):
 	var bullet = BulletScene.instance()
 	
 	bullet.position = _position
 	bullet.start_position = root_position
 	bullet.rotation = _rotation
 	bullet.z_index = _z_index
+	bullet.ignore_rid = ignore_rid
 	
 	if Network.is_online: 
 		setup_networking_attributes(bullet, _position, _rotation, _z_index, _name)

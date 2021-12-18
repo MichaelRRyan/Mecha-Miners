@@ -3,6 +3,7 @@ extends Sprite
 export var cooldown = 0.15
 export var automatic = false
 var bullet_manager = null
+var holder_rid = null
 
 
 # -----------------------------------------------------------------------------
@@ -13,7 +14,7 @@ func _ready():
 	
 
 # -----------------------------------------------------------------------------
-func _process(delta):
+func _process(_delta):
 	
 	var origin = global_position - position
 	var direction_to_mouse = (get_global_mouse_position() - origin).normalized()
@@ -40,7 +41,8 @@ func shoot():
 			$Tip.global_position, 
 			$Tip.global_rotation, 
 			z_index - 1,
-			global_position)
+			global_position,
+			holder_rid)
 		
 		$CooldownTimer.start(cooldown)
 

@@ -98,6 +98,11 @@ func _get_property_list():
 
 
 # -----------------------------------------------------------------------------
+func _ready():
+	$Gun.holder_rid = get_rid()
+	
+
+# -----------------------------------------------------------------------------
 func _physics_process(delta):
 	# Don't process if in the editor.
 	if Engine.editor_hint:
