@@ -29,6 +29,7 @@ z_index = -1
 script = ExtResource( 1 )
 
 [node name="ParticlesLarge" type="Particles2D" parent="."]
+z_index = -100
 emitting = false
 amount = 5
 local_coords = false
@@ -36,6 +37,7 @@ process_material = SubResource( 3 )
 texture = ExtResource( 3 )
 
 [node name="ParticlesSmall" type="Particles2D" parent="."]
+z_index = -100
 emitting = false
 amount = 6
 local_coords = false

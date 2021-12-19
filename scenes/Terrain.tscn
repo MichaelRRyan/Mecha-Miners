@@ -535,6 +535,7 @@ points = PoolVector2Array( 16, 16, 0, 16, 0, 0, 16, 0 )
 2/z_index = 0
 
 [node name="Terrain" type="TileMap" groups=["terrain"]]
+z_index = -100
 tile_set = SubResource( 48 )
 cell_size = Vector2( 16, 16 )
 cell_custom_transform = Transform2D( 16, 0, 0, 16, 0, 0 )

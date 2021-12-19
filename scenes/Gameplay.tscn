@@ -36,4 +36,6 @@ pause_mode = 2
 
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
 
+[node name="CrystalShards" type="Node2D" parent="." groups=["crystal_container"]]
+
 [connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
