@@ -26,6 +26,16 @@ export var tile_heal_time = 1.0
 
 # A dictionary of tile position keys to tile health values.
 var damaged_tiles = {}
+var crystal_container = null
+
+
+# -----------------------------------------------------------------------------
+func _ready():
+	var containers = get_tree().get_nodes_in_group("crystal_container")
+	if containers and !containers.empty():
+		crystal_container = containers[0]
+	else:
+		crystal_container = self
 
 
 # -----------------------------------------------------------------------------
@@ -116,7 +126,7 @@ func __destroy_tile(tile_position : Vector2):
 func spawn_crystals(_position, amount):
 	for _i in range(amount):
 		var crystal = CrystalShard.instance()
-		add_child(crystal)
+		crystal_container.add_child(crystal)
 		crystal.position = _position
 		crystal.velocity = Vector2(rand_range(-50, 50), rand_range(-100, -10))
 		

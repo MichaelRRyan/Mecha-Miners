@@ -1,9 +1,10 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=2]
 [ext_resource path="res://scenes/Gun.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/Jetpack.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/MechArms.gd" type="Script" id=5]
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 1 )
@@ -91,16 +92,19 @@ offset = Vector2( 0, -6 )
 visible = false
 shape = SubResource( 13 )
 
-[node name="Gun" parent="." instance=ExtResource( 3 )]
+[node name="Jetpack" parent="." instance=ExtResource( 4 )]
+
+[node name="Arms" type="Node2D" parent="."]
+script = ExtResource( 5 )
+
+[node name="Gun1" parent="Arms" instance=ExtResource( 3 )]
 position = Vector2( -1.5, 1 )
 z_index = 2
 
-[node name="Gun2" parent="." instance=ExtResource( 3 )]
+[node name="Gun2" parent="Arms" instance=ExtResource( 3 )]
 position = Vector2( 6, 1 )
 z_index = -1
-region_rect = Rect2( 48, 80, 16, 16 )
-
-[node name="Jetpack" parent="." instance=ExtResource( 4 )]
+frame = 1
 
 [node name="Feet" type="Node2D" parent="."]
 position = Vector2( 0, 9 )

@@ -95,12 +95,6 @@ func _get_property_list():
 		{ name = "vertical_movement/jump_height", type = TYPE_REAL },
 		{ name = "vertical_movement/time_to_jump_peak", type = TYPE_REAL },
 	]
-
-
-# -----------------------------------------------------------------------------
-func _ready():
-	$Gun.holder_rid = get_rid()
-	$Gun2.holder_rid = get_rid()
 	
 
 # -----------------------------------------------------------------------------
@@ -115,12 +109,8 @@ func _physics_process(delta):
 		
 	__handle_vertical_movement(delta)
 	__handle_horizontal_movement(delta)
-	
 	__handle_sprite_flip()
-	
-	# Move by the velocity.
 	velocity = move_and_slide(velocity, Vector2.UP)
-	
 	__handle_network_syncing()
 
 
@@ -202,12 +192,7 @@ func __handle_network_syncing():
 		position = position,
 		flip_h = $AnimatedSprite.flip_h,
 		animation_id = animation_id,
-		gun1_scale_x = $Gun.scale.x,
-		gun1_position_x = $Gun.position.x,
-		gun1_rotation = $Gun.rotation,
-		gun2_scale_x = $Gun2.scale.x,
-		gun2_position_x = $Gun2.position.x,
-		gun2_rotation = $Gun2.rotation
+		arms_data = $Arms.get_sync_data(),
 	})
 
 
@@ -227,12 +212,7 @@ puppet func set_puppet_state(state):
 	position = state.position
 	$AnimatedSprite.flip_h = state.flip_h
 	__set_animation(state.animation_id)
-	$Gun.scale.x = state.gun1_scale_x
-	$Gun.position.x = state.gun1_position_x
-	$Gun.rotation = state.gun1_rotation
-	$Gun2.scale.x = state.gun2_scale_x
-	$Gun2.position.x = state.gun2_position_x
-	$Gun2.rotation = state.gun2_rotation
+	$Arms.apply_sync_date(state.arms_data)
 	
 	
 # -----------------------------------------------------------------------------
@@ -251,8 +231,7 @@ func die():
 	set_physics_process(false)
 	hide()
 	
-	$Gun.set_process(false)
-	$Gun2.set_process(false)
+	$Arms.set_process(false)
 	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
@@ -290,8 +269,7 @@ func respawn_complete():
 	set_physics_process(true)
 	show()
 	
-	$Gun.set_process(true)
-	$Gun2.set_process(true)
+	$Arms.set_process(true)
 
 
 # -----------------------------------------------------------------------------
