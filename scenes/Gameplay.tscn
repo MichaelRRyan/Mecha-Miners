@@ -9,7 +9,7 @@
 [ext_resource path="res://scripts/PlayerManager.gd" type="Script" id=7]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 40, 40 )
+extents = Vector2( 24, 30.5 )
 
 [node name="Gameplay" type="Node2D"]
 
@@ -43,7 +43,7 @@ pause_mode = 2
 [node name="CrystalShards" type="Node2D" parent="." groups=["crystal_container"]]
 
 [node name="DropPod" type="KinematicBody2D" parent="."]
-position = Vector2( 64, 90 )
+position = Vector2( 64, 98 )
 z_index = -50
 collision_layer = 0
 __meta__ = {
@@ -53,10 +53,11 @@ __meta__ = {
 [node name="Sprite" type="Sprite" parent="DropPod"]
 texture = ExtResource( 5 )
 region_enabled = true
-region_rect = Rect2( 0, 128, 80, 80 )
+region_rect = Rect2( 0, 128, 64, 64 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DropPod"]
 visible = false
+position = Vector2( 0, 1.5 )
 shape = SubResource( 1 )
 
 [connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
