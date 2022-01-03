@@ -1,11 +1,15 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Terrain.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scenes/GUIManager.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/BulletManager.gd" type="Script" id=4]
+[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=5]
 [ext_resource path="res://scenes/Cursor.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scripts/PlayerManager.gd" type="Script" id=7]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 40, 40 )
 
 [node name="Gameplay" type="Node2D"]
 
@@ -25,7 +29,7 @@ position = Vector2( 90.4262, 116.708 )
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player"]
 scale = Vector2( 2, 2 )
 current = true
-zoom = Vector2( 0.25, 0.25 )
+zoom = Vector2( 0.5, 0.5 )
 smoothing_enabled = true
 
 [node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
@@ -37,5 +41,22 @@ pause_mode = 2
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
 
 [node name="CrystalShards" type="Node2D" parent="." groups=["crystal_container"]]
+
+[node name="DropPod" type="KinematicBody2D" parent="."]
+position = Vector2( 64, 90 )
+z_index = -50
+collision_layer = 0
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="DropPod"]
+texture = ExtResource( 5 )
+region_enabled = true
+region_rect = Rect2( 0, 128, 80, 80 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DropPod"]
+visible = false
+shape = SubResource( 1 )
 
 [connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
