@@ -11,6 +11,7 @@ var players = {} # Peer id: player instance
 # -----------------------------------------------------------------------------
 func _ready():
 	spawn_point = $SpawnPoint.position
+	$Player.position = spawn_point
 	var _r = $Player.connect("died", self, "_on_player_died", [$Player])
 	
 	_r = Network.connect("player_connected", self, "_on_player_connected")
