@@ -16,4 +16,5 @@ script = ExtResource( 3 )
 [node name="DropPodMenu" parent="." instance=ExtResource( 4 )]
 visible = false
 
+[connection signal="gems_amount_changed" from="DropPodMenu" to="." method="_on_DropPodMenu_gems_amount_changed"]
 [connection signal="menu_closed" from="DropPodMenu" to="." method="_on_DropPod_menu_closed"]

@@ -3,11 +3,17 @@ extends ColorRect
 signal slot_pressed(slot_index)
 
 
+var inventory : Inventory = null
 var item_slots = []
 
 
+# ------------------------------------------------------------------------------
+func set_inventory(reference):
+	inventory = reference
+	
+
 # -----------------------------------------------------------------------------
-func load_inventory(inventory : Inventory):
+func refresh():
 	var stack_count = inventory.get_stack_count()
 	
 	for i in range(item_slots.size()):
@@ -18,6 +24,19 @@ func load_inventory(inventory : Inventory):
 			item_slots[i].set_item_stack(null)
 
 
+# -----------------------------------------------------------------------------
+func add_stack(new_stack):
+	var remainder = inventory.add_stack(new_stack)
+	refresh()
+	return remainder
+
+# -----------------------------------------------------------------------------
+func remove_stack(stack_index):
+	var stack = inventory.remove_stack(stack_index)
+	refresh()
+	return stack
+	
+	
 # -----------------------------------------------------------------------------
 func get_item_stack(slot_index):
 	return item_slots[slot_index].get_item_stack()
@@ -36,7 +55,7 @@ func _get_slots():
 		var slots = column.get_children()
 		for slot in slots:
 			# Connects the button pressed signal.
-			item_slots.connect("pressed", self, "_on_ItemSlot_pressed", 
+			slot.connect("pressed", self, "_on_ItemSlot_pressed", 
 				[item_slots.size()])
 			
 			# Adds the slot to the list.

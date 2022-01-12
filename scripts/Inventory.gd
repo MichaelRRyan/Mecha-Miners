@@ -7,13 +7,6 @@ var item_stacks = []
 
 
 # ------------------------------------------------------------------------------
-func get_item_data(index):
-	if index < item_stacks.size():
-		return ItemData.get_data(item_stacks[index].type)
-	return null
-
-
-# ------------------------------------------------------------------------------
 func get_stack_count():
 	return item_stacks.size()
 	
@@ -44,6 +37,15 @@ func count_and_remove_gems():
 	
 	return count
 
+
+# ------------------------------------------------------------------------------
+func remove_stack(stack_index):
+	if stack_index < item_stacks.size():
+		var stack = item_stacks[stack_index]
+		item_stacks.remove(stack_index)
+		return stack
+		
+	return null
 
 # ------------------------------------------------------------------------------
 func add_stack(new_stack):

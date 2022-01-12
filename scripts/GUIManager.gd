@@ -2,6 +2,7 @@ extends CanvasLayer
 
 signal menu_toggled(opened)
 
+
 var _current_screen = null
 
 
@@ -60,3 +61,5 @@ func _switch_screen(new_screen):
 
 
 # -----------------------------------------------------------------------------
+func _on_DropPodMenu_gems_amount_changed(amount):
+	$CrystalsAmount/Amount.text = str(amount)
