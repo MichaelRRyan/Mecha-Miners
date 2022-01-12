@@ -2,7 +2,7 @@
 
 [ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=1]
 [ext_resource path="res://scripts/DropPodMenu.gd" type="Script" id=2]
-[ext_resource path="res://scenes/ui/ItemSlot.tscn" type="PackedScene" id=3]
+[ext_resource path="res://scenes/ui/InventoryUI.tscn" type="PackedScene" id=3]
 
 [node name="DropPodMenu" type="Control"]
 anchor_right = 1.0
@@ -103,128 +103,7 @@ margin_right = 417.0
 margin_bottom = 36.0
 text = "Inventory"
 
-[node name="InventoryBackground" type="ColorRect" parent="HDivider/InventoryList"]
-margin_top = 40.0
-margin_right = 417.0
-margin_bottom = 223.0
-size_flags_vertical = 3
-color = Color( 0.490196, 0.505882, 0.662745, 1 )
-
-[node name="Rows" type="VBoxContainer" parent="HDivider/InventoryList/InventoryBackground"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 10.0
-margin_top = 5.0
-margin_right = -10.0
-margin_bottom = -5.0
-rect_pivot_offset = Vector2( 681, 91 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Column1" type="HBoxContainer" parent="HDivider/InventoryList/InventoryBackground/Rows"]
-margin_right = 397.0
-margin_bottom = 55.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ItemSlot1" parent="HDivider/InventoryList/InventoryBackground/Rows/Column1" instance=ExtResource( 3 )]
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot2" parent="HDivider/InventoryList/InventoryBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 66.0
-margin_right = 129.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot3" parent="HDivider/InventoryList/InventoryBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 133.0
-margin_right = 196.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot4" parent="HDivider/InventoryList/InventoryBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 200.0
-margin_right = 263.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot5" parent="HDivider/InventoryList/InventoryBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 267.0
-margin_right = 330.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot6" parent="HDivider/InventoryList/InventoryBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 334.0
-margin_right = 397.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="Column2" type="HBoxContainer" parent="HDivider/InventoryList/InventoryBackground/Rows"]
-margin_top = 59.0
-margin_right = 397.0
-margin_bottom = 114.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ItemSlot1" parent="HDivider/InventoryList/InventoryBackground/Rows/Column2" instance=ExtResource( 3 )]
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot2" parent="HDivider/InventoryList/InventoryBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 66.0
-margin_right = 129.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot3" parent="HDivider/InventoryList/InventoryBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 133.0
-margin_right = 196.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot4" parent="HDivider/InventoryList/InventoryBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 200.0
-margin_right = 263.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot5" parent="HDivider/InventoryList/InventoryBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 267.0
-margin_right = 330.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot6" parent="HDivider/InventoryList/InventoryBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 334.0
-margin_right = 397.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="Column3" type="HBoxContainer" parent="HDivider/InventoryList/InventoryBackground/Rows"]
-margin_top = 118.0
-margin_right = 397.0
-margin_bottom = 173.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ItemSlot1" parent="HDivider/InventoryList/InventoryBackground/Rows/Column3" instance=ExtResource( 3 )]
-rect_pivot_offset = Vector2( 169, 576 )
-
-[node name="ItemSlot2" parent="HDivider/InventoryList/InventoryBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 66.0
-margin_right = 129.0
-rect_pivot_offset = Vector2( 103, 576 )
-
-[node name="ItemSlot3" parent="HDivider/InventoryList/InventoryBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 133.0
-margin_right = 196.0
-rect_pivot_offset = Vector2( 36, 576 )
-
-[node name="ItemSlot4" parent="HDivider/InventoryList/InventoryBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 200.0
-margin_right = 263.0
-rect_pivot_offset = Vector2( -31, 576 )
-
-[node name="ItemSlot5" parent="HDivider/InventoryList/InventoryBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 267.0
-margin_right = 330.0
-rect_pivot_offset = Vector2( -98, 576 )
-
-[node name="ItemSlot6" parent="HDivider/InventoryList/InventoryBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 334.0
-margin_right = 397.0
-rect_pivot_offset = Vector2( -165, 576 )
+[node name="PlayerInventoryUI" parent="HDivider/InventoryList" instance=ExtResource( 3 )]
 
 [node name="DropPodTitle" type="Label" parent="HDivider/InventoryList"]
 margin_top = 227.0
@@ -232,128 +111,11 @@ margin_right = 417.0
 margin_bottom = 263.0
 text = "Drop Pod"
 
-[node name="DropPodBackground" type="ColorRect" parent="HDivider/InventoryList"]
+[node name="DropPodInventoryUI" parent="HDivider/InventoryList" instance=ExtResource( 3 )]
 margin_top = 267.0
-margin_right = 417.0
 margin_bottom = 450.0
-size_flags_vertical = 3
-color = Color( 0.490196, 0.505882, 0.662745, 1 )
-
-[node name="Rows" type="VBoxContainer" parent="HDivider/InventoryList/DropPodBackground"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 10.0
-margin_top = 5.0
-margin_right = -10.0
-margin_bottom = -5.0
-rect_pivot_offset = Vector2( 335, 413 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Column1" type="HBoxContainer" parent="HDivider/InventoryList/DropPodBackground/Rows"]
-margin_right = 397.0
-margin_bottom = 55.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ItemSlot1" parent="HDivider/InventoryList/DropPodBackground/Rows/Column1" instance=ExtResource( 3 )]
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot2" parent="HDivider/InventoryList/DropPodBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 66.0
-margin_right = 129.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot3" parent="HDivider/InventoryList/DropPodBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 133.0
-margin_right = 196.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot4" parent="HDivider/InventoryList/DropPodBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 200.0
-margin_right = 263.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot5" parent="HDivider/InventoryList/DropPodBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 267.0
-margin_right = 330.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot6" parent="HDivider/InventoryList/DropPodBackground/Rows/Column1" instance=ExtResource( 3 )]
-margin_left = 334.0
-margin_right = 397.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="Column2" type="HBoxContainer" parent="HDivider/InventoryList/DropPodBackground/Rows"]
-margin_top = 59.0
-margin_right = 397.0
-margin_bottom = 114.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ItemSlot1" parent="HDivider/InventoryList/DropPodBackground/Rows/Column2" instance=ExtResource( 3 )]
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot2" parent="HDivider/InventoryList/DropPodBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 66.0
-margin_right = 129.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot3" parent="HDivider/InventoryList/DropPodBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 133.0
-margin_right = 196.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot4" parent="HDivider/InventoryList/DropPodBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 200.0
-margin_right = 263.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot5" parent="HDivider/InventoryList/DropPodBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 267.0
-margin_right = 330.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="ItemSlot6" parent="HDivider/InventoryList/DropPodBackground/Rows/Column2" instance=ExtResource( 3 )]
-margin_left = 334.0
-margin_right = 397.0
-rect_pivot_offset = Vector2( -45, 295 )
-
-[node name="Column3" type="HBoxContainer" parent="HDivider/InventoryList/DropPodBackground/Rows"]
-margin_top = 118.0
-margin_right = 397.0
-margin_bottom = 173.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ItemSlot1" parent="HDivider/InventoryList/DropPodBackground/Rows/Column3" instance=ExtResource( 3 )]
-rect_pivot_offset = Vector2( 169, 576 )
-
-[node name="ItemSlot2" parent="HDivider/InventoryList/DropPodBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 66.0
-margin_right = 129.0
-rect_pivot_offset = Vector2( 103, 576 )
-
-[node name="ItemSlot3" parent="HDivider/InventoryList/DropPodBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 133.0
-margin_right = 196.0
-rect_pivot_offset = Vector2( 36, 576 )
-
-[node name="ItemSlot4" parent="HDivider/InventoryList/DropPodBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 200.0
-margin_right = 263.0
-rect_pivot_offset = Vector2( -31, 576 )
-
-[node name="ItemSlot5" parent="HDivider/InventoryList/DropPodBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 267.0
-margin_right = 330.0
-rect_pivot_offset = Vector2( -98, 576 )
-
-[node name="ItemSlot6" parent="HDivider/InventoryList/DropPodBackground/Rows/Column3" instance=ExtResource( 3 )]
-margin_left = 334.0
-margin_right = 397.0
-rect_pivot_offset = Vector2( -165, 576 )
 
 [connection signal="pressed" from="HDivider/ActionsList/ReturnToShip" to="." method="_on_ReturnToShip_pressed"]
 [connection signal="pressed" from="HDivider/ActionsList/CloseMenu" to="." method="_on_CloseMenu_pressed"]
+[connection signal="slot_pressed" from="HDivider/InventoryList/PlayerInventoryUI" to="." method="_on_PlayerInventoryUI_slot_pressed"]
+[connection signal="slot_pressed" from="HDivider/InventoryList/DropPodInventoryUI" to="." method="_on_DropPodInventoryUI_slot_pressed"]

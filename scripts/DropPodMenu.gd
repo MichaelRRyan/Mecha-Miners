@@ -3,28 +3,10 @@ extends Control
 signal menu_closed
 
 var local_player = null
-var inventory_slots = null
-var drop_pod_slots = null
+var drop_pod_inventory = Inventory.new()
 
-
-# -----------------------------------------------------------------------------
-func _ready():
-	inventory_slots = _get_slots($HDivider/InventoryList/InventoryBackground/Rows)
-	drop_pod_slots = _get_slots($HDivider/InventoryList/DropPodBackground/Rows)
-
-
-# -----------------------------------------------------------------------------
-func _get_slots(rows):
-	var return_slots = []
-	
-	var columns = rows.get_children()
-	for column in columns:
-		
-		var slots = column.get_children()
-		for slot in slots:
-			return_slots.append(slot)
-	
-	return return_slots
+onready var player_inventory_ui = $HDivider/InventoryList/PlayerInventoryUI
+onready var drop_pod_inventory_ui = $HDivider/InventoryList/DropPodInventoryUI
 
 
 # -----------------------------------------------------------------------------
@@ -48,19 +30,17 @@ func show():
 	if managers and managers.size():
 		local_player = managers[0].get_local_player()
 		if local_player:
-			_load_inventory(local_player.inventory)
+			player_inventory_ui.load_inventory(local_player.inventory)
 
 
 # -----------------------------------------------------------------------------
-func _load_inventory(inventory : Inventory):
-	var stack_count = inventory.get_stack_count()
-	
-	for i in range(inventory_slots.size()):
-		
-		if i < stack_count:
-			inventory_slots[i].set_item_stack(inventory.item_stacks[i])
-		else:
-			inventory_slots[i].set_item_stack(null)
-	
+func _on_PlayerInventoryUI_slot_pressed(slot_index):
+	pass # Replace with function body.
+
+
+# -----------------------------------------------------------------------------
+func _on_DropPodInventoryUI_slot_pressed(slot_index):
+	pass # Replace with function body.
+
 
 # -----------------------------------------------------------------------------
