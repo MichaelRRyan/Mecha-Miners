@@ -10,7 +10,7 @@ var item_slots = []
 # ------------------------------------------------------------------------------
 func set_inventory(reference):
 	inventory = reference
-	
+
 
 # -----------------------------------------------------------------------------
 func refresh():
@@ -39,7 +39,7 @@ func remove_stack(stack_index):
 	
 # -----------------------------------------------------------------------------
 func get_item_stack(slot_index):
-	return item_slots[slot_index].get_item_stack()
+	return inventory.get_item_stack(slot_index)
 
 
 # -----------------------------------------------------------------------------

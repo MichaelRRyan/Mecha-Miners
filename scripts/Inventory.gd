@@ -9,7 +9,15 @@ var item_stacks = []
 # ------------------------------------------------------------------------------
 func get_stack_count():
 	return item_stacks.size()
+
 	
+# ------------------------------------------------------------------------------
+func get_item_stack(stack_index):
+	if stack_index < item_stacks.size():
+		return item_stacks[stack_index]
+	else:
+		return null
+
 
 # ------------------------------------------------------------------------------
 func get_gem_count():

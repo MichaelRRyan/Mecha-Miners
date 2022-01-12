@@ -115,6 +115,9 @@ text = "Drop Pod"
 margin_top = 267.0
 margin_bottom = 450.0
 
+[connection signal="pressed" from="HDivider/ActionsList/ResourcesActionList/DepositGems" to="." method="_on_DepositGems_pressed"]
+[connection signal="pressed" from="HDivider/ActionsList/ResourcesActionList/DepositAll" to="." method="_on_DepositAll_pressed"]
+[connection signal="pressed" from="HDivider/ActionsList/ResourcesActionList/WithdrawAll" to="." method="_on_WithdrawAll_pressed"]
 [connection signal="pressed" from="HDivider/ActionsList/ReturnToShip" to="." method="_on_ReturnToShip_pressed"]
 [connection signal="pressed" from="HDivider/ActionsList/CloseMenu" to="." method="_on_CloseMenu_pressed"]
 [connection signal="slot_pressed" from="HDivider/InventoryList/PlayerInventoryUI" to="." method="_on_PlayerInventoryUI_slot_pressed"]

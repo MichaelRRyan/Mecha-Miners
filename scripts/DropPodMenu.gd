@@ -10,24 +10,48 @@ onready var player_inventory_ui = $HDivider/InventoryList/PlayerInventoryUI
 onready var drop_pod_inventory_ui = $HDivider/InventoryList/DropPodInventoryUI
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func _ready():
 	drop_pod_inventory_ui.set_inventory(drop_pod_inventory)
 	drop_pod_inventory_ui.refresh()
 
-# -----------------------------------------------------------------------------
+
+# ------------------------------------------------------------------------------
+func _on_DepositGems_pressed():
+	for i in range(0, Inventory.SIZE):
+		var index = Inventory.SIZE - 1 - i
+		var stack = player_inventory_ui.get_item_stack(index)
+		if stack and stack.type == ItemData.ItemType.GEM:
+			_move_stack(index, player_inventory_ui, drop_pod_inventory_ui)
+			
+
+# ------------------------------------------------------------------------------
+func _on_DepositAll_pressed():
+	for i in range(0, Inventory.SIZE):
+		var index = Inventory.SIZE - 1 - i
+		_move_stack(index, player_inventory_ui, drop_pod_inventory_ui)
+
+
+# ------------------------------------------------------------------------------
+func _on_WithdrawAll_pressed():
+	for i in range(0, Inventory.SIZE):
+		var index = Inventory.SIZE - 1 - i
+		_move_stack(index, drop_pod_inventory_ui, player_inventory_ui)
+
+
+# ------------------------------------------------------------------------------
 func _on_ReturnToShip_pressed():
 	get_tree().paused = false
 	if get_tree().change_scene("res://scenes/screens/ShipScreen.tscn") != OK:
 		print("Error changing from DropPodMenu to ShipScreen.")
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func _on_CloseMenu_pressed():
 	emit_signal("menu_closed")
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func show():
 	visible = true
 	
@@ -44,24 +68,24 @@ func show():
 	player_inventory_ui.refresh()
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func hide():
 	visible = false
 	var gems = player_inventory_ui.inventory.get_gem_count()
 	emit_signal("gems_amount_changed", gems)
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func _on_PlayerInventoryUI_slot_pressed(slot_index):
 	_move_stack(slot_index, player_inventory_ui, drop_pod_inventory_ui)
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func _on_DropPodInventoryUI_slot_pressed(slot_index):
 	_move_stack(slot_index, drop_pod_inventory_ui, player_inventory_ui)
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func _move_stack(stack_index, from_inventory, to_inventory):
 	
 	# Tries to remove a stack at the specified index.
@@ -75,3 +99,6 @@ func _move_stack(stack_index, from_inventory, to_inventory):
 		# 	inventory.
 		if remainder:
 			from_inventory.add_stack(remainder)
+
+
+# ------------------------------------------------------------------------------
