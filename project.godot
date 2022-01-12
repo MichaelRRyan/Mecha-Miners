@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "Inventory",
+"language": "GDScript",
+"path": "res://scripts/Inventory.gd"
+} ]
+_global_script_class_icons={
+"Inventory": ""
+}
+
 [application]
 
 config/name="Mecha-Miners"
@@ -19,9 +29,11 @@ config/icon="res://assets/images/icon.png"
 
 Network="*res://scripts/Network.gd"
 GameState="*res://scripts/GameState.gd"
+ItemData="*res://scripts/ItemData.gd"
 
 [display]
 
+window/size/fullscreen=true
 window/stretch/mode="2d"
 window/stretch/aspect="expand"
 

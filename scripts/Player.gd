@@ -24,9 +24,10 @@ var velocity = Vector2.ZERO
 
 # -- Private Variables --
 var animation_id = 0
-var crystals = 0
 var respawning = false
 var was_on_floor = false
+
+var inventory = Inventory.new()
 
 onready var LandingParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 
@@ -233,16 +234,17 @@ func die():
 	
 	$Arms.set_process(false)
 	
+	var gems = inventory.count_and_remove_gems()
+	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
 		
 		var terrain = terrains[0]
 		
 		if (terrain.has_method("spawn_crystals")):
-			terrain.spawn_crystals(position, crystals)
+			terrain.spawn_crystals(position, gems)
 			
-	crystals = 0
-	emit_signal("crystal_amount_changed", crystals)
+	emit_signal("crystal_amount_changed", 0)
 	emit_signal("died")
 	
 	
@@ -255,9 +257,13 @@ func die():
 # -----------------------------------------------------------------------------
 func pickup_crystal():
 	if not respawning:
-		crystals += 1
-		emit_signal("crystal_amount_changed", crystals)
-		return true
+		var remainder = inventory.add_stack({ 
+			type = ItemData.ItemType.GEM,
+			quantity = 1,
+		})
+		if remainder == null:
+			emit_signal("crystal_amount_changed", inventory.get_gem_count())
+			return true
 	return false
 
 

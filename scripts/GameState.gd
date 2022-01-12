@@ -1,3 +1,3 @@
 extends Node
 
-var crystals_in_ship = 51
+var gems_in_ship = 51
