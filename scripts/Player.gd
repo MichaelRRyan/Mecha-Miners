@@ -36,14 +36,14 @@ enum AnimationName {
 	Idle = 0,
 	Jump = 1,
 	Walk = 2,
-	WalkReversed = 3
+	WalkReversed = 3,
 }
 
 var animation_names = [
 	"idle",
 	"jump",
 	"walk",
-	"walk_reversed"
+	"walk_reversed",
 ]
 
 # -- Param Map --

@@ -6,7 +6,7 @@ export var base_player_health : float = 5.0
 
 var spawn_point : Vector2 = Vector2.ZERO
 var players = {} # Peer id: player instance
-var local_player
+var local_player = null
 
 
 # -----------------------------------------------------------------------------
