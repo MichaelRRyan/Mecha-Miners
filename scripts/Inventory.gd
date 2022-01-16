@@ -1,6 +1,6 @@
 class_name Inventory
 
-const SIZE = 18
+export var size = 18
 
 # Contains ItemStacks = { type : ItemData.ItemType, quantity : int }
 var item_stacks = []
@@ -64,7 +64,7 @@ func add_stack(new_stack):
 	
 	# If there's still a stack, adds it to the end of the inventory if there's 
 	# 	space.
-	if remaining_stack and item_stacks.size() < SIZE:
+	if remaining_stack and item_stacks.size() < size:
 		item_stacks.append(remaining_stack)
 		return null
 	
