@@ -1,0 +1,124 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=1]
+[ext_resource path="res://scripts/DropPodMenu.gd" type="Script" id=2]
+[ext_resource path="res://scenes/ui/InventoryUI.tscn" type="PackedScene" id=3]
+
+[node name="DropPodMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = -50.0
+margin_bottom = -50.0
+theme = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.278431, 0.254902, 0.313726, 0.901961 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HDivider" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 25.0
+margin_top = 25.0
+margin_right = -25.0
+margin_bottom = -25.0
+custom_constants/separation = 40
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionsList" type="VBoxContainer" parent="HDivider"]
+margin_right = 417.0
+margin_bottom = 450.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="ActionsTitle" type="Label" parent="HDivider/ActionsList"]
+margin_right = 417.0
+margin_bottom = 36.0
+text = "Actions"
+
+[node name="ResourcesActionList" type="VBoxContainer" parent="HDivider/ActionsList"]
+margin_top = 46.0
+margin_right = 417.0
+margin_bottom = 346.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 10
+
+[node name="MoveResources" type="Button" parent="HDivider/ActionsList/ResourcesActionList"]
+margin_right = 417.0
+margin_bottom = 42.0
+text = "Move Resources"
+
+[node name="DepositGems" type="Button" parent="HDivider/ActionsList/ResourcesActionList"]
+margin_top = 52.0
+margin_right = 417.0
+margin_bottom = 94.0
+text = "Deposit Gems"
+
+[node name="DepositAll" type="Button" parent="HDivider/ActionsList/ResourcesActionList"]
+margin_top = 104.0
+margin_right = 417.0
+margin_bottom = 146.0
+text = "Deposit All"
+
+[node name="WithdrawAll" type="Button" parent="HDivider/ActionsList/ResourcesActionList"]
+margin_top = 156.0
+margin_right = 417.0
+margin_bottom = 198.0
+text = "Withdraw All"
+
+[node name="ReturnToShip" type="Button" parent="HDivider/ActionsList"]
+margin_top = 356.0
+margin_right = 417.0
+margin_bottom = 398.0
+text = "Return to Ship"
+
+[node name="CloseMenu" type="Button" parent="HDivider/ActionsList"]
+margin_top = 408.0
+margin_right = 417.0
+margin_bottom = 450.0
+text = "Close Menu"
+
+[node name="InventoryList" type="VBoxContainer" parent="HDivider"]
+margin_left = 457.0
+margin_right = 874.0
+margin_bottom = 450.0
+size_flags_horizontal = 3
+
+[node name="InventoryTitle" type="Label" parent="HDivider/InventoryList"]
+margin_right = 417.0
+margin_bottom = 36.0
+text = "Inventory"
+
+[node name="PlayerInventoryUI" parent="HDivider/InventoryList" instance=ExtResource( 3 )]
+
+[node name="DropPodTitle" type="Label" parent="HDivider/InventoryList"]
+margin_top = 227.0
+margin_right = 417.0
+margin_bottom = 263.0
+text = "Drop Pod"
+
+[node name="DropPodInventoryUI" parent="HDivider/InventoryList" instance=ExtResource( 3 )]
+margin_top = 267.0
+margin_bottom = 450.0
+
+[connection signal="pressed" from="HDivider/ActionsList/ResourcesActionList/DepositGems" to="." method="_on_DepositGems_pressed"]
+[connection signal="pressed" from="HDivider/ActionsList/ResourcesActionList/DepositAll" to="." method="_on_DepositAll_pressed"]
+[connection signal="pressed" from="HDivider/ActionsList/ResourcesActionList/WithdrawAll" to="." method="_on_WithdrawAll_pressed"]
+[connection signal="pressed" from="HDivider/ActionsList/ReturnToShip" to="." method="_on_ReturnToShip_pressed"]
+[connection signal="pressed" from="HDivider/ActionsList/CloseMenu" to="." method="_on_CloseMenu_pressed"]
+[connection signal="slot_pressed" from="HDivider/InventoryList/PlayerInventoryUI" to="." method="_on_PlayerInventoryUI_slot_pressed"]
+[connection signal="slot_pressed" from="HDivider/InventoryList/DropPodInventoryUI" to="." method="_on_DropPodInventoryUI_slot_pressed"]

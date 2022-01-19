@@ -6,6 +6,7 @@ export var friction_multiplier = 0.96
 var velocity = Vector2.ZERO
 var was_on_floor = false
 
+
 func _ready():
 	$ShadowSprite.hide()
 	$PickupParticles.restart()

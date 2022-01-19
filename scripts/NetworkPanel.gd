@@ -16,17 +16,6 @@ func _ready():
 			ip_adress =  IP.resolve_hostname(str(OS.get_environment("HOSTNAME")),1)
 	
 	$Content/IPLabel.text = "Private IP: " + ip_adress
-	
-
-# -----------------------------------------------------------------------------
-func _input(event):
-	if event is InputEventKey:
-		if event.is_action_pressed("toggle_network_panel"):
-			visible = !visible
-			get_tree().paused = visible
-		
-		if event.is_action_pressed("exit"):
-			get_tree().quit()
 
 
 # -----------------------------------------------------------------------------

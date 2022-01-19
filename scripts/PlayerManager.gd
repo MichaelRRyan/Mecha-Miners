@@ -6,12 +6,21 @@ export var base_player_health : float = 5.0
 
 var spawn_point : Vector2 = Vector2.ZERO
 var players = {} # Peer id: player instance
+var local_player = null
+
+
+# -----------------------------------------------------------------------------
+func get_local_player():
+	return local_player
 
 
 # -----------------------------------------------------------------------------
 func _ready():
+	local_player = $Player
 	spawn_point = $SpawnPoint.position
-	var _r = $Player.connect("died", self, "_on_player_died", [$Player])
+	
+	local_player.position = spawn_point
+	var _r = local_player.connect("died", self, "_on_player_died", [local_player])
 	
 	_r = Network.connect("player_connected", self, "_on_player_connected")
 	_r = Network.connect("player_disconnected", self, "_on_player_disconnected")
@@ -32,7 +41,7 @@ func _on_player_disconnected(peer_id):
 
 # -----------------------------------------------------------------------------
 func _on_connection_succeeded():
-	$Player.position = spawn_point
+	local_player.position = spawn_point
 	setup_player_for_network()
 
 

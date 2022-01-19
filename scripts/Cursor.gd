@@ -25,12 +25,23 @@ func _on_Detector_body_exited(_body):
 
 
 # -----------------------------------------------------------------------------
-# TEMPORARY.
-func _input(event):
-	if event is InputEventKey:
-		if event.is_action_pressed("toggle_network_panel"):
-			
-			if visible: Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-			else: Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-			
-			visible = !visible
+## TEMPORARY.
+#func _input(event):
+#	if event is InputEventKey:
+#		if event.is_action_pressed("toggle_network_panel"):
+#
+#			if visible: Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+#			else: Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+#
+#			visible = !visible
+
+
+# -----------------------------------------------------------------------------
+func _on_GUIManager_menu_toggled(opened):
+	if opened: Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	else: Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+	
+	visible = !opened
+
+
+# -----------------------------------------------------------------------------
