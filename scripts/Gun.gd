@@ -14,7 +14,7 @@ func _ready():
 
 
 # -----------------------------------------------------------------------------
-func shoot():
+func activate():
 	# If there's a reference to a bullet manager and cooldown has expired.
 	if bullet_manager and $CooldownTimer.is_stopped():	
 			

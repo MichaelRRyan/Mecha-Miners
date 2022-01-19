@@ -1,9 +1,9 @@
 extends Node2D
 
-onready var equiped1 = $Gun1
-onready var equiped2 = $Gun2
-onready var front_position = $Gun1.position.x
-onready var back_position = $Gun2.position.x
+onready var equiped1 = $Equiped1
+onready var equiped2 = $Equiped2
+onready var front_position = $Equiped1.position.x
+onready var back_position = $Equiped2.position.x
 
 
 # -----------------------------------------------------------------------------
@@ -53,11 +53,11 @@ func _process(_delta):
 	
 	if (equiped1.automatic and Input.is_action_pressed("action1")
 			or Input.is_action_just_pressed("action1")):
-				equiped1.shoot()
+				equiped1.activate()
 	
 	if (equiped2.automatic and Input.is_action_pressed("action2")
 			or Input.is_action_just_pressed("action2")):
-				equiped2.shoot()
+				equiped2.activate()
 
 
 # -----------------------------------------------------------------------------

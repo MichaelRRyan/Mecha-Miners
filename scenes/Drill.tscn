@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://scripts/Drill.gd" type="Script" id=2]
+
+[node name="Drill" type="Sprite"]
+position = Vector2( 6, 1 )
+z_index = -1
+texture = ExtResource( 1 )
+offset = Vector2( 4, -1 )
+hframes = 2
+frame = 1
+region_enabled = true
+region_rect = Rect2( 32, 64, 32, 16 )
+script = ExtResource( 2 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+position = Vector2( -5, 0 )
+cast_to = Vector2( 20, 0 )
