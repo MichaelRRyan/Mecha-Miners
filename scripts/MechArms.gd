@@ -1,18 +1,17 @@
 extends Node2D
 
-onready var equiped1 = $Equiped1
-onready var equiped2 = $Equiped2
-onready var front_position = $Equiped1.position.x
-onready var back_position = $Equiped2.position.x
+onready var equipped1 = $Equipped1
+onready var equipped2 = $Equipped2
+onready var front_position = $Equipped1.position.x
+onready var back_position = $Equipped2.position.x
 
 
 # -----------------------------------------------------------------------------
 func _ready():
 	var parent = get_parent()
 	if parent:
-		var rid = parent.get_rid()
-		equiped1.holder_rid = rid
-		equiped2.holder_rid = rid
+		equipped1.set_holder(parent)
+		equipped2.set_holder(parent)
 
 
 # -----------------------------------------------------------------------------
@@ -31,33 +30,33 @@ func _process(_delta):
 	scale.x = dir_sign
 
 	if flip:
-		equiped1.position.x = back_position
-		equiped2.position.x = front_position
-		equiped1.frame = 1
-		equiped2.frame = 0
+		equipped1.position.x = back_position
+		equipped2.position.x = front_position
+		equipped1.frame = 1
+		equipped2.frame = 0
 
 	else:
-		equiped1.position.x = front_position
-		equiped2.position.x = back_position
-		equiped1.frame = 0
-		equiped2.frame = 1
+		equipped1.position.x = front_position
+		equipped2.position.x = back_position
+		equipped1.frame = 0
+		equipped2.frame = 1
 	
-	equiped1.z_index = 2 * dir_sign
-	equiped2.z_index = -2 * dir_sign
+	equipped1.z_index = 2 * dir_sign
+	equipped2.z_index = -2 * dir_sign
 	
 	# Works out the angle to the mouse sets the equipment's rotation to it.
 	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
 	if flip: angle = deg2rad(180.0) - angle
-	equiped1.rotation = angle
-	equiped2.rotation = angle
+	equipped1.rotation = angle
+	equipped2.rotation = angle
 	
-	if (equiped1.automatic and Input.is_action_pressed("action1")
+	if (equipped1.automatic and Input.is_action_pressed("action1")
 			or Input.is_action_just_pressed("action1")):
-				equiped1.activate()
+				equipped1.activate()
 	
-	if (equiped2.automatic and Input.is_action_pressed("action2")
+	if (equipped2.automatic and Input.is_action_pressed("action2")
 			or Input.is_action_just_pressed("action2")):
-				equiped2.activate()
+				equipped2.activate()
 
 
 # -----------------------------------------------------------------------------
@@ -65,15 +64,15 @@ func get_sync_data():
 	return {
 		scale_x = scale.x,
 		
-		equiped1_position_x = equiped1.position.x,
-		equiped1_rotation = equiped1.rotation,
-		equiped1_z_index = equiped1.z_index,
-		equiped1_frame = equiped1.frame,
+		equipped1_position_x = equipped1.position.x,
+		equipped1_rotation = equipped1.rotation,
+		equipped1_z_index = equipped1.z_index,
+		equipped1_frame = equipped1.frame,
 		
-		equiped2_position_x = equiped2.position.x,
-		equiped2_rotation = equiped2.rotation,
-		equiped2_z_index = equiped2.z_index,
-		equiped2_frame = equiped2.frame,
+		equipped2_position_x = equipped2.position.x,
+		equipped2_rotation = equipped2.rotation,
+		equipped2_z_index = equipped2.z_index,
+		equipped2_frame = equipped2.frame,
 	}
 
 
@@ -81,15 +80,15 @@ func get_sync_data():
 func apply_sync_date(data):
 	scale.x = data.scale_x
 	
-	equiped1.position.x = data.equiped1_position_x
-	equiped1.rotation =	data.equiped1_rotation
-	equiped1.z_index = data.equiped1_z_index
-	equiped1.frame = data.equiped1_frame
+	equipped1.position.x = data.equipped1_position_x
+	equipped1.rotation =	data.equipped1_rotation
+	equipped1.z_index = data.equipped1_z_index
+	equipped1.frame = data.equipped1_frame
 	
-	equiped2.position.x = data.equiped2_position_x
-	equiped2.rotation =	data.equiped2_rotation
-	equiped2.z_index = data.equiped2_z_index
-	equiped2.frame = data.equiped2_frame
+	equipped2.position.x = data.equipped2_position_x
+	equipped2.rotation =	data.equipped2_rotation
+	equipped2.z_index = data.equipped2_z_index
+	equipped2.frame = data.equipped2_frame
 
 
 # -----------------------------------------------------------------------------

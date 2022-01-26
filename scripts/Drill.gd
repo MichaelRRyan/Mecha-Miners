@@ -1,12 +1,12 @@
-extends Sprite
-
-export var automatic = true
-var holder_rid = null
+extends "res://scripts/equipment/Tool.gd"
 
 onready var _raycast = $RayCast2D
 
+
 # -----------------------------------------------------------------------------
+# An override of the Tool base class's activate method.
 func activate():
+	_raycast.global_position = _holder.global_position
 	_raycast.force_raycast_update()
 	
 	if _raycast.is_colliding():

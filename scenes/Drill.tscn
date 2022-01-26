@@ -13,6 +13,7 @@ frame = 1
 region_enabled = true
 region_rect = Rect2( 32, 64, 32, 16 )
 script = ExtResource( 2 )
+automatic = true
 
 [node name="RayCast2D" type="RayCast2D" parent="."]
 position = Vector2( -5, 0 )
