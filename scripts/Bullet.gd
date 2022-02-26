@@ -66,8 +66,6 @@ func __check_for_collision():
 			terrain.damage_tile(tile_pos, 1)
 		
 			position = collision_point
-		
-			# Call on_impact stop looping.
 			__on_impact()
 			
 		elif collider.is_in_group("player"):

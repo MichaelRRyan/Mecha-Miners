@@ -1,10 +1,11 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=2]
 [ext_resource path="res://scenes/Gun.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scenes/Jetpack.tscn" type="PackedScene" id=4]
 [ext_resource path="res://scripts/MechArms.gd" type="Script" id=5]
+[ext_resource path="res://scenes/Drill.tscn" type="PackedScene" id=6]
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 1 )
@@ -13,22 +14,6 @@ region = Rect2( 0, 64, 32, 32 )
 [sub_resource type="AtlasTexture" id=11]
 atlas = ExtResource( 1 )
 region = Rect2( 64, 64, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=3]
-atlas = ExtResource( 1 )
-region = Rect2( 0, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=4]
-atlas = ExtResource( 1 )
-region = Rect2( 32, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=5]
-atlas = ExtResource( 1 )
-region = Rect2( 64, 96, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=6]
-atlas = ExtResource( 1 )
-region = Rect2( 96, 96, 32, 32 )
 
 [sub_resource type="AtlasTexture" id=7]
 atlas = ExtResource( 1 )
@@ -46,6 +31,22 @@ region = Rect2( 0, 96, 32, 32 )
 atlas = ExtResource( 1 )
 region = Rect2( 96, 96, 32, 32 )
 
+[sub_resource type="AtlasTexture" id=3]
+atlas = ExtResource( 1 )
+region = Rect2( 0, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=4]
+atlas = ExtResource( 1 )
+region = Rect2( 32, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=5]
+atlas = ExtResource( 1 )
+region = Rect2( 64, 96, 32, 32 )
+
+[sub_resource type="AtlasTexture" id=6]
+atlas = ExtResource( 1 )
+region = Rect2( 96, 96, 32, 32 )
+
 [sub_resource type="SpriteFrames" id=12]
 animations = [ {
 "frames": [ SubResource( 2 ) ],
@@ -58,14 +59,14 @@ animations = [ {
 "name": "jump",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
-"loop": true,
-"name": "walk",
-"speed": 10.0
-}, {
 "frames": [ SubResource( 7 ), SubResource( 8 ), SubResource( 9 ), SubResource( 10 ) ],
 "loop": true,
 "name": "walk_reversed",
+"speed": 10.0
+}, {
+"frames": [ SubResource( 3 ), SubResource( 4 ), SubResource( 5 ), SubResource( 6 ) ],
+"loop": true,
+"name": "walk",
 "speed": 10.0
 } ]
 
@@ -97,14 +98,11 @@ shape = SubResource( 13 )
 [node name="Arms" type="Node2D" parent="."]
 script = ExtResource( 5 )
 
-[node name="Gun1" parent="Arms" instance=ExtResource( 3 )]
+[node name="Equipped1" parent="Arms" instance=ExtResource( 3 )]
 position = Vector2( -1.5, 1 )
 z_index = 2
 
-[node name="Gun2" parent="Arms" instance=ExtResource( 3 )]
-position = Vector2( 6, 1 )
-z_index = -1
-frame = 1
+[node name="Equipped2" parent="Arms" instance=ExtResource( 6 )]
 
 [node name="Feet" type="Node2D" parent="."]
 position = Vector2( 0, 9 )
