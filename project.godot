@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Inventory",
 "language": "GDScript",
-"path": "res://scripts/Inventory.gd"
+"path": "res://scripts/classes/Inventory.gd"
 }, {
 "base": "Reference",
 "class": "Item",

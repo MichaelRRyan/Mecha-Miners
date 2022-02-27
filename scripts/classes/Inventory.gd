@@ -7,7 +7,7 @@ var item_stacks = []
 
 
 # ------------------------------------------------------------------------------
-func get_stack_count():
+func get_stack_count() -> int:
 	return item_stacks.size()
 
 	
@@ -20,7 +20,7 @@ func get_item_stack(stack_index):
 
 
 # ------------------------------------------------------------------------------
-func get_gem_count():
+func get_gem_count() -> int:
 	var count = 0
 	
 	for stack in item_stacks:
@@ -31,7 +31,7 @@ func get_gem_count():
 
 
 # ------------------------------------------------------------------------------
-func count_and_remove_gems():
+func count_and_remove_gems() -> int:
 	var count = 0
 	var deletion_queue = []
 	
@@ -54,6 +54,7 @@ func remove_stack(stack_index):
 		return stack
 		
 	return null
+
 
 # ------------------------------------------------------------------------------
 func add_stack(new_stack):
