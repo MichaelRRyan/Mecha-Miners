@@ -13,16 +13,34 @@ _global_script_classes=[ {
 "class": "Inventory",
 "language": "GDScript",
 "path": "res://scripts/Inventory.gd"
+}, {
+"base": "Reference",
+"class": "Item",
+"language": "GDScript",
+"path": "res://scripts/classes/ItemCategories.gd"
+}, {
+"base": "Reference",
+"class": "ItemStack",
+"language": "GDScript",
+"path": "res://scripts/classes/ItemStack.gd"
+}, {
+"base": "Reference",
+"class": "ItemType",
+"language": "GDScript",
+"path": "res://scripts/classes/ItemType.gd"
 } ]
 _global_script_class_icons={
-"Inventory": ""
+"Inventory": "",
+"Item": "",
+"ItemStack": "",
+"ItemType": ""
 }
 
 [application]
 
 config/name="Mecha-Miners"
 config/description="Descend into the depths of volatile planets to claim the crypto treasures of its core before it explodes!"
-run/main_scene="res://scenes/screens/ShipScreen.tscn"
+run/main_scene="res://scenes/Gameplay.tscn"
 config/icon="res://assets/images/icon.png"
 
 [autoload]
@@ -30,6 +48,7 @@ config/icon="res://assets/images/icon.png"
 Network="*res://scripts/Network.gd"
 GameState="*res://scripts/GameState.gd"
 ItemData="*res://scripts/ItemData.gd"
+Utility="*res://scripts/Utility.gd"
 
 [display]
 
