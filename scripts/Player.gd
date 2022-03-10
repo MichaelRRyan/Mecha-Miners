@@ -197,8 +197,8 @@ func __handle_horizontal_movement(delta):
 
 # -----------------------------------------------------------------------------
 func __handle_sprite_flip():
-	var dir_to_mouse = get_global_mouse_position().x - global_position.x
-	$AnimatedSprite.flip_h = dir_to_mouse < 0.0
+	var dir_to_target = _target.x - global_position.x
+	$AnimatedSprite.flip_h = dir_to_target < 0.0
 
 
 # -----------------------------------------------------------------------------
