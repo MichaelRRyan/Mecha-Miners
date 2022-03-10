@@ -100,6 +100,11 @@ func _get_property_list():
 	
 
 # -----------------------------------------------------------------------------
+func get_target() -> Vector2:
+	return _target
+	
+
+# -----------------------------------------------------------------------------
 func _physics_process(delta):
 	# Don't process if in the editor.
 	if Engine.editor_hint:
@@ -131,24 +136,24 @@ func __handle_vertical_movement(delta):
 	if is_human:
 		# If the jump input was just pressed.
 		if Input.is_action_just_pressed("jump"):
-			_jump(delta)
+			jump(delta)
 			
 		# If already flying and the jump button is down, keep flying.
 		elif Input.is_action_pressed("jump") and $Jetpack.is_flying():
-			_thrust_jetpack(delta)
+			thrust_jetpack(delta)
 
 
 # -----------------------------------------------------------------------------
-func _jump(delta):
+func jump(delta):
 	# Adds the jump speed to velocity if on the ground.
 	if is_on_floor(): velocity.y = jump_speed
 	
 	# If not on the ground, begin flying.
-	else: _thrust_jetpack(delta)
+	else: thrust_jetpack(delta)
 
 
 # -----------------------------------------------------------------------------
-func _thrust_jetpack(delta):
+func thrust_jetpack(delta):
 	$Jetpack.activate(delta)
 
 
@@ -265,7 +270,8 @@ func die():
 # -----------------------------------------------------------------------------
 func _input(event):
 	
-	if is_human and event is InputEventMouseMotion:
+	#if is_human and event is InputEventMouseMotion:
+	if event is InputEventMouseMotion:
 		_target = get_global_mouse_position()
 	
 #	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():

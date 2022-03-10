@@ -1,5 +1,6 @@
 extends AIBehaviours # So we can access all behaviours without prefix.
 
+var subject : Node2D = null
 var _behaviour_stack : Array = []
 
 
@@ -48,7 +49,8 @@ func _disable(behaviour : Behaviour) -> void:
 
 #-------------------------------------------------------------------------------
 func _ready() -> void:
-	add_behaviour(IdleBehaviour.new())
+	subject = get_parent()
+	add_behaviour(PursueBehaviour.new())
 
 
 #-------------------------------------------------------------------------------

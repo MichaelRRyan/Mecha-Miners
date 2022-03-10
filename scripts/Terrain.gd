@@ -27,6 +27,18 @@ export var tile_heal_time = 1.0
 # A dictionary of tile position keys to tile health values.
 var damaged_tiles = {}
 var crystal_container = null
+var _pathfinding : AStar2D = AStar2D.new()
+
+
+
+# -----------------------------------------------------------------------------
+func get_pathfinding() -> AStar2D:
+	return _pathfinding
+	
+	
+# -----------------------------------------------------------------------------
+func get_cell_size() -> Vector2:
+	return cell_size
 
 
 # -----------------------------------------------------------------------------
@@ -36,6 +48,8 @@ func _ready():
 		crystal_container = containers[0]
 	else:
 		crystal_container = self
+		
+	_generate_pathfinding_grid()
 
 
 # -----------------------------------------------------------------------------
@@ -130,5 +144,25 @@ func spawn_crystals(_position, amount):
 		crystal.position = _position
 		crystal.velocity = Vector2(rand_range(-50, 50), rand_range(-100, -10))
 		
+
+# -----------------------------------------------------------------------------
+func _generate_pathfinding_grid() -> void:
+	for x in range(-100, 100):
+		for y in range(-50, 100):
+			
+			if get_cell(x, y) == TileType.Empty:
+				var new_point = _pathfinding.get_available_point_id()
+				_pathfinding.add_point(new_point, Vector2(x, y))
+				
+				if get_cell(x - 1, y) == TileType.Empty:
+					var other_point = _pathfinding.get_closest_point(Vector2(x - 1, y))
+					if other_point != new_point:
+						_pathfinding.connect_points(other_point, new_point)
+				
+				if get_cell(x, y - 1) == TileType.Empty:
+					var other_point = _pathfinding.get_closest_point(Vector2(x, y - 1))
+					if other_point != new_point:
+						_pathfinding.connect_points(other_point, new_point)
+
 
 # -----------------------------------------------------------------------------
