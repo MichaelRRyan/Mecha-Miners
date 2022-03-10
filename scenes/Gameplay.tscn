@@ -22,12 +22,16 @@ position = Vector2( 64, 111 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 1 )]
 position = Vector2( 90.4262, 116.708 )
+is_human = true
 
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player"]
 scale = Vector2( 2, 2 )
 current = true
 zoom = Vector2( 0.5, 0.5 )
 smoothing_enabled = true
+
+[node name="Player2" parent="PlayerManager" instance=ExtResource( 1 )]
+position = Vector2( -37.1231, 148.846 )
 
 [node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
 script = ExtResource( 4 )
