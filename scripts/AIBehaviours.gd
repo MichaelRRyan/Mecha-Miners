@@ -34,16 +34,20 @@ class PursueBehaviour:
 	extends Behaviour
 	
 	var _cell_size : Vector2 = Vector2.ZERO
+	var _cell_size_squared : float = 0.0
 	var _pathfinding : AStar2D = null
-	var _path : PoolVector2Array
+	var _path : PoolIntArray
 	var _last_target : Vector2 = Vector2.ZERO
 	
+	
+	#---------------------------------------------------------------------------
 	func _ready():
 		var terrain_container = get_tree().get_nodes_in_group("terrain")
 		if not terrain_container.empty():
 			var terrain = terrain_container.front()
 			_pathfinding = terrain.get_pathfinding()
 			_cell_size = terrain.get_cell_size()
+			_cell_size_squared = _cell_size.length_squared()
 			
 	
 	#---------------------------------------------------------------------------
@@ -55,17 +59,25 @@ class PursueBehaviour:
 			
 			var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
 			var target_point = _pathfinding.get_closest_point(target)
-			_path = _pathfinding.get_point_path(subject_point, target_point)
+			_path = _pathfinding.get_id_path(subject_point, target_point)
 			
 		if _path and _path.size() > 1:
-			var next_pos = (Vector2(_path[1].x, _path[1].y))# * _cell_size
-				#+_cell_size * 0.5)
-				
-			if next_pos.y < _brain.subject.position.y:
-				_brain.subject.thrust_jetpack(delta)
 			
-			if next_pos.y - _brain.subject.position.y < _cell_size.y:
+			var next_pos = _pathfinding.get_point_position(_path[1])
+			var dist_squared = (next_pos - _brain.subject.position).length_squared()
+			
+			if dist_squared < _cell_size_squared:
 				_path.remove(0)
+			
+			if _path.size() > 1:
+				next_pos = _pathfinding.get_point_position(_path[1])
+					
+				_brain.subject.direction = sign(next_pos.x - _brain.subject.position.x)
+				
+				if next_pos.y < _brain.subject.position.y:
+					_brain.subject.thrust_jetpack(delta)
+			
+			
 
 
 #-------------------------------------------------------------------------------

@@ -27,6 +27,7 @@ var animation_id = 0
 var respawning = false
 var was_on_floor = false
 var _target = Vector2.ZERO
+var direction : float = 0.0
 
 var inventory = Inventory.new()
 
@@ -160,9 +161,7 @@ func thrust_jetpack(delta):
 # -----------------------------------------------------------------------------
 func __handle_horizontal_movement(delta):
 	
-	# Get the horizontal input.
-	var direction = 0
-	
+	# Get the horizontal input if human controlled.
 	if is_human:
 		direction = (Input.get_action_strength("move_right") - 
 					 Input.get_action_strength("move_left"))

@@ -150,17 +150,17 @@ func _generate_pathfinding_grid() -> void:
 	for x in range(-100, 100):
 		for y in range(-50, 100):
 			
-			if get_cell(x, y) == TileType.Empty:
+			if get_cell(x, y) == TileType.Empty:		
 				var new_point = _pathfinding.get_available_point_id()
-				_pathfinding.add_point(new_point, Vector2(x, y))
+				_pathfinding.add_point(new_point, Vector2(x * cell_size.x, y * cell_size.y))
 				
 				if get_cell(x - 1, y) == TileType.Empty:
-					var other_point = _pathfinding.get_closest_point(Vector2(x - 1, y))
+					var other_point = _pathfinding.get_closest_point(Vector2((x - 1)  * cell_size.x, y * cell_size.y))
 					if other_point != new_point:
 						_pathfinding.connect_points(other_point, new_point)
 				
 				if get_cell(x, y - 1) == TileType.Empty:
-					var other_point = _pathfinding.get_closest_point(Vector2(x, y - 1))
+					var other_point = _pathfinding.get_closest_point(Vector2(x * cell_size.x, (y - 1)  * cell_size.y))
 					if other_point != new_point:
 						_pathfinding.connect_points(other_point, new_point)
 
