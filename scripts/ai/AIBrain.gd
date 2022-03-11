@@ -17,7 +17,7 @@ func get_target() -> Vector2:
 
 #-------------------------------------------------------------------------------
 # Adds a behaviour to the top of the stack (becomes the current behaviour).
-func add_behaviour(new_behaviour : Behaviour) -> void:
+func add_behaviour(new_behaviour) -> void:
 	assert(false)
 
 
@@ -29,7 +29,7 @@ func pop_behaviour() -> void:
 
 #-------------------------------------------------------------------------------
 # Switches the current running behaviour with another, removing the original.
-func change_behaviour(new_behaviour : Behaviour) -> void:
+func change_behaviour(new_behaviour) -> void:
 	assert(false)
 
 
