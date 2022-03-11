@@ -34,6 +34,9 @@ var inventory = Inventory.new()
 onready var LandingParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 
 
+var _temp = true
+
+
 enum AnimationName {
 	Idle = 0,
 	Jump = 1,
@@ -104,6 +107,12 @@ func _get_property_list():
 func get_target() -> Vector2:
 	return _target
 	
+
+# -----------------------------------------------------------------------------
+func set_target(pos : Vector2) -> void:
+	_target = pos
+	_temp = false
+
 
 # -----------------------------------------------------------------------------
 func _physics_process(delta):
@@ -270,7 +279,7 @@ func die():
 func _input(event):
 	
 	#if is_human and event is InputEventMouseMotion:
-	if event is InputEventMouseMotion:
+	if (is_human or _temp) and event is InputEventMouseMotion:
 		_target = get_global_mouse_position()
 	
 #	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():

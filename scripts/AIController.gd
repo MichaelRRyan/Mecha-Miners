@@ -37,9 +37,9 @@ func change_behaviour(new_behaviour : Behaviour) -> void:
 
 #-------------------------------------------------------------------------------
 func _set_as_current(behaviour : Behaviour) -> void:
-	add_child(behaviour)
 	behaviour.owner = self
 	behaviour.set_brain(self)
+	add_child(behaviour)
 
 
 #-------------------------------------------------------------------------------

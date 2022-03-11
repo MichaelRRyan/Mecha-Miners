@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 class_name AIBehaviours
 
 #---------------------------------------------------------------------------
@@ -33,9 +33,11 @@ class IdleBehaviour:
 class PursueBehaviour:
 	extends Behaviour
 	
+	var _terrain : TileMap = null
+	var _pathfinding : AStar2D = null
+	
 	var _cell_size : Vector2 = Vector2.ZERO
 	var _cell_size_squared : float = 0.0
-	var _pathfinding : AStar2D = null
 	var _path : PoolIntArray
 	var _last_target : Vector2 = Vector2.ZERO
 	
@@ -44,10 +46,14 @@ class PursueBehaviour:
 	func _ready():
 		var terrain_container = get_tree().get_nodes_in_group("terrain")
 		if not terrain_container.empty():
-			var terrain = terrain_container.front()
-			_pathfinding = terrain.get_pathfinding()
-			_cell_size = terrain.get_cell_size()
+			_terrain = terrain_container.front()
+			_pathfinding = _terrain.get_pathfinding()
+			_cell_size = _terrain.get_cell_size()
 			_cell_size_squared = _cell_size.length_squared()
+		
+		var sensor : Node2D = _brain.find_node("MineralSensor")
+		if sensor:
+			sensor.connect("crystal_found", self, "_on_MineralSensor_crystal_found")
 			
 	
 	#---------------------------------------------------------------------------
@@ -76,8 +82,13 @@ class PursueBehaviour:
 				
 				if next_pos.y < _brain.subject.position.y:
 					_brain.subject.thrust_jetpack(delta)
+			else:
+				_brain.subject.direction = 0.0
 			
 			
+	#---------------------------------------------------------------------------
+	func _on_MineralSensor_crystal_found(cell_position):
+		_brain.subject.set_target(_terrain.map_to_world(cell_position))
 
 
 #-------------------------------------------------------------------------------
