@@ -1,6 +1,6 @@
 extends Node2D
 
-signal crystal_found(cell_position)
+signal mineral_found(mineral_cell)
 
 var _terrain : TileMap = null
 
@@ -24,7 +24,7 @@ func _process(delta):
 		var cell_pos = _terrain.world_to_map(pos)
 		
 		if _terrain.get_cellv(cell_pos) == _terrain.TileType.Crystal:
-			emit_signal("crystal_found", cell_pos)
+			emit_signal("mineral_found", cell_pos)
 	
 	update()
 

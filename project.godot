@@ -9,19 +9,49 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "Node2D",
-"class": "AIBehaviours",
+"base": "Node",
+"class": "Behaviour",
 "language": "GDScript",
-"path": "res://scripts/AIBehaviours.gd"
+"path": "res://scripts/ai/behaviours/Behaviour.gd"
+}, {
+"base": "Behaviour",
+"class": "DestroyCellBehaviour",
+"language": "GDScript",
+"path": "res://scripts/ai/behaviours/DestroyCellBehaviour.gd"
+}, {
+"base": "Behaviour",
+"class": "HarvestMineralsBehaviour",
+"language": "GDScript",
+"path": "res://scripts/ai/behaviours/HarvestMineralsBehaviour.gd"
+}, {
+"base": "Behaviour",
+"class": "IdleBehaviour",
+"language": "GDScript",
+"path": "res://scripts/ai/behaviours/IdleBehaviour.gd"
 }, {
 "base": "Reference",
 "class": "Inventory",
 "language": "GDScript",
 "path": "res://scripts/Inventory.gd"
+}, {
+"base": "Behaviour",
+"class": "PursueBehaviour",
+"language": "GDScript",
+"path": "res://scripts/ai/behaviours/PursueBehaviour.gd"
+}, {
+"base": "TileMap",
+"class": "Terrain",
+"language": "GDScript",
+"path": "res://scripts/Terrain.gd"
 } ]
 _global_script_class_icons={
-"AIBehaviours": "",
-"Inventory": ""
+"Behaviour": "",
+"DestroyCellBehaviour": "",
+"HarvestMineralsBehaviour": "",
+"IdleBehaviour": "",
+"Inventory": "",
+"PursueBehaviour": "",
+"Terrain": ""
 }
 
 [application]
@@ -39,7 +69,6 @@ ItemData="*res://scripts/ItemData.gd"
 
 [display]
 
-window/size/fullscreen=true
 window/stretch/mode="2d"
 window/stretch/aspect="expand"
 

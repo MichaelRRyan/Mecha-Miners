@@ -1,7 +1,17 @@
-extends AIBehaviours # So we can access all behaviours without prefix.
+extends Node2D
 
 var subject : Node2D = null
 var _behaviour_stack : Array = []
+
+
+#-------------------------------------------------------------------------------
+func set_target(new_target : Vector2) -> void:
+	subject.set_target(new_target)
+
+
+#-------------------------------------------------------------------------------
+func get_target() -> Vector2:
+	return subject.get_target()
 
 
 #-------------------------------------------------------------------------------
@@ -20,12 +30,15 @@ func pop_behaviour() -> void:
 	if not _behaviour_stack.empty():
 		
 		var behaviour = _behaviour_stack.pop_back()
+		#print("AI " + subject.name + " exiting " + behaviour.get_class())
 		_disable(behaviour)
 		behaviour.queue_free()
 		
 		# If still not empty.
 		if not _behaviour_stack.empty():
 			_set_as_current(_behaviour_stack.back())
+		else:
+			add_behaviour(IdleBehaviour.new())
 
 
 #-------------------------------------------------------------------------------
@@ -37,7 +50,7 @@ func change_behaviour(new_behaviour : Behaviour) -> void:
 
 #-------------------------------------------------------------------------------
 func _set_as_current(behaviour : Behaviour) -> void:
-	behaviour.owner = self
+	#print("AI " + subject.name + " entering " + behaviour.get_class())
 	behaviour.set_brain(self)
 	add_child(behaviour)
 
@@ -50,7 +63,7 @@ func _disable(behaviour : Behaviour) -> void:
 #-------------------------------------------------------------------------------
 func _ready() -> void:
 	subject = get_parent()
-	add_behaviour(PursueBehaviour.new())
+	add_behaviour(IdleBehaviour.new())
 
 
 #-------------------------------------------------------------------------------

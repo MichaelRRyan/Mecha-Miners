@@ -1,4 +1,5 @@
 extends TileMap
+class_name Terrain
 
 onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
 
@@ -29,6 +30,15 @@ var damaged_tiles = {}
 var crystal_container = null
 var _pathfinding : AStar2D = AStar2D.new()
 
+
+# -----------------------------------------------------------------------------
+func is_mineral(cell_position : Vector2) -> bool:
+	return TileType.Crystal == get_cellv(cell_position)
+
+
+# -----------------------------------------------------------------------------
+func map_to_world_centred(cell_position : Vector2) -> Vector2:
+	return map_to_world(cell_position) + (get_cell_size() * 0.5)
 
 
 # -----------------------------------------------------------------------------

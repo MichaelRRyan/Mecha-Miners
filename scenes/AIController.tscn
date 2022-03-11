@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://scripts/AIController.gd" type="Script" id=1]
+[ext_resource path="res://scripts/ai/AIController.gd" type="Script" id=1]
 [ext_resource path="res://scripts/ai/MineralSensor.gd" type="Script" id=2]
 
 [node name="AIController" type="Node2D"]
