@@ -1,7 +1,7 @@
 class_name Behaviour
 extends Node
 
-var _brain = null setget set_brain
+var _brain : AIBrain = null setget set_brain
 
 
 #-------------------------------------------------------------------------------

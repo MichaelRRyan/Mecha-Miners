@@ -1,6 +1,5 @@
-extends Node2D
+extends AIBrain
 
-var subject : Node2D = null
 var _behaviour_stack : Array = []
 
 
@@ -64,11 +63,6 @@ func _disable(behaviour : Behaviour) -> void:
 func _ready() -> void:
 	subject = get_parent()
 	add_behaviour(IdleBehaviour.new())
-
-
-#-------------------------------------------------------------------------------
-func _process(_delta : float) -> void:
-	pass
 
 
 #-------------------------------------------------------------------------------
