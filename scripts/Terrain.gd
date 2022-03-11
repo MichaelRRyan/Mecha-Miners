@@ -144,6 +144,11 @@ func __destroy_tile(tile_position : Vector2):
 	# Removes the damage information and visual.
 	damaged_tiles.erase(tile_position)
 	$DamageIndicators.set_cellv(tile_position, -1)
+	
+	var new_point = _pathfinding.get_available_point_id()
+	var centred_pos = map_to_world_centred(tile_position)
+	_pathfinding.add_point(new_point, centred_pos)
+	_update_pathfinding_connections(tile_position, new_point)
 
 
 # -----------------------------------------------------------------------------
@@ -162,17 +167,29 @@ func _generate_pathfinding_grid() -> void:
 			
 			if get_cell(x, y) == TileType.Empty:		
 				var new_point = _pathfinding.get_available_point_id()
-				_pathfinding.add_point(new_point, Vector2(x * cell_size.x, y * cell_size.y))
+				_pathfinding.add_point(new_point, map_to_world_centred(Vector2(x, y)))
 				
 				if get_cell(x - 1, y) == TileType.Empty:
-					var other_point = _pathfinding.get_closest_point(Vector2((x - 1)  * cell_size.x, y * cell_size.y))
+					var other_point = _pathfinding.get_closest_point(map_to_world_centred(Vector2(x - 1, y)))
 					if other_point != new_point:
 						_pathfinding.connect_points(other_point, new_point)
 				
 				if get_cell(x, y - 1) == TileType.Empty:
-					var other_point = _pathfinding.get_closest_point(Vector2(x * cell_size.x, (y - 1)  * cell_size.y))
+					var other_point = _pathfinding.get_closest_point(map_to_world_centred(Vector2(x, y - 1)))
 					if other_point != new_point:
 						_pathfinding.connect_points(other_point, new_point)
 
 
 # -----------------------------------------------------------------------------
+func _update_pathfinding_connections(cell_position : Vector2, new_point_id : int) -> void:
+	var dir = Vector2.RIGHT
+	
+	for _i in range(4):
+		var next_cell = cell_position + dir
+		
+		if get_cellv(next_cell) == TileType.Empty or get_cellv(next_cell) == TileType.Background:
+			var other_point = _pathfinding.get_closest_point(map_to_world_centred(next_cell))
+			if other_point != new_point_id:
+				_pathfinding.connect_points(other_point, new_point_id)
+		
+		dir = Vector2(-dir.y, dir.x)

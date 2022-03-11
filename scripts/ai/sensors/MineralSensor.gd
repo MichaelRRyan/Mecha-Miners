@@ -9,13 +9,15 @@ var _scan_rotation = PI * 0.8 # The direction and magnitude of the rotation per 
 var _scan_distance = 100.0
 var _scan_segment = 8.0
 
-
+		
+#-------------------------------------------------------------------------------
 func _ready():
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
 		_terrain = terrain_container.front()
 
-
+		
+#-------------------------------------------------------------------------------
 func _process(delta):
 	_scan_direction = _scan_direction.rotated(_scan_rotation * delta)
 	
@@ -28,6 +30,10 @@ func _process(delta):
 	
 	update()
 
+		
+#-------------------------------------------------------------------------------
+#func _draw():
+#	draw_line(Vector2.ZERO, _scan_direction * _scan_distance, Color.red, 1.0)
 
-func _draw():
-	draw_line(Vector2.ZERO, _scan_direction * _scan_distance, Color.red, 1.0)
+		
+#-------------------------------------------------------------------------------

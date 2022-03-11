@@ -5,19 +5,19 @@ var subject : Node2D = null
 
 
 #-------------------------------------------------------------------------------
-func set_target(new_target : Vector2) -> void:
+func set_target(_new_target : Vector2) -> void:
 	assert(false)
 
 
 #-------------------------------------------------------------------------------
 func get_target() -> Vector2:
-	return Vector2.ZERO
 	assert(false)
+	return Vector2.ZERO
 
 
 #-------------------------------------------------------------------------------
 # Adds a behaviour to the top of the stack (becomes the current behaviour).
-func add_behaviour(new_behaviour) -> void:
+func add_behaviour(_new_behaviour) -> void:
 	assert(false)
 
 
@@ -29,7 +29,7 @@ func pop_behaviour() -> void:
 
 #-------------------------------------------------------------------------------
 # Switches the current running behaviour with another, removing the original.
-func change_behaviour(new_behaviour) -> void:
+func change_behaviour(_new_behaviour) -> void:
 	assert(false)
 
 

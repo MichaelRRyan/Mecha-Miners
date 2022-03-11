@@ -1,17 +1,17 @@
 class_name Behaviour
-extends Node
+extends Node2D
 
 var _brain : AIBrain = null setget set_brain
 
 
 #-------------------------------------------------------------------------------
-func set_brain(brain) -> void:
-	_brain = brain
+func get_class() -> String:
+	return "Behaviour"
 
 
 #-------------------------------------------------------------------------------
-func get_class() -> String:
-	return "Behaviour"
+func set_brain(brain : AIBrain) -> void:
+	_brain = brain
 
 
 #-------------------------------------------------------------------------------

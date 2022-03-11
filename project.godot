@@ -14,7 +14,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/ai/AIBrain.gd"
 }, {
-"base": "Node",
+"base": "Node2D",
 "class": "Behaviour",
 "language": "GDScript",
 "path": "res://scripts/ai/behaviours/Behaviour.gd"

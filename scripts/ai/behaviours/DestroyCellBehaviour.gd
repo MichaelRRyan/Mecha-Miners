@@ -12,12 +12,17 @@ var _mech_arms = null
 
 
 #-------------------------------------------------------------------------------
-func _init(target_cell):
+func get_class() -> String:
+	return "DestroyCellBehaviour"
+
+
+#-------------------------------------------------------------------------------
+func _init(target_cell : Vector2) -> void:
 	_target_cell = target_cell
 	
 	
 #-------------------------------------------------------------------------------
-func _ready():
+func _ready() -> void:
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
 		_terrain = terrain_container.front()
@@ -33,7 +38,7 @@ func _ready():
 
 
 #-------------------------------------------------------------------------------
-func _process(_delta):
+func _process(_delta : float) -> void:
 	_mech_arms.equipped1.activate()
 	_mech_arms.equipped2.activate()
 	
@@ -42,11 +47,6 @@ func _process(_delta):
 		_brain.subject.set_target(_previous_target)
 		_brain.pop_behaviour()
 		emit_signal("cell_destroyed")
-
-
-#-------------------------------------------------------------------------------
-func get_class() -> String:
-	return "DestroyCellBehaviour"
 
 
 #-------------------------------------------------------------------------------
