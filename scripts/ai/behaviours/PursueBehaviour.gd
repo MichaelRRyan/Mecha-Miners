@@ -30,36 +30,65 @@ func _ready() -> void:
 func _process(delta : float) -> void:
 	if _active:
 		var target = _brain.get_target()
+		var found_new_path = false
 		
+		# If the target has changed since last time, regenerates the path.
 		if target != _last_target:
 			_last_target = target
-			
-			var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
-			var target_point = _pathfinding.get_closest_point(target)
-			_path = _pathfinding.get_id_path(subject_point, target_point)
+			_find_new_path()
+			found_new_path = true
 			
 		if _path and _path.size() > 1:
 			
-			var next_pos = _pathfinding.get_point_position(_path[1])
-			var dist_squared = (next_pos - _brain.subject.position).length_squared()
+			# If a new path has not just been found and we're not within range 
+			#	of the path.
+			if not found_new_path and not _is_within_range_of_path():
+				_find_new_path()
+				found_new_path = true
 			
-			if _path.size() == 2:
-				if dist_squared < _cell_size_squared * 0.1:
-					_path.remove(0)
-					
-			elif dist_squared < _cell_size_squared:
-				_path.remove(0)
+			_follow_path(delta)
 			
-			if _path.size() > 1:
-				next_pos = _pathfinding.get_point_position(_path[1])
-				_move_towards(next_pos, delta)
 		else:
 			_brain.subject.direction = 0.0
 			_brain.pop_behaviour()
 			emit_signal("target_reached")
+			
 		update()
 
 		
+#-------------------------------------------------------------------------------
+func _find_new_path():
+	var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
+	var target_point = _pathfinding.get_closest_point(_brain.get_target())
+	_path = _pathfinding.get_id_path(subject_point, target_point)
+
+
+#-------------------------------------------------------------------------------
+func _is_within_range_of_path():
+	# Checks if we're too far from the first path node.
+	var path_start = _pathfinding.get_point_position(_path[0])
+	var dist_squared = (path_start - _brain.subject.position).length_squared()
+	
+	return dist_squared <= _cell_size_squared
+
+
+#-------------------------------------------------------------------------------
+func _follow_path(delta : float):
+	var next_pos = _pathfinding.get_point_position(_path[1])
+	var dist_squared = (next_pos - _brain.subject.position).length_squared()
+	
+	if _path.size() == 2:
+		if dist_squared < _cell_size_squared * 0.1:
+			_path.remove(0)
+			
+	elif dist_squared < _cell_size_squared:
+		_path.remove(0)
+	
+	if _path.size() > 1:
+		next_pos = _pathfinding.get_point_position(_path[1])
+		_move_towards(next_pos, delta)
+
+
 #-------------------------------------------------------------------------------
 func _move_towards(pos : Vector2, delta : float) -> void:
 	_brain.subject.direction = sign(pos.x - _brain.subject.position.x)
