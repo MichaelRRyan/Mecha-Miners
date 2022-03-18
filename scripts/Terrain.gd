@@ -32,6 +32,13 @@ var _pathfinding : AStar2D = AStar2D.new()
 
 
 # -----------------------------------------------------------------------------
+func is_empty(cell_position : Vector2) -> bool:
+	var type = get_cellv(cell_position)
+	return (TileType.Empty == type
+		or TileType.Background == type)
+
+
+# -----------------------------------------------------------------------------
 func is_mineral(cell_position : Vector2) -> bool:
 	return TileType.Crystal == get_cellv(cell_position)
 

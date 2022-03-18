@@ -17,10 +17,11 @@ func get_target() -> Vector2:
 # Adds a behaviour to the top of the stack (becomes the current behaviour).
 func add_behaviour(new_behaviour : Behaviour) -> void:
 	if not _behaviour_stack.empty():
-		_disable(_behaviour_stack.back())
+		_behaviour_stack.back().set_active(false)
 		
 	_behaviour_stack.push_back(new_behaviour)
 	_set_as_current(new_behaviour)
+	add_child(new_behaviour)
 
 
 #-------------------------------------------------------------------------------
@@ -29,7 +30,7 @@ func pop_behaviour() -> void:
 	if not _behaviour_stack.empty():
 		
 		var behaviour = _behaviour_stack.pop_back()
-		#print("AI " + subject.name + " exiting " + behaviour.get_class())
+		print("AI " + subject.name + " exiting " + behaviour.get_class())
 		_disable(behaviour)
 		behaviour.queue_free()
 		
@@ -49,9 +50,9 @@ func change_behaviour(new_behaviour : Behaviour) -> void:
 
 #-------------------------------------------------------------------------------
 func _set_as_current(behaviour : Behaviour) -> void:
-	#print("AI " + subject.name + " entering " + behaviour.get_class())
+	print("AI " + subject.name + " entering " + behaviour.get_class())
 	behaviour.set_brain(self)
-	add_child(behaviour)
+	behaviour.set_active(true)
 
 
 #-------------------------------------------------------------------------------

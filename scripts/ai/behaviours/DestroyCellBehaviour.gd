@@ -12,17 +12,14 @@ var _mech_arms = null
 
 
 #-------------------------------------------------------------------------------
-func get_class() -> String:
-	return "DestroyCellBehaviour"
-
-
-#-------------------------------------------------------------------------------
 func _init(target_cell : Vector2) -> void:
 	_target_cell = target_cell
 	
 	
 #-------------------------------------------------------------------------------
 func _ready() -> void:
+	_name = "DestroyCellBehaviour"
+	
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
 		_terrain = terrain_container.front()
@@ -39,14 +36,15 @@ func _ready() -> void:
 
 #-------------------------------------------------------------------------------
 func _process(_delta : float) -> void:
-	_mech_arms.equipped1.activate()
-	_mech_arms.equipped2.activate()
-	
-	var type = _terrain.get_cellv(_target_cell)
-	if type == _terrain.TileType.Empty or type == _terrain.TileType.Background:
-		_brain.subject.set_target(_previous_target)
-		_brain.pop_behaviour()
-		emit_signal("cell_destroyed")
+	if _active:
+		_mech_arms.equipped1.activate()
+		_mech_arms.equipped2.activate()
+		
+		var type = _terrain.get_cellv(_target_cell)
+		if type == _terrain.TileType.Empty or type == _terrain.TileType.Background:
+			_brain.subject.set_target(_previous_target)
+			_brain.pop_behaviour()
+			emit_signal("cell_destroyed")
 
 
 #-------------------------------------------------------------------------------

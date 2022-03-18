@@ -15,12 +15,9 @@ var _last_target : Vector2 = Vector2.ZERO
 
 
 #-------------------------------------------------------------------------------
-func get_class() -> String:
-	return "PursueBehaviour"
-
-
-#-------------------------------------------------------------------------------
 func _ready() -> void:
+	_name = "PursueBehaviour"
+	
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
 		var terrain = terrain_container.front()
@@ -31,38 +28,36 @@ func _ready() -> void:
 
 #-------------------------------------------------------------------------------
 func _process(delta : float) -> void:
-	var target = _brain.subject.get_target()
-	
-	if target != _last_target:
-		_last_target = target
+	if _active:
+		var target = _brain.get_target()
 		
-		var my_pos = _brain.subject.position
-		var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
-		var cell_centre = _pathfinding.get_point_position(subject_point)
-		var target_point = _pathfinding.get_closest_point(target)
-		var target_cell_centre = _pathfinding.get_point_position(target_point)
-		_path = _pathfinding.get_id_path(subject_point, target_point)
-		
-	if _path and _path.size() > 1:
-		
-		var next_pos = _pathfinding.get_point_position(_path[1])
-		var dist_squared = (next_pos - _brain.subject.position).length_squared()
-		
-		if _path.size() == 2:
-			if dist_squared < _cell_size_squared * 0.1:
+		if target != _last_target:
+			_last_target = target
+			
+			var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
+			var target_point = _pathfinding.get_closest_point(target)
+			_path = _pathfinding.get_id_path(subject_point, target_point)
+			
+		if _path and _path.size() > 1:
+			
+			var next_pos = _pathfinding.get_point_position(_path[1])
+			var dist_squared = (next_pos - _brain.subject.position).length_squared()
+			
+			if _path.size() == 2:
+				if dist_squared < _cell_size_squared * 0.1:
+					_path.remove(0)
+					
+			elif dist_squared < _cell_size_squared:
 				_path.remove(0)
-				
-		elif dist_squared < _cell_size_squared:
-			_path.remove(0)
-		
-		if _path.size() > 1:
-			next_pos = _pathfinding.get_point_position(_path[1])
-			_move_towards(next_pos, delta)
-	else:
-		_brain.subject.direction = 0.0
-		_brain.pop_behaviour()
-		emit_signal("target_reached")
-	update()
+			
+			if _path.size() > 1:
+				next_pos = _pathfinding.get_point_position(_path[1])
+				_move_towards(next_pos, delta)
+		else:
+			_brain.subject.direction = 0.0
+			_brain.pop_behaviour()
+			emit_signal("target_reached")
+		update()
 
 		
 #-------------------------------------------------------------------------------
@@ -74,13 +69,13 @@ func _move_towards(pos : Vector2, delta : float) -> void:
 		
 		
 #-------------------------------------------------------------------------------
-#func _draw():
-#	for node in _path:
-#		var dist = _pathfinding.get_point_position(node) - _brain.subject.position
-#		draw_circle(dist, 2, Color.red)
-#
-#	var dist = _brain.subject.get_target() - _brain.subject.position
-#	draw_circle(dist, 2, Color.red)
+func _draw():
+	for node in _path:
+		var dist = _pathfinding.get_point_position(node) - _brain.subject.position
+		draw_circle(dist, 2, Color.red)
+
+	var dist = _brain.subject.get_target() - _brain.subject.position
+	draw_circle(dist, 2, Color.red)
 
 		
 #-------------------------------------------------------------------------------
