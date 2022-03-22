@@ -7,6 +7,11 @@ var _spotted_mineral_items = []
 
 
 #-------------------------------------------------------------------------------
+func _init():
+	_name = "HarvestMineralsBehaviour"
+
+	
+#-------------------------------------------------------------------------------
 func add_spotted_mineral_cell(mineral_cell : Vector2) -> void:
 	_spotted_mineral_cells.append(mineral_cell)
 
@@ -18,8 +23,6 @@ func add_spotted_mineral_item(mineral_item : Node2D) -> void:
 
 #-------------------------------------------------------------------------------
 func _ready() -> void:
-	_name = "HarvestMineralsBehaviour"
-	
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
 		_terrain = terrain_container.front()

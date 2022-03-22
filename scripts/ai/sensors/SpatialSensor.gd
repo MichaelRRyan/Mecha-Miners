@@ -15,10 +15,17 @@ var _last_checked_location : Vector2 = Vector2.ZERO
 
 # Vector2 : bool
 var _checked : Array = []
-var _queue = [] # Vector2
+var _queue = [] # Array<Vector2>
 
 var _furthest_cell : Vector2 = Vector2.ZERO
 var _furthest_dist_squared : float = 0.0
+
+
+#-------------------------------------------------------------------------------
+func get_next_best() -> Vector2:
+	if not _queue.empty():
+		return _queue.front()	
+	return Vector2.ZERO	
 
 
 #-------------------------------------------------------------------------------
@@ -51,7 +58,11 @@ func _check_surroundings():
 	
 	# Re-assesses the furthest cell.
 	var dist_squared = (_furthest_cell - cell_pos).length_squared()
-	_furthest_dist_squared = dist_squared
+	if dist_squared <= view_range_cells_squared:
+		_furthest_dist_squared = dist_squared
+	else:
+		_furthest_cell = Vector2.ZERO
+		_furthest_dist_squared = 0
 	
 	while not _queue.empty():
 		

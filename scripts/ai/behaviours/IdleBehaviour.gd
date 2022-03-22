@@ -3,9 +3,12 @@ extends Behaviour
 
 
 #---------------------------------------------------------------------------
-func _ready() -> void:
+func _init():
 	_name = "IdleBehaviour"
-	
+
+
+#---------------------------------------------------------------------------
+func _ready() -> void:
 	var mineral_sensor : Node2D = _brain.find_node("MineralSensor")
 	if mineral_sensor:
 		var _v = mineral_sensor.connect("mineral_found", self, "_on_MineralSensor_mineral_found")

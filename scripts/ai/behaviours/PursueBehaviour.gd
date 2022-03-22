@@ -14,10 +14,13 @@ var _path : PoolIntArray
 var _last_target : Vector2 = Vector2.ZERO
 
 
-#-------------------------------------------------------------------------------
-func _ready() -> void:
+#---------------------------------------------------------------------------
+func _init():
 	_name = "PursueBehaviour"
 	
+	
+#-------------------------------------------------------------------------------
+func _ready() -> void:
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
 		var terrain = terrain_container.front()

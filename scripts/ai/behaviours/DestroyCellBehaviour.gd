@@ -13,13 +13,13 @@ var _mech_arms = null
 
 #-------------------------------------------------------------------------------
 func _init(target_cell : Vector2) -> void:
+	_name = "DestroyCellBehaviour"
 	_target_cell = target_cell
+	
 	
 	
 #-------------------------------------------------------------------------------
 func _ready() -> void:
-	_name = "DestroyCellBehaviour"
-	
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
 		_terrain = terrain_container.front()
