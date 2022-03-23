@@ -16,9 +16,14 @@ const RECALCULATE_DISTANCE_SQUARED : float = RECALCULATE_DISTANCE * RECALCULATE_
 # Private variables
 var _view_range_cells_sq : int = view_range_cells * view_range_cells
 var _last_check_pos : Vector2 = Vector2.ZERO
-var _furthest_cell : Vector2 = Vector2.ZERO
+var _best_cell : Vector2 = Vector2.ZERO
 var _checked : Array = [] # Array<bool>
 var _queue : Array = [] # Array<Vector2>
+
+
+#-------------------------------------------------------------------------------
+func get_best_cell() -> Vector2:
+	return _best_cell
 
 
 #-------------------------------------------------------------------------------
@@ -41,7 +46,7 @@ func _ready() -> void:
 		_terrain = terrain_container.front()
 	
 		var cell_pos = _terrain.world_to_map(global_position)
-		_furthest_cell = cell_pos
+		_best_cell = cell_pos
 		_queue.append(cell_pos)
 		_check_surroundings()
 
@@ -59,27 +64,27 @@ func _physics_process(_delta) -> void:
 func _check_surroundings() -> void:
 	
 	var next_queue = []
-	var previous_furthest = _furthest_cell
+	var previous_best = _best_cell
 	var my_cell_pos = _terrain.world_to_map(global_position)
 	
-	# Assesses the furthest cell is still within range and returns the distance.
-	var furthest_dist_sq = _assess_furthest_cell(my_cell_pos)
+	# Reassesses the furthest cell is still within range and returns the distance.
+	var best_value = _reassess_furthest_cell(my_cell_pos)
 	
-	# Loops for every cell in the queue, popping the top each time.
+	# Loops for every cell in the queue, popping the front each time.
 	while not _queue.empty():
 		var next_cell : Vector2 = _queue.pop_front()
 		
 		# If the cell is within range, checks all its neighbours.
 		if _is_within_range(next_cell, my_cell_pos):
-			furthest_dist_sq = _check_neighbours(next_cell, my_cell_pos, furthest_dist_sq)
+			best_value = _check_neighbours(next_cell, my_cell_pos, best_value)
 			
 		# If the cell is outside the range, adds it to the next queue.
 		else: next_queue.append(next_cell)
 		
 	_queue = next_queue
 	
-	if previous_furthest != _furthest_cell:
-		emit_signal("new_furthest", _furthest_cell)
+	if previous_best != _best_cell:
+		emit_signal("new_furthest", _best_cell)
 
 
 #-------------------------------------------------------------------------------
@@ -99,7 +104,7 @@ func _is_within_range(cell_pos : Vector2, my_cell_pos : Vector2) -> bool:
 
 #-------------------------------------------------------------------------------
 func _check_neighbours(next_cell : Vector2, my_cell_pos : Vector2, 
-					   furthest_dist_squared : float) -> float:
+					   best_value : float) -> float:
 						
 	# Loop through all neighbours.
 	for neighbour in _get_neighbours(next_cell):
@@ -115,26 +120,36 @@ func _check_neighbours(next_cell : Vector2, my_cell_pos : Vector2,
 				# Sets the cell as the new furthest cell if its distance is 
 				#	greater than the previous furthest.
 				var dist_squared = (neighbour - my_cell_pos).length_squared()
-				if dist_squared > furthest_dist_squared:
-					furthest_dist_squared = dist_squared
-					_furthest_cell = neighbour
+				var cell_value = _evaluate_cell(neighbour) + dist_squared
+				
+				if cell_value > best_value:
+					best_value = cell_value
+					_best_cell = neighbour
 	
-	return furthest_dist_squared
+	return best_value
 
 
 #-------------------------------------------------------------------------------
 # Assesses the furthest cell is still within range and returns the distance.
-func _assess_furthest_cell(my_cell_pos : Vector2) -> float:
+func _reassess_furthest_cell(my_cell_pos : Vector2) -> float:
 	
-	var dist_squared = (_furthest_cell - my_cell_pos).length_squared()
+	var dist_squared = (_best_cell - my_cell_pos).length_squared()
 	
 	# Checks the furthest cell is still within range.
 	if dist_squared <= _view_range_cells_sq:
-		return dist_squared
+		var cell_value = _evaluate_cell(_best_cell) + dist_squared
+		return cell_value
 	else:
-		_furthest_cell = Vector2.ZERO
+		_best_cell = Vector2.ZERO
 		return 0.0
 	
+	
+#-------------------------------------------------------------------------------
+func _evaluate_cell(cell_pos : Vector2) -> int:
+	var dir = Vector2.DOWN
+	var value_vec = cell_pos * dir
+	var value = value_vec.x + value_vec.y
+	return value * 10.0
 
 #-------------------------------------------------------------------------------
 func _draw() -> void:

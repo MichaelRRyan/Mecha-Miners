@@ -26,7 +26,7 @@ position = Vector2( 102.152, 736.746 )
 is_human = true
 
 [node name="Player2" parent="PlayerManager" instance=ExtResource( 1 )]
-position = Vector2( 298.852, 1094.74 )
+position = Vector2( 116, 89 )
 
 [node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 8 )]
 

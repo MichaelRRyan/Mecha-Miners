@@ -20,7 +20,7 @@ func _ready() -> void:
 	if _spatial_sensor:
 		var _v = _spatial_sensor.connect("new_furthest", self, "_on_SpatialSensor_new_furthest")
 	
-		_brain.set_target(_terrain.map_to_world_centred(_spatial_sensor._furthest_cell))
+		_brain.set_target(_terrain.map_to_world_centred(_spatial_sensor.get_best_cell()))
 		_pursue()
 
 
