@@ -40,3 +40,15 @@ func change_behaviour(_new_behaviour) -> void:
 
 
 #-------------------------------------------------------------------------------
+# Adds the new behaviour if it has a higher priority than the current highest, 
+#	removing the original.
+func request_add_behaviour(_new_behaviour) -> void:
+	assert(false)
+
+
+#-------------------------------------------------------------------------------
+func get_highest_priority():
+	assert(false)
+	
+	
+#-------------------------------------------------------------------------------

@@ -27,18 +27,16 @@ func _process(_delta):
 		
 #-------------------------------------------------------------------------------
 func _on_MineralSensor_mineral_found(mineral_cell : Vector2) -> void:
-	if _active:
-		var behaviour = HarvestMineralsBehaviour.new()
-		behaviour.add_spotted_mineral_cell(mineral_cell)
-		_brain.add_behaviour(behaviour)
+	var behaviour = HarvestMineralsBehaviour.new()
+	behaviour.add_spotted_mineral_cell(mineral_cell)
+	_brain.request_add_behaviour(behaviour)
 
 
 #-------------------------------------------------------------------------------
 func _on_ItemSensor_mineral_found(mineral_item : Node2D) -> void:
-	if _active:
-		var behaviour = HarvestMineralsBehaviour.new()
-		behaviour.add_spotted_mineral_item(mineral_item)
-		_brain.add_behaviour(behaviour)
+	var behaviour = HarvestMineralsBehaviour.new()
+	behaviour.add_spotted_mineral_item(mineral_item)
+	_brain.request_add_behaviour(behaviour)
 
 
 #-------------------------------------------------------------------------------

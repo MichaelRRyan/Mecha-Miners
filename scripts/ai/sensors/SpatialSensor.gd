@@ -25,7 +25,7 @@ var _queue : Array = [] # Array<Vector2>
 
 #-------------------------------------------------------------------------------
 func get_best_cell() -> Vector2:
-	return _queue.front()
+	return _queue.front() if not _queue.empty() else INVALID_CELL
 
 
 #-------------------------------------------------------------------------------

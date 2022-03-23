@@ -7,7 +7,7 @@ onready var _terrain : Terrain = Utility.get_dependency("terrain")
 var _brain : AIBrain = null
 
 var _scan_direction = Vector2.LEFT
-var _scan_rotation = PI * 0.8 # The direction and magnitude of the rotation per second.
+var _scan_rotation = PI * 2 # The direction and magnitude of the rotation per second.
 var _scan_distance = 100.0
 var _scan_segment = 8.0
 

@@ -4,6 +4,7 @@ var _behaviour_stack : Array = []
 var _debug : bool = false
 var _main_camera = null
 var _previous_camera_focus = null
+var _highest_priority_behaviour = null
 
 
 #-------------------------------------------------------------------------------
@@ -37,8 +38,26 @@ func add_behaviour(new_behaviour : Behaviour) -> void:
 func pop_behaviour() -> void:
 	if not _behaviour_stack.empty():
 		
-		var behaviour = _behaviour_stack.pop_back()
-		print("AI " + subject.name + " exiting " + behaviour.get_class())
+		var behaviour = _behaviour_stack.back()
+		
+		if _highest_priority_behaviour == behaviour:
+			if _behaviour_stack.size() > 1:
+				var index = _behaviour_stack.find(behaviour)
+				
+				_highest_priority_behaviour = _behaviour_stack.front()
+				for i in range(1, index):
+					if (_behaviour_stack[i].get_priority() > 
+						_highest_priority_behaviour.get_priority()):
+							_highest_priority_behaviour = _behaviour_stack[i]
+					
+			else:
+				_highest_priority_behaviour = null
+		
+		_behaviour_stack.pop_back()
+		
+		if _debug:
+			print("AI " + subject.name + " exiting " + behaviour.get_class())
+			
 		_disable(behaviour)
 		behaviour.queue_free()
 		
@@ -54,13 +73,36 @@ func pop_behaviour() -> void:
 func change_behaviour(new_behaviour : Behaviour) -> void:
 	pop_behaviour()
 	add_behaviour(new_behaviour)
+	
+	
+#-------------------------------------------------------------------------------	
+# Switches the current running behaviour with another if the new behaviour has a
+#	higher priority than the current highest, removing the original.
+func request_add_behaviour(new_behaviour : Behaviour) -> void:
+	if	(_highest_priority_behaviour == null or new_behaviour.get_priority() > 
+		_highest_priority_behaviour.get_priority()):
+			add_behaviour(new_behaviour)
+			
+	else: # Disposes of the behaviour.
+		new_behaviour.queue_free()
+
+
+#-------------------------------------------------------------------------------
+func get_highest_priority():
+	return _highest_priority_behaviour
 
 
 #-------------------------------------------------------------------------------
 func _set_as_current(behaviour : Behaviour) -> void:
-	print("AI " + subject.name + " entering " + behaviour.get_class())
+	if _debug:
+		print("AI " + subject.name + " entering " + behaviour.get_class())
+		
 	behaviour.set_brain(self)
 	behaviour.set_active(true)
+	
+	if (_highest_priority_behaviour == null 
+		or behaviour.get_priority() > _highest_priority_behaviour.get_priority()):
+			_highest_priority_behaviour = behaviour
 
 
 #-------------------------------------------------------------------------------

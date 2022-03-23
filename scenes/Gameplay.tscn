@@ -32,7 +32,7 @@ zoom = Vector2( 0.5, 0.5 )
 smoothing_enabled = true
 
 [node name="Player2" parent="PlayerManager" instance=ExtResource( 1 )]
-position = Vector2( 116, 89 )
+position = Vector2( 66, 311 )
 
 [node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 8 )]
 

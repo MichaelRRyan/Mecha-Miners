@@ -14,6 +14,7 @@ var _mech_arms = null
 #-------------------------------------------------------------------------------
 func _init(target_cell : Vector2) -> void:
 	_name = "DestroyCellBehaviour"
+	_priority = 1
 	_target_cell = target_cell
 	
 	
