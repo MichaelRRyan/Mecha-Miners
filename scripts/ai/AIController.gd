@@ -1,6 +1,14 @@
 extends AIBrain
 
 var _behaviour_stack : Array = []
+var _debug : bool = false
+var _main_camera = null
+var _previous_camera_focus = null
+
+
+#-------------------------------------------------------------------------------
+func is_debug() -> bool:
+	return _debug
 
 
 #-------------------------------------------------------------------------------
@@ -64,6 +72,38 @@ func _disable(behaviour : Behaviour) -> void:
 func _ready() -> void:
 	subject = get_parent()
 	add_behaviour(IdleBehaviour.new())
+	
+	var main_cameras = get_tree().get_nodes_in_group("main_camera")
+	if main_cameras != null and not main_cameras.empty():
+		_main_camera = main_cameras.front()
+
+
+#-------------------------------------------------------------------------------
+func _input(event):
+	# Toggles AI debug mode.
+	if event.is_action_pressed("ai_debug"):
+		_debug = not _debug
+	
+	if event.is_action_pressed("ai_perspective"):
+		
+		# If the main camera exists.
+		if _main_camera != null:
+			
+			# If the camera is following a node.
+			var camera_focus : Node = _main_camera.get_parent()
+			if camera_focus != null:
+				
+				camera_focus.remove_child(_main_camera)
+				
+				if _previous_camera_focus == null:
+					_previous_camera_focus = camera_focus
+					add_child(_main_camera)
+					
+				else:
+					_previous_camera_focus.add_child(_main_camera)
+					_previous_camera_focus = null
+					
+				_main_camera.position = Vector2.ZERO
 
 
 #-------------------------------------------------------------------------------

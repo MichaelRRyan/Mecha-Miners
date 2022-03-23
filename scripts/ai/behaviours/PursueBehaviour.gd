@@ -102,12 +102,13 @@ func _move_towards(pos : Vector2, delta : float) -> void:
 		
 #-------------------------------------------------------------------------------
 func _draw():
-	for node in _path:
-		var dist = _pathfinding.get_point_position(node) - _brain.subject.position
-		draw_circle(dist, 2, Color.red)
+	if _brain.is_debug():
+		for node in _path:
+			var dist = _pathfinding.get_point_position(node) - _brain.subject.position
+			draw_circle(dist, 2, Color.red)
 
-	var dist = _brain.subject.get_target() - _brain.subject.position
-	draw_circle(dist, 2, Color.red)
+		var dist = _brain.subject.get_target() - _brain.subject.position
+		draw_circle(dist, 2, Color.red)
 
 		
 #-------------------------------------------------------------------------------

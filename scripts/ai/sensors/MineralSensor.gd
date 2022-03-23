@@ -2,7 +2,9 @@ extends Node2D
 
 signal mineral_found(mineral_cell)
 
-var _terrain : TileMap = null
+# Dependencies.
+onready var _terrain : Terrain = Utility.get_dependency("terrain")
+var _brain : AIBrain = null
 
 var _scan_direction = Vector2.LEFT
 var _scan_rotation = PI * 0.8 # The direction and magnitude of the rotation per second.
@@ -12,9 +14,13 @@ var _scan_segment = 8.0
 		
 #-------------------------------------------------------------------------------
 func _ready():
-	var terrain_container = get_tree().get_nodes_in_group("terrain")
-	if not terrain_container.empty():
-		_terrain = terrain_container.front()
+	if _terrain == null:
+		set_process(false)
+	
+	# Gets the parent as the brain if it's an AI brain.
+	var parent = get_parent()
+	if parent != null and parent is AIBrain:
+		_brain = parent 
 
 		
 #-------------------------------------------------------------------------------
@@ -32,8 +38,9 @@ func _process(delta):
 
 		
 #-------------------------------------------------------------------------------
-#func _draw():
-#	draw_line(Vector2.ZERO, _scan_direction * _scan_distance, Color.red, 1.0)
+func _draw():
+	if _brain.is_debug():
+		draw_line(Vector2.ZERO, _scan_direction * _scan_distance, Color.red, 1.0)
 
 		
 #-------------------------------------------------------------------------------

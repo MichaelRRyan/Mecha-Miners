@@ -1,9 +1,10 @@
 extends Node2D
 
-signal new_furthest(furthest_cell)
+signal new_best(best_cell)
 
 # Dependancies.
 var _terrain : Terrain = null
+var _brain : AIBrain = null
  
 # Public variables.
 var view_range_cells : int = 8 setget set_view_range_cells
@@ -42,6 +43,11 @@ func _ready() -> void:
 		var cell_pos = _terrain.world_to_map(global_position)
 		_queue.append(cell_pos)
 		_check_surroundings()
+	
+	# Gets the parent as the brain if it's an AI brain.
+	var parent = get_parent()
+	if parent != null and parent is AIBrain:
+		_brain = parent 
 
 
 #-------------------------------------------------------------------------------
@@ -73,9 +79,9 @@ func _check_surroundings() -> void:
 		
 	_queue = next_queue
 	
-	var best = _queue.front()
-	if previous_best != best:
-		emit_signal("new_furthest", best)
+	var new_best = _queue.front()
+	if new_best != null and previous_best != new_best:
+		emit_signal("new_best", new_best)
 
 
 #-------------------------------------------------------------------------------
@@ -142,10 +148,11 @@ func _sorted_add(cell_pos : Vector2, queue : Array) -> void:
 
 #-------------------------------------------------------------------------------
 func _draw() -> void:
-	for cell in _queue:
-		var global = _terrain.map_to_world_centred(cell)
-		var local = global - global_position
-		draw_circle(local, 5, Color.blue)
+	if _brain.is_debug():
+		for cell in _queue:
+			var global = _terrain.map_to_world_centred(cell)
+			var local = global - global_position
+			draw_circle(local, 5, Color.blue)
 		
 		
 #-------------------------------------------------------------------------------

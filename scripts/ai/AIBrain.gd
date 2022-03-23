@@ -5,6 +5,12 @@ var subject : Node2D = null
 
 
 #-------------------------------------------------------------------------------
+func is_debug() -> bool:
+	assert(false)
+	return false
+	
+	
+#-------------------------------------------------------------------------------
 func set_target(_new_target : Vector2) -> void:
 	assert(false)
 
