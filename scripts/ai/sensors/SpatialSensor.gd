@@ -11,14 +11,13 @@ const RECALCULATE_DISTANCE_SQUARED : float = RECALCULATE_DISTANCE * RECALCULATE_
  
 var view_range_cells_squared : int = 8 * 8
 
-var _last_checked_location : Vector2 = Vector2.ZERO
+var _last_check_pos : Vector2 = Vector2.ZERO
 
 # Vector2 : bool
 var _checked : Array = []
 var _queue = [] # Array<Vector2>
 
 var _furthest_cell : Vector2 = Vector2.ZERO
-var _furthest_dist_squared : float = 0.0
 
 
 #-------------------------------------------------------------------------------
@@ -42,8 +41,8 @@ func _ready():
 
 #-------------------------------------------------------------------------------
 func _physics_process(_delta):
-	if (_last_checked_location - global_position).length_squared() > RECALCULATE_DISTANCE_SQUARED:
-		_last_checked_location = global_position
+	if (_last_check_pos - global_position).length_squared() > RECALCULATE_DISTANCE_SQUARED:
+		_last_check_pos = global_position
 		_check_surroundings()
 		
 	update()
@@ -53,42 +52,21 @@ func _physics_process(_delta):
 func _check_surroundings():
 	var previous_furthest = _furthest_cell
 	
-	var cell_pos = _terrain.world_to_map(global_position)
+	var my_cell_pos = _terrain.world_to_map(global_position)
 	var next_queue = []
 	
-	# Re-assesses the furthest cell.
-	var dist_squared = (_furthest_cell - cell_pos).length_squared()
-	if dist_squared <= view_range_cells_squared:
-		_furthest_dist_squared = dist_squared
-	else:
-		_furthest_cell = Vector2.ZERO
-		_furthest_dist_squared = 0
+	# Assesses the furthest cell is still within range and returns the distance.
+	var furthest_dist_sq = _assess_furthest_cell(my_cell_pos)
 	
+	# Loops for every cell in the queue, popping the top each time.
 	while not _queue.empty():
+		var next_cell : Vector2 = _queue.pop_front()
 		
-		var node : Vector2 = _queue.pop_front()
-		
-		# If the cell is within range.
-		if (node - cell_pos).length_squared() <= view_range_cells_squared:
-			
-			# Check all neighbours and check it's checked.
-			for neighbour in _get_neighbours(node):
-				
-				# If the cell has not been check.
-				if not _checked.has(neighbour):
-					_checked.append(neighbour)
-					
-					# If the cell is an empty cell, proceed.
-					if _terrain.is_empty(neighbour):
-						_queue.append(neighbour)
-						
-						dist_squared = (neighbour - cell_pos).length_squared()
-						if dist_squared > _furthest_dist_squared:
-							_furthest_dist_squared = dist_squared
-							_furthest_cell = neighbour
-		
+		if _is_within_range(next_cell, my_cell_pos):
+			furthest_dist_sq = _check_neighbours(next_cell, my_cell_pos, 
+													  furthest_dist_sq)
 		else:
-			next_queue.append(node)
+			next_queue.append(next_cell)
 		
 	_queue = next_queue
 	
@@ -105,6 +83,50 @@ func _get_neighbours(cell : Vector2) -> Array:
 		cell - Vector2(0, -1),
 	]
 
+
+#-------------------------------------------------------------------------------
+func _is_within_range(cell_pos, my_cell_pos):
+	return (cell_pos - my_cell_pos).length_squared() <= view_range_cells_squared
+
+
+#-------------------------------------------------------------------------------
+func _check_neighbours(next_cell : Vector2, my_cell_pos : Vector2, 
+					   furthest_dist_squared : float) -> float:
+						
+	# Loop through all neighbours.
+	for neighbour in _get_neighbours(next_cell):
+		
+		# Checks the cell if it has not been checked already.
+		if not _checked.has(neighbour):
+			_checked.append(neighbour)
+			
+			# If the cell is an empty cell, proceeds.
+			if _terrain.is_empty(neighbour):
+				_queue.append(neighbour)
+				
+				# Sets the cell as the new furthest cell if its distance is 
+				#	greater than the previous furthest.
+				var dist_squared = (neighbour - my_cell_pos).length_squared()
+				if dist_squared > furthest_dist_squared:
+					furthest_dist_squared = dist_squared
+					_furthest_cell = neighbour
+	
+	return furthest_dist_squared
+
+
+#-------------------------------------------------------------------------------
+# Assesses the furthest cell is still within range and returns the distance.
+func _assess_furthest_cell(my_cell_pos : Vector2) -> float:
+	
+	var dist_squared = (_furthest_cell - my_cell_pos).length_squared()
+	
+	# Checks the furthest cell is still within range.
+	if dist_squared <= view_range_cells_squared:
+		return dist_squared
+	else:
+		_furthest_cell = Vector2.ZERO
+		return 0.0
+	
 
 #-------------------------------------------------------------------------------
 func _draw():
