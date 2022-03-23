@@ -15,7 +15,7 @@ const RECALCULATE_DISTANCE : float = CELL_SIZE * 3.0
 const RECALCULATE_DISTANCE_SQUARED : float = RECALCULATE_DISTANCE * RECALCULATE_DISTANCE
 const INVALID_CELL : Vector2 = Vector2(-1000, -1000)
 
-# Private variables
+# Private variables.
 var _view_range_cells_sq : int = view_range_cells * view_range_cells
 var _last_check_pos : Vector2 = Vector2.ZERO
 var _checked : Array = [] # Array<bool>
