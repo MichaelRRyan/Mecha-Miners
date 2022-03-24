@@ -19,10 +19,10 @@
 script = ExtResource( 7 )
 
 [node name="SpawnPoint" type="Node2D" parent="PlayerManager"]
-position = Vector2( 271, 9 )
+position = Vector2( 63, 99 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 1 )]
-position = Vector2( 102.152, 736.746 )
+position = Vector2( 107, 113 )
 is_human = true
 
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player" groups=["main_camera"]]
@@ -32,7 +32,7 @@ zoom = Vector2( 0.5, 0.5 )
 smoothing_enabled = true
 
 [node name="Player2" parent="PlayerManager" instance=ExtResource( 1 )]
-position = Vector2( 66, 311 )
+position = Vector2( -22, 138 )
 
 [node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 8 )]
 

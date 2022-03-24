@@ -123,7 +123,10 @@ func _physics_process(delta):
 	# Don't process if online and not the network master, is updated instead.
 	if Network.is_online and not is_network_master():
 		return
-		
+	
+	if (is_human or _temp):
+		_target = get_global_mouse_position()
+	
 	__handle_vertical_movement(delta)
 	__handle_horizontal_movement(delta)
 	__handle_sprite_flip()
@@ -276,11 +279,11 @@ func die():
 	
 	
 # -----------------------------------------------------------------------------
-func _input(event):
-	
-	#if is_human and event is InputEventMouseMotion:
-	if (is_human or _temp) and event is InputEventMouseMotion:
-		_target = get_global_mouse_position()
+#func _input(event):
+#
+#	#if is_human and event is InputEventMouseMotion:
+#	if (is_human or _temp) and event is InputEventMouseMotion:
+#		_target = get_global_mouse_position()
 	
 #	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
 #		die()

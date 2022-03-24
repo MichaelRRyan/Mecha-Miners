@@ -57,9 +57,9 @@ func _process(delta : float) -> void:
 			_brain.pop_behaviour()
 			emit_signal("target_reached")
 			
-		update()
+	update()
 
-		
+
 #-------------------------------------------------------------------------------
 func _find_new_path():
 	var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
@@ -103,7 +103,7 @@ func _move_towards(pos : Vector2, delta : float) -> void:
 		
 #-------------------------------------------------------------------------------
 func _draw():
-	if _brain.is_debug():
+	if _brain.is_debug() and _active:
 		for node in _path:
 			var dist = _pathfinding.get_point_position(node) - _brain.subject.position
 			draw_circle(dist, 2, Color.red)
