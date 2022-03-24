@@ -1,4 +1,5 @@
 extends TileMap
+class_name Terrain
 
 onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
 
@@ -27,6 +28,34 @@ export var tile_heal_time = 1.0
 # A dictionary of tile position keys to tile health values.
 var damaged_tiles = {}
 var crystal_container = null
+var _pathfinding : AStar2D = AStar2D.new()
+
+
+# -----------------------------------------------------------------------------
+func is_empty(cell_position : Vector2) -> bool:
+	var type = get_cellv(cell_position)
+	return (TileType.Empty == type
+		or TileType.Background == type)
+
+
+# -----------------------------------------------------------------------------
+func is_mineral(cell_position : Vector2) -> bool:
+	return TileType.Crystal == get_cellv(cell_position)
+
+
+# -----------------------------------------------------------------------------
+func map_to_world_centred(cell_position : Vector2) -> Vector2:
+	return map_to_world(cell_position) + (get_cell_size() * 0.5)
+
+
+# -----------------------------------------------------------------------------
+func get_pathfinding() -> AStar2D:
+	return _pathfinding
+	
+	
+# -----------------------------------------------------------------------------
+func get_cell_size() -> Vector2:
+	return cell_size
 
 
 # -----------------------------------------------------------------------------
@@ -36,6 +65,8 @@ func _ready():
 		crystal_container = containers[0]
 	else:
 		crystal_container = self
+		
+	_generate_pathfinding_grid()
 
 
 # -----------------------------------------------------------------------------
@@ -120,6 +151,11 @@ func __destroy_tile(tile_position : Vector2):
 	# Removes the damage information and visual.
 	damaged_tiles.erase(tile_position)
 	$DamageIndicators.set_cellv(tile_position, -1)
+	
+	var new_point = _pathfinding.get_available_point_id()
+	var centred_pos = map_to_world_centred(tile_position)
+	_pathfinding.add_point(new_point, centred_pos)
+	_update_pathfinding_connections(tile_position, new_point)
 
 
 # -----------------------------------------------------------------------------
@@ -132,3 +168,35 @@ func spawn_crystals(_position, amount):
 		
 
 # -----------------------------------------------------------------------------
+func _generate_pathfinding_grid() -> void:
+	for x in range(-100, 100):
+		for y in range(-50, 100):
+			
+			if get_cell(x, y) == TileType.Empty:		
+				var new_point = _pathfinding.get_available_point_id()
+				_pathfinding.add_point(new_point, map_to_world_centred(Vector2(x, y)))
+				
+				if get_cell(x - 1, y) == TileType.Empty:
+					var other_point = _pathfinding.get_closest_point(map_to_world_centred(Vector2(x - 1, y)))
+					if other_point != new_point:
+						_pathfinding.connect_points(other_point, new_point)
+				
+				if get_cell(x, y - 1) == TileType.Empty:
+					var other_point = _pathfinding.get_closest_point(map_to_world_centred(Vector2(x, y - 1)))
+					if other_point != new_point:
+						_pathfinding.connect_points(other_point, new_point)
+
+
+# -----------------------------------------------------------------------------
+func _update_pathfinding_connections(cell_position : Vector2, new_point_id : int) -> void:
+	var dir = Vector2.RIGHT
+	
+	for _i in range(4):
+		var next_cell = cell_position + dir
+		
+		if get_cellv(next_cell) == TileType.Empty or get_cellv(next_cell) == TileType.Background:
+			var other_point = _pathfinding.get_closest_point(map_to_world_centred(next_cell))
+			if other_point != new_point_id:
+				_pathfinding.connect_points(other_point, new_point_id)
+		
+		dir = Vector2(-dir.y, dir.x)

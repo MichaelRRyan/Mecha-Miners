@@ -5,13 +5,16 @@ onready var equipped2 = $Equipped2
 onready var front_position = $Equipped1.position.x
 onready var back_position = $Equipped2.position.x
 
+onready var _parent = get_parent()
+
 
 # -----------------------------------------------------------------------------
 func _ready():
-	var parent = get_parent()
-	if parent:
-		equipped1.set_holder(parent)
-		equipped2.set_holder(parent)
+	if _parent:
+		equipped1.set_holder(_parent)
+		equipped2.set_holder(_parent)
+	else:
+		set_process(false)
 
 
 # -----------------------------------------------------------------------------
@@ -21,10 +24,10 @@ func _process(_delta):
 	if Network.is_online and not is_network_master():
 		return
 	
-	var direction_to_mouse = (get_global_mouse_position() - global_position).normalized()
+	var direction_to_target = (_parent._target - global_position).normalized()
 	
-	var flip = direction_to_mouse.x < 0.0
-	var dir_sign = sign(direction_to_mouse.x)
+	var flip = direction_to_target.x < 0.0
+	var dir_sign = sign(direction_to_target.x)
 	if dir_sign == 0.0: dir_sign = 1
 	
 	scale.x = dir_sign
@@ -45,18 +48,19 @@ func _process(_delta):
 	equipped2.z_index = -2 * dir_sign
 	
 	# Works out the angle to the mouse sets the equipment's rotation to it.
-	var angle = atan2(direction_to_mouse.y, direction_to_mouse.x)
+	var angle = atan2(direction_to_target.y, direction_to_target.x)
 	if flip: angle = deg2rad(180.0) - angle
 	equipped1.rotation = angle
 	equipped2.rotation = angle
 	
-	if (equipped1.automatic and Input.is_action_pressed("action1")
-			or Input.is_action_just_pressed("action1")):
-				equipped1.activate()
-	
-	if (equipped2.automatic and Input.is_action_pressed("action2")
-			or Input.is_action_just_pressed("action2")):
-				equipped2.activate()
+	if _parent.is_human:
+		if (equipped1.automatic and Input.is_action_pressed("action1")
+				or Input.is_action_just_pressed("action1")):
+					equipped1.activate()
+		
+		if (equipped2.automatic and Input.is_action_pressed("action2")
+				or Input.is_action_just_pressed("action2")):
+					equipped2.activate()
 
 
 # -----------------------------------------------------------------------------

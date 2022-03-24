@@ -112,7 +112,7 @@ color_ramp = SubResource( 5 )
 hue_variation = 0.1
 hue_variation_random = 0.5
 
-[node name="CrystalShard" type="KinematicBody2D"]
+[node name="CrystalShard" type="KinematicBody2D" groups=["mineral"]]
 collision_layer = 8
 script = ExtResource( 2 )
 

@@ -30,6 +30,8 @@ func activate():
 
 # -----------------------------------------------------------------------------
 func _ready():
+	tool_type = Type.GUN
+	
 	var managers = get_tree().get_nodes_in_group("bullet_manager")
 	if managers and not managers.empty():
 		bullet_manager = managers[0]

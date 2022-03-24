@@ -5,7 +5,7 @@ tool
 signal died
 signal crystal_amount_changed(total_crystals)
 
-
+export var is_human : bool = false
 export var health : float = 5.0
 
 # -- Configurable Properties --
@@ -26,10 +26,15 @@ var velocity = Vector2.ZERO
 var animation_id = 0
 var respawning = false
 var was_on_floor = false
+var _target = Vector2.ZERO
+var direction : float = 0.0
 
 var inventory = Inventory.new()
 
 onready var LandingParticleScene = preload("res://scenes/BulletHitParticle.tscn")
+
+
+var _temp = true
 
 
 enum AnimationName {
@@ -99,6 +104,17 @@ func _get_property_list():
 	
 
 # -----------------------------------------------------------------------------
+func get_target() -> Vector2:
+	return _target
+	
+
+# -----------------------------------------------------------------------------
+func set_target(pos : Vector2) -> void:
+	_target = pos
+	_temp = false
+
+
+# -----------------------------------------------------------------------------
 func _physics_process(delta):
 	# Don't process if in the editor.
 	if Engine.editor_hint:
@@ -107,7 +123,10 @@ func _physics_process(delta):
 	# Don't process if online and not the network master, is updated instead.
 	if Network.is_online and not is_network_master():
 		return
-		
+	
+	if (is_human or _temp):
+		_target = get_global_mouse_position()
+	
 	__handle_vertical_movement(delta)
 	__handle_horizontal_movement(delta)
 	__handle_sprite_flip()
@@ -127,25 +146,36 @@ func __handle_vertical_movement(delta):
 	# Add the gravity acceleration to velocity.
 	velocity.y += gravity_acceleration * delta
 	
-	# If the jump input was just pressed.
-	if Input.is_action_just_pressed("jump"):
-		
-		# Adds the jump speed to velocity if on the ground.
-		if on_floor: velocity.y = jump_speed
-		
-		# If not on the ground, begin flying.
-		else: $Jetpack.activate(delta)
+	if is_human:
+		# If the jump input was just pressed.
+		if Input.is_action_just_pressed("jump"):
+			jump(delta)
+			
+		# If already flying and the jump button is down, keep flying.
+		elif Input.is_action_pressed("jump") and $Jetpack.is_flying():
+			thrust_jetpack(delta)
+
+
+# -----------------------------------------------------------------------------
+func jump(delta):
+	# Adds the jump speed to velocity if on the ground.
+	if is_on_floor(): velocity.y = jump_speed
 	
-	# If already flying and the jump button is down, keep flying.
-	elif Input.is_action_pressed("jump") and $Jetpack.is_flying():
-		$Jetpack.activate(delta)
-		
+	# If not on the ground, begin flying.
+	else: thrust_jetpack(delta)
+
+
+# -----------------------------------------------------------------------------
+func thrust_jetpack(delta):
+	$Jetpack.activate(delta)
+
 
 # -----------------------------------------------------------------------------
 func __handle_horizontal_movement(delta):
 	
-	# Get the horizontal input.
-	var direction = (Input.get_action_strength("move_right") - 
+	# Get the horizontal input if human controlled.
+	if is_human:
+		direction = (Input.get_action_strength("move_right") - 
 					 Input.get_action_strength("move_left"))
 	
 	# If there's no input.
@@ -166,7 +196,7 @@ func __handle_horizontal_movement(delta):
 		
 		# Play the appropriate movement animation.
 		if is_on_floor():
-			var dir_to_mouse = get_global_mouse_position().x - global_position.x
+			var dir_to_mouse = _target.x - global_position.x
 			var reversed = sign(dir_to_mouse) != sign(direction)
 			
 			if reversed:
@@ -183,8 +213,8 @@ func __handle_horizontal_movement(delta):
 
 # -----------------------------------------------------------------------------
 func __handle_sprite_flip():
-	var dir_to_mouse = get_global_mouse_position().x - global_position.x
-	$AnimatedSprite.flip_h = dir_to_mouse < 0.0
+	var dir_to_target = _target.x - global_position.x
+	$AnimatedSprite.flip_h = dir_to_target < 0.0
 
 
 # -----------------------------------------------------------------------------
@@ -250,6 +280,11 @@ func die():
 	
 # -----------------------------------------------------------------------------
 #func _input(event):
+#
+#	#if is_human and event is InputEventMouseMotion:
+#	if (is_human or _temp) and event is InputEventMouseMotion:
+#		_target = get_global_mouse_position()
+	
 #	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
 #		die()
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Terrain.tscn" type="PackedScene" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scenes/DropPod.tscn" type="PackedScene" id=5]
 [ext_resource path="res://scenes/Cursor.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scripts/PlayerManager.gd" type="Script" id=7]
+[ext_resource path="res://scenes/AIController.tscn" type="PackedScene" id=8]
 
 [node name="Gameplay" type="Node2D"]
 
@@ -18,16 +19,22 @@
 script = ExtResource( 7 )
 
 [node name="SpawnPoint" type="Node2D" parent="PlayerManager"]
-position = Vector2( 64, 111 )
+position = Vector2( 63, 99 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 1 )]
-position = Vector2( 90.4262, 116.708 )
+position = Vector2( 107, 113 )
+is_human = true
 
-[node name="Camera2D" type="Camera2D" parent="PlayerManager/Player"]
+[node name="Camera2D" type="Camera2D" parent="PlayerManager/Player" groups=["main_camera"]]
 scale = Vector2( 2, 2 )
 current = true
 zoom = Vector2( 0.5, 0.5 )
 smoothing_enabled = true
+
+[node name="Player2" parent="PlayerManager" instance=ExtResource( 1 )]
+position = Vector2( -22, 138 )
+
+[node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 8 )]
 
 [node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
 script = ExtResource( 4 )
