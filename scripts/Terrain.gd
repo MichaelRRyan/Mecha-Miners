@@ -6,15 +6,20 @@ onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
 
 enum TileType {
 	Empty = -1,
-	Solid = 0,
-	Crystal = 1,
-	Background = 2,
+	Solid = 3,
+	Unbreakable = 4,
+	Crystal = 5,
+	Background = 6,
 }
 
 # A mapping of tile type to tile max health.
 const MAX_TILE_HEALTHS = [
-	10.0,
-	5.0
+	0, # NULL
+	0, # NULL
+	0, # NULL
+	10.0, # Solid
+	100000000000.0, # Unbreakable
+	5.0, # Crystal
 ]
 
 # The number of damage stages visually displayed.
@@ -103,7 +108,9 @@ func _physics_process(_delta):
 func damage_tile(tile_position : Vector2, damage : float):
 	# If the tile is not empty.
 	var tile_type = get_cellv(tile_position)
-	if tile_type != TileType.Empty and tile_type != TileType.Background:
+	if (tile_type != TileType.Empty 
+		and tile_type != TileType.Background
+		and tile_type != TileType.Unbreakable):
 		
 		# If the tile has been damaged recently.
 		if damaged_tiles.has(tile_position):

@@ -143,6 +143,14 @@ func generate_world():
 			
 			_terrain.set_cell(x, y, tiles[x][y])
 	
+	for x in range(-1, WIDTH + 1):
+		_terrain.set_cell(x, -1, _terrain.TileType.Unbreakable)
+		_terrain.set_cell(x, HEIGHT, _terrain.TileType.Unbreakable)
+	
+	for y in HEIGHT:
+		_terrain.set_cell(-1, y, _terrain.TileType.Unbreakable)
+		_terrain.set_cell(HEIGHT, y, _terrain.TileType.Unbreakable)
+	
 	_terrain.update_bitmask_region(Vector2(0, 0), Vector2(WIDTH, HEIGHT))
 
 
