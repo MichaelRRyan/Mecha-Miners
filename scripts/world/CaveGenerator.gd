@@ -39,6 +39,7 @@ var params = {
 
 const WIDTH = 100
 const HEIGHT = 100
+const EDGE_SOFTENING = 5
 
 func _get_property_list():
 	return [
@@ -108,11 +109,7 @@ func generate_world():
 	cave_map.period = params["cave/period"]
 	cave_map.lacunarity = params["cave/lacunarity"]
 	cave_map.persistence = params["cave/persistence"]
-		
-#		# Sets the minerals map noise properties.
-#		if params["randomize_seed"]:
-#			minerals_map.seed = randi()
-#
+	
 	minerals_map.seed = noise_seed
 	minerals_map.octaves = params["minerals/octaves"]
 	minerals_map.period = params["minerals/period"]
@@ -126,45 +123,29 @@ func generate_world():
 		
 		for y in HEIGHT:	
 			var noise_sample = cave_map.get_noise_2d(x, y)
-			tiles[x].append(_get_tile_from_height(noise_sample))
+			var normalised_sample = (noise_sample + 1.0) * 0.5
+			normalised_sample = min(normalised_sample 
+				+ _get_edge_dist_modifier(x, y), 1)
+			
+			tiles[x].append(_get_tile_from_height(normalised_sample))
 			
 			if _terrain.TileType.Solid == tiles[x][y]:
 				noise_sample = minerals_map.get_noise_2d(float(x), float(y))
 				tiles[x][y] = _get_tile_from_mineral(noise_sample)
 	
 	emit_signal("world_generated", tiles)
-	
-	_terrain.clear()
-	
-	for x in WIDTH:
-		for y in HEIGHT:
-			if not Engine.editor_hint:
-				_terrain.set_background(x, y)
-			
-			_terrain.set_cell(x, y, tiles[x][y])
-	
-	for x in range(-1, WIDTH + 1):
-		_terrain.set_cell(x, -1, _terrain.TileType.Unbreakable)
-		_terrain.set_cell(x, HEIGHT, _terrain.TileType.Unbreakable)
-	
-	for y in HEIGHT:
-		_terrain.set_cell(-1, y, _terrain.TileType.Unbreakable)
-		_terrain.set_cell(HEIGHT, y, _terrain.TileType.Unbreakable)
-	
-	_terrain.update_bitmask_region(Vector2(0, 0), Vector2(WIDTH, HEIGHT))
+	_apply_tiles_to_tilemap(tiles)
 
 
 # ------------------------------------------------------------------------------
 func _get_tile_from_height(noise_sample):
-	var normalised_sample = (noise_sample + 1.0) * 0.5
-	
 	if params["cave/sign"]:
-		if normalised_sample > params["cave/split"]:
+		if noise_sample > params["cave/split"]:
 			return _terrain.TileType.Solid
 		return _terrain.TileType.Empty
 		
 	else:
-		if normalised_sample < params["cave/split"]:
+		if noise_sample < params["cave/split"]:
 			return _terrain.TileType.Solid
 		return _terrain.TileType.Empty
 
@@ -179,6 +160,42 @@ func _get_tile_from_mineral(noise_sample):
 
 
 # ------------------------------------------------------------------------------
+func _get_edge_dist_modifier(x, y):
+	var top = 1 - (min(y, EDGE_SOFTENING) / EDGE_SOFTENING)
+	var bottom = 1 - (min(HEIGHT - y, EDGE_SOFTENING) / EDGE_SOFTENING)
+	var left = 1 - (min(x, EDGE_SOFTENING) / EDGE_SOFTENING)
+	var right = 1 - (min(WIDTH - x, EDGE_SOFTENING) / EDGE_SOFTENING)
+	return (top + bottom + left + right) / 2.0 * 0.3
+
+
+# ------------------------------------------------------------------------------
+func _apply_tiles_to_tilemap(tiles : Array):
+	_terrain.clear()
+	
+	for x in WIDTH:
+		for y in HEIGHT:
+			if not Engine.editor_hint:
+				_terrain.set_background(x, y)
+			
+			_terrain.set_cell(x, y, tiles[x][y])
+	
+	var buffer = 10
+	
+	for x in range(-buffer, WIDTH + buffer):
+		for y in range(0, buffer):
+			_terrain.set_cell(x, -1 - y, _terrain.TileType.Unbreakable)
+			_terrain.set_cell(x, HEIGHT + y, _terrain.TileType.Unbreakable)
+	
+	for y in HEIGHT:
+		for x in range(0, buffer):
+			_terrain.set_cell(-1 - x, y, _terrain.TileType.Unbreakable)
+			_terrain.set_cell(HEIGHT + x, y, _terrain.TileType.Unbreakable)
+	
+	_terrain.update_bitmask_region(Vector2(-buffer, -buffer), 
+								   Vector2(WIDTH + buffer, HEIGHT + buffer))
+
+
+# ------------------------------------------------------------------------------
 func _ready():
 	randomize()
 	noise_seed = randi()
@@ -187,6 +204,9 @@ func _ready():
 	if parent != null and parent is Terrain:
 		_terrain = parent
 		generate_world()
+	
+	if Engine.editor_hint:
+		call_deferred("clear")
 
 
 # ------------------------------------------------------------------------------
