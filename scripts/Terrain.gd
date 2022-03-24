@@ -59,6 +59,11 @@ func get_cell_size() -> Vector2:
 
 
 # -----------------------------------------------------------------------------
+func set_background(x : int, y : int) -> void:
+	$Background.set_cell(x, y, TileType.Background)
+
+
+# -----------------------------------------------------------------------------
 func _ready():
 	var containers = get_tree().get_nodes_in_group("crystal_container")
 	if containers and !containers.empty():
@@ -142,10 +147,10 @@ func __destroy_tile(tile_position : Vector2):
 			randi() % 5 + 1)
 	
 	# Removes the cell and updates the surrounding cells.
-	if tile_position.y > 10:
-		set_cellv(tile_position, TileType.Background)
-	else:
-		set_cellv(tile_position, TileType.Empty)
+	#if tile_position.y > 10:
+	set_cellv(tile_position, TileType.Empty)
+	set_background(tile_position.x, tile_position.y)
+#	else:
 	update_bitmask_area(tile_position)
 	
 	# Removes the damage information and visual.

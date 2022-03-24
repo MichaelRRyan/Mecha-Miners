@@ -19,10 +19,10 @@
 script = ExtResource( 7 )
 
 [node name="SpawnPoint" type="Node2D" parent="PlayerManager"]
-position = Vector2( 63, 99 )
+position = Vector2( 60, 99 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 1 )]
-position = Vector2( 107, 113 )
+position = Vector2( 109, 113 )
 is_human = true
 
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player" groups=["main_camera"]]
@@ -32,7 +32,7 @@ zoom = Vector2( 0.5, 0.5 )
 smoothing_enabled = true
 
 [node name="Player2" parent="PlayerManager" instance=ExtResource( 1 )]
-position = Vector2( -22, 138 )
+position = Vector2( -80, 130 )
 
 [node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 8 )]
 
@@ -45,6 +45,7 @@ pause_mode = 2
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
 
 [node name="DropPod" parent="." instance=ExtResource( 5 )]
+position = Vector2( 60, 99 )
 
 [connection signal="menu_toggled" from="GUIManager" to="Cursor" method="_on_GUIManager_menu_toggled"]
 [connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
