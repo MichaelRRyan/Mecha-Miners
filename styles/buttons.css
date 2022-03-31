@@ -1,0 +1,39 @@
+:root {
+    --outline-button-color: white;
+    --tag-button-color: rgb(178, 113, 253);
+    --tag-button-tint-color: rgb(234, 218, 253);
+}
+
+.outline-button {
+    color: var(--outline-button-color);
+    padding: 16px 20px;
+    border: 1px solid var(--outline-button-color);
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+.outline-button:hover {
+    background-color: white;
+    color: black;
+}
+
+.tag-button {
+    color: var(--tag-button-color);
+    padding: 12px 12px;
+    border: 1px solid var(--tag-button-color);
+    border-left-color: var(--tag-button-tint-color);
+    border-top-color: var(--tag-button-tint-color);
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 12px;
+    height: 1em;
+    margin: 0 4%;
+}
+
+.tag-button:hover {
+    color: white;
+    background-image: linear-gradient(to top left, var(--tag-button-color), var(--tag-button-tint-color));
+}
