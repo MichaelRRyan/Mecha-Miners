@@ -37,3 +37,11 @@
     color: white;
     background-image: linear-gradient(to top left, var(--tag-button-color), var(--tag-button-tint-color));
 }
+
+/* -- Active when the browser width is 700 or less -- */
+@media only screen and (max-width: 700px) {
+    .outline-button {
+        font-size: 0.8em;
+        padding: 8px 10px;
+    }
+}

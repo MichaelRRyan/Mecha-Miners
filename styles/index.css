@@ -4,7 +4,7 @@
     font-family: 'Roboto', sans-serif;
 
     --section-background-color-1: #432450;
-	--section-background-color-2: #863160;
+	--section-background-color-2: rgb(105, 46, 79);
     --highlighted-color: rgb(253, 198, 255);
 }
 
@@ -59,9 +59,10 @@ section:nth-child(even)
 	background-blend-mode: soft-light;
 	background-size: cover;
     object-fit: cover;
-    width: 95%;
-    height: 95%;
-    filter: hue-rotate(12deg)
+    width: 90%;
+    height: 90%;
+    filter: hue-rotate(12deg);
+    border-radius: 20px;
     /* padding: 200px 0;
     background-color: black; */
 }
@@ -105,6 +106,11 @@ h1.section-title {
     width: 100%;
 }
 
+.vertical-divider {
+    border: 0.5px solid rgba(255, 174, 241, 0.616);
+    height: 70%;
+}
+
 a {
     color: var(--highlighted-color);
 }
@@ -113,10 +119,34 @@ a {
     filter: sepia(25%);
 }
 
-/* -- Active when the browser width is 1000 or less -- */
-@media only screen and (max-width: 1000px) {
+h3 {
+    font-size: 1.6em;
+}
+
+/* -- Active when the browser width is 1200 or less -- */
+@media only screen and (max-width: 1200px) {
 	section {
 		flex-direction: column;
-        height: 200vh;
+        height: auto;
 	}
+
+    .section-side {
+        width: 90%;
+    }
+
+    .section-frame {
+        width: 90%;
+        height: 100vw;
+    }
+
+    .vertical-divider {
+        display: none;
+    }
+}
+
+/* -- Active when the browser width is 700 or less -- */
+@media only screen and (max-width: 700px) {
+    h1.section-title {
+        font-size: 3em;
+    }
 }
