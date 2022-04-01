@@ -105,14 +105,18 @@ h1.section-title {
     width: 100%;
 }
 
+a {
+    color: var(--highlighted-color);
+}
+
+#profile-image {
+    filter: sepia(25%);
+}
+
 /* -- Active when the browser width is 1000 or less -- */
 @media only screen and (max-width: 1000px) {
 	section {
 		flex-direction: column;
         height: 200vh;
 	}
-}
-
-a {
-    color: var(--highlighted-color);
 }
