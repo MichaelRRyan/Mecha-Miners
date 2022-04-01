@@ -1,7 +1,7 @@
 :root {
     --outline-button-color: white;
     --tag-button-color: rgb(178, 113, 253);
-    --tag-button-tint-color: rgb(234, 218, 253);
+    --tag-button-tint-color: rgb(222, 196, 255);
 }
 
 .outline-button {
@@ -23,8 +23,8 @@
     color: var(--tag-button-color);
     padding: 12px 12px;
     border: 1px solid var(--tag-button-color);
-    border-left-color: var(--tag-button-tint-color);
-    border-top-color: var(--tag-button-tint-color);
+    /* border-left-color: var(--tag-button-tint-color);
+    border-top-color: var(--tag-button-tint-color); */
     border-radius: 5px;
     font-weight: bold;
     text-decoration: none;

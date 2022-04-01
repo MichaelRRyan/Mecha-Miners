@@ -4,7 +4,7 @@
     font-family: 'Roboto', sans-serif;
 
     --section-background-color-1: #432450;
-	--section-background-color-2: #8f2d47;
+	--section-background-color-2: #863160;
     --highlighted-color: rgb(253, 198, 255);
 }
 
@@ -111,4 +111,8 @@ h1.section-title {
 		flex-direction: column;
         height: 200vh;
 	}
+}
+
+a {
+    color: var(--highlighted-color);
 }
