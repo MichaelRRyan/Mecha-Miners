@@ -16,7 +16,11 @@
 
 .outline-button:hover {
     background-color: white;
-    color: black;
+    color: var(--section-background-color-1);
+}
+
+section:nth-child(even) .outline-button:hover {
+    color: var(--section-background-color-2);
 }
 
 .tag-button {
@@ -36,6 +40,56 @@
 .tag-button:hover {
     color: white;
     background-image: linear-gradient(to top left, var(--tag-button-color), var(--tag-button-tint-color));
+}
+
+.section-button {
+    background-color: rgba(255, 255, 255, 0.7);
+    color: var(--section-background-color-1);
+    text-decoration: none;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border-radius: 100%;
+    width: 50px;
+    font-size: 0.8em;
+}
+
+.section-button:hover {
+    background-color: white;
+}
+
+.section-button i {
+    font-size: 2em;
+}
+
+.next-section-button {
+    bottom: 40px;
+    padding-top: 5px;
+    height: 45px;
+}
+
+.previous-section-button {
+    top: 40px;
+    height: 50px;
+}
+
+section:nth-child(even) .section-button {
+    color: var(--section-background-color-2);
+    color: var(--section-background-color-2);
+}
+
+/* -- Active when the browser width is 1000 or more -- */
+@media only screen and (min-width: 1000px) {
+    .outline-button {
+        padding: 32px 40px;
+        border: 1px solid var(--outline-button-color);
+        border-radius: 8px;
+        font-size: 1.1em;
+    }
 }
 
 /* -- Active when the browser width is 700 or less -- */
