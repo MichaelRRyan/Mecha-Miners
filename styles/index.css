@@ -3,8 +3,11 @@
 :root {
     font-family: 'Roboto', sans-serif;
 
-    --section-background-color-1: #432450;
-	--section-background-color-2: rgb(105, 46, 79);
+    --landing-background-color: #432450;
+    --section-background-color-1: #8e5572;
+	--section-background-color-2: #6C464F;
+	--section-text-color-1: rgb(255, 224, 232);
+	--section-text-color-2: white;
     --highlighted-color: rgb(253, 198, 255);
 }
 
@@ -16,16 +19,17 @@ section {
     margin: 0;
 	position: relative;
 	height: 100vh;
-	color: #eee;
 	background-color: var(--section-background-color-1);
     display: flex;
     flex-direction: row;
     align-items: center;
+    color: var(--section-text-color-1);
 }
 
-section:nth-child(even) 
+section:nth-child(odd) 
 {
 	background-color: var(--section-background-color-2);
+	color: var(--section-text-color-2);
 }
 
 .section-side {
@@ -62,8 +66,6 @@ section:nth-child(even)
     height: 90%;
     filter: hue-rotate(12deg);
     border-radius: 20px;
-    /* padding: 200px 0;
-    background-color: black; */
 }
 
 h1.section-title {
@@ -78,6 +80,10 @@ h1.section-title {
     display: flex;
     justify-content:center;
     margin: 10px 0;
+}
+
+#landing-section {
+    background-color: var(--landing-background-color);
 }
 
 .left-container {
@@ -106,8 +112,12 @@ h1.section-title {
 }
 
 .vertical-divider {
-    border: 0.5px solid white;
+    border: 0.5px solid var(--section-text-color-1);
     height: 70%;
+}
+
+section:nth-child(odd) .vertical-divider {
+    border: 0.5px solid var(--section-text-color-2);
 }
 
 a {
@@ -123,7 +133,7 @@ h3 {
 }
 
 #questions {
-    width: 70%;
+    width: 80%;
     object-fit: contain;
     opacity: 20%;
 }
@@ -133,7 +143,12 @@ h3 {
 	section {
 		flex-direction: column;
         height: auto;
+        padding: 100px 0;
 	}
+
+    #landing-section {
+        padding: 0 0 100px 0;
+    }
 
     .section-side {
         width: 90%;
@@ -147,10 +162,15 @@ h3 {
     .vertical-divider {
         display: none;
     }
+
+    .space {
+        display: none;
+    }
 }
 
 /* -- Active when the browser width is 700 or less -- */
 @media only screen and (max-width: 700px) {
+    
     h1.section-title {
         font-size: 3em;
     }
