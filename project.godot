@@ -49,10 +49,15 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/ai/behaviours/PursueBehaviour.gd"
 }, {
-"base": "TileMap",
+"base": "Node2D",
 "class": "Terrain",
 "language": "GDScript",
 "path": "res://scripts/Terrain.gd"
+}, {
+"base": "TileSet",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://scripts/misc/TerrainTiles.gd"
 } ]
 _global_script_class_icons={
 "AIBrain": "",
@@ -63,7 +68,8 @@ _global_script_class_icons={
 "IdleBehaviour": "",
 "Inventory": "",
 "PursueBehaviour": "",
-"Terrain": ""
+"Terrain": "",
+"Tile": ""
 }
 
 [application]

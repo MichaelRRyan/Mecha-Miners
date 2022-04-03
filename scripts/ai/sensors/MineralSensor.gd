@@ -31,7 +31,7 @@ func _process(delta):
 		var pos = global_position + _scan_direction * i
 		var cell_pos = _terrain.world_to_map(pos)
 		
-		if _terrain.get_cellv(cell_pos) == _terrain.TileType.Crystal:
+		if _terrain.is_mineral(cell_pos):
 			emit_signal("mineral_found", cell_pos)
 	
 	update()

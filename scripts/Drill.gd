@@ -12,12 +12,13 @@ func activate():
 	if _raycast.is_colliding():
 		var collider = _raycast.get_collider()
 		
-		if collider.is_in_group("terrain"):
+		if collider.get_parent() != null and collider.get_parent().is_in_group("terrain"):
+			collider = collider.get_parent()
 			
 			var normal = _raycast.get_collision_normal()
 			
 			# Gets the terrain as a tilemap.
-			var terrain : TileMap = collider
+			var terrain : Terrain = collider
 			
 			# Works out the position of the tile hit.
 			var collision_point = _raycast.get_collision_point()

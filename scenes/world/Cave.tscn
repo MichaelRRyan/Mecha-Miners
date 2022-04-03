@@ -4,7 +4,6 @@
 [ext_resource path="res://scripts/world/CaveGenerator.gd" type="Script" id=2]
 
 [node name="Cave" instance=ExtResource( 1 )]
-tile_data = PoolIntArray(  )
 
 [node name="Background" parent="." index="0"]
 tile_data = PoolIntArray(  )
