@@ -57,13 +57,22 @@ section:nth-child(odd)
     flex-direction: column;
 }
 
+.section-frame {
+    width: 50%;
+	height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .section-image {
 	background-position: center;
 	background-blend-mode: soft-light;
 	background-size: cover;
     object-fit: cover;
-    width: 90%;
-    height: 90%;
+    width: 85%;
+    height: 85%;
     filter: hue-rotate(12deg);
     border-radius: 20px;
 }
@@ -91,15 +100,6 @@ h1.section-title {
     justify-content: flex-start;
     margin: 10px 0;
     width: 100%;
-}
-
-.section-frame {
-    width: 50%;
-	height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
 
 .highlighted {
