@@ -1,13 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
 
 :root {
     font-family: 'Roboto', sans-serif;
 
     --landing-background-color: #432450;
+    --about-me-background-color: #D0ADA7;
     --section-background-color-1: #8e5572;
 	--section-background-color-2: #6C464F;
+
+    --about-me-text-color: #885361;
 	--section-text-color-1: rgb(255, 224, 232);
 	--section-text-color-2: white;
+
     --highlighted-color: rgb(253, 198, 255);
 }
 
@@ -136,6 +141,28 @@ h3 {
     width: 80%;
     object-fit: contain;
     opacity: 20%;
+}
+
+#educational {
+    height: 70%;
+    object-fit: contain;
+    opacity: 80%;
+}
+
+#about-me-section {
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.5em;
+    background-color: var(--about-me-background-color);
+    color: var(--about-me-text-color);
+}
+
+#about-me-section a {
+    color: var(--landing-background-color);
+}
+
+#references-section {
+    font-family: 'Indie Flower', cursive;
+    font-size: 1.4em;
 }
 
 /* -- Active when the browser width is 1200 or less -- */
