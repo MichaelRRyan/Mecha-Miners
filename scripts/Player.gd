@@ -268,11 +268,12 @@ func die():
 	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
-		
-		var terrain = terrains[0]
+		var terrain = terrains.front()
 		
 		if (terrain.has_method("spawn_crystals")):
 			terrain.spawn_crystals(position, gems)
+		else:
+			print_debug("ERROR: Terrain does not have a 'spawn_crystals' method.")
 			
 	emit_signal("crystal_amount_changed", 0)
 	emit_signal("died")

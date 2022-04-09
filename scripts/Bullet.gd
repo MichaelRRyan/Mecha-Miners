@@ -82,12 +82,12 @@ func __on_impact():
 # -----------------------------------------------------------------------------
 func __on_player_impact(player):
 	# If online and the collided player is not the ignored peer id.
-	if Network.is_online: # and player.get_network_master() != ignore_id:
-		if player.has_method("take_damage"):
-			player.take_damage(damage)
-		
-		queue_free()
-		create_hit_particles()
+	#if Network.is_online: # and player.get_network_master() != ignore_id:
+	if player.has_method("take_damage"):
+		player.take_damage(damage)
+	
+	queue_free()
+	create_hit_particles()
 
 
 # -----------------------------------------------------------------------------

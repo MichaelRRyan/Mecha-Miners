@@ -4,9 +4,9 @@ class_name Tile
 
 enum Type {
 	EMPTY = -1,
-	STONE = 3,
-	UNBREAKABLE = 4,
-	CRYSTAL = 5,
+	STONE = 0,
+	UNBREAKABLE = 1,
+	CRYSTAL = 2,
 	BACKGROUND = 6,
 }
 

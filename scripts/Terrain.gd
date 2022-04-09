@@ -6,17 +6,14 @@ onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
 
 enum TileType {
 	Empty = -1,
-	Solid = 3,
-	Unbreakable = 4,
-	Crystal = 5,
+	Solid = 0,
+	Unbreakable = 1,
+	Crystal = 2,
 	Background = 6,
 }
 
 # A mapping of tile type to tile max health.
 const MAX_TILE_HEALTHS = [
-	0, # NULL
-	0, # NULL
-	0, # NULL
 	10.0, # Solid
 	100000000000.0, # Unbreakable
 	5.0, # Crystal
@@ -36,6 +33,11 @@ var crystal_container = null
 var _pathfinding : AStar2D = AStar2D.new()
 onready var _foreground = get_node("Foreground")
 	
+	
+# -----------------------------------------------------------------------------
+func clear() -> void:
+	_foreground.clear()
+
 
 # -----------------------------------------------------------------------------
 func is_empty(cell_position : Vector2) -> bool:
