@@ -16,22 +16,30 @@
 script = ExtResource( 7 )
 randomize_seed = null
 clear = null
+ground_height/script = null
+ground_height/octaves = 4
+ground_height/period = 187.976
+ground_height/lacunarity = 2.322
+ground_height/persistence = 2.371
+ground_height/split = 0.546
+ground_height/sign = false
 cave/script = null
 cave/octaves = 4
-cave/period = 76.486
-cave/lacunarity = 2.381
-cave/persistence = 1.476
-cave/split = 0.402
+cave/period = 4.009
+cave/lacunarity = 0.731
+cave/persistence = 1.67
+cave/split = 0.489
 cave/sign = true
 minerals/script = null
 minerals/octaves = 4
-minerals/period = 5.076
-minerals/lacunarity = 0.68
-minerals/persistence = 1.67
-minerals/split = 0.489
-minerals/sign = true
+minerals/period = 3.25
+minerals/lacunarity = 0.603
+minerals/persistence = 0.251
+minerals/split = 0.658
+minerals/sign = false
 
 [node name="PlayerManager" type="Node2D" parent="." groups=["player_manager"]]
+visible = false
 script = ExtResource( 4 )
 
 [node name="SpawnPoint" type="Node2D" parent="PlayerManager"]

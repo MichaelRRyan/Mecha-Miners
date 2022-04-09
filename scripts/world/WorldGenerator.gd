@@ -1,138 +1,88 @@
-extends Node2D
+extends ProceduralGenerator
 signal world_generated(terrain_tiles)
 tool
 
+export(int, 0, 200, 2) var width = 100 setget _set_width
+export(int, 0, 200, 2) var ground_height = 50 setget _set_ground_height
+export(int, 0, 200, 2) var cave_height = 100 setget _set_cave_height
 
-class Noise:
-	var _noise = OpenSimplexNoise.new()
-	var _params = {
-		"octaves": 4,
-		"period": 5.076,
-		"lacunarity": 0.731,
-		"persistence": 1.67,
-		"split": 0.489,
-		"sign": true,
-	}
-	
-	var _properies = [
-			{ name = "octaves", hint = PROPERTY_HINT_RANGE, hint_string = "1,9,1", type = TYPE_REAL },
-			{ name = "period", hint = PROPERTY_HINT_RANGE, hint_string = "0,500", type = TYPE_REAL },
-			{ name = "lacunarity", hint = PROPERTY_HINT_RANGE, hint_string = "0,5", type = TYPE_REAL },
-			{ name = "persistence", hint = PROPERTY_HINT_RANGE, hint_string = "0,5", type = TYPE_REAL },
-			{ name = "split", hint = PROPERTY_HINT_RANGE, hint_string = "0,1", type = TYPE_REAL },
-			{ name = "sign", type = TYPE_BOOL },
-		]
-	
-	func _get_property_list():
-		return _properies
-	
-	func _set(property, value):
-		if _params.has(property):
-			_params[property] = value
-			
-			if property != "split" and property != "sign":
-				_noise.set(property, value)
-	
-	func _get(property):
-		if _params.has(property):
-			return _params[property]
-
-var noise_list = {
-	cave = Noise.new(),
-	minerals = Noise.new(),
-	ground_height = Noise.new(),
-}
-
-const WIDTH = 100
-const HEIGHT = 100
 const EDGE_SOFTENING = 5
-var noise_seed = randi()
 var _foreground : TileMap = null
 var _background : TileMap = null
 
+var noise_list = {
+	ground_height = Noise.new(),
+	cave = Noise.new(),
+	minerals = Noise.new(),
+}
 
-func _get_property_list():
-	var props = [
-		{ name = "randomize_seed", type = TYPE_BOOL },
-		{ name = "clear", type = TYPE_BOOL },
-	]
 
-	for noise_name in noise_list.keys():
-		var p_list = noise_list[noise_name].get_property_list()
-
-		for p in p_list:
-			props.append(p)
-			props.back().name = noise_name + "/" + props.back().name
-
-	return props
+# ------------------------------------------------------------------------------
+func _set_width(value : int) -> void:
+	width = value
 	
-
-
-
-# ------------------------------------------------------------------------------
-func _set(property : String, value):
-	var split = property.split("/")
-
-	if split.size() == 2:
-		var noise_name = property.split("/")[0]
-		var prop_name = property.split("/")[1]
-
-		if noise_list.has(noise_name):
-			noise_list[noise_name]._set(prop_name, value)
-		
-		generate_world()
-		
-	elif Engine.editor_hint: 
-		if property == "randomize_seed":
-			noise_seed = randi()
-			generate_world()
-
-		elif property == "clear":
-			clear()
-
-		else:
-			generate_world()
+	if Engine.editor_hint:
+		generate()
 
 
 # ------------------------------------------------------------------------------
-func _get(property):
-	var split = property.split("/")
+func _set_cave_height(value : int) -> void:
+	cave_height = value
+	
+	if Engine.editor_hint:
+		generate()
 
-	if split.size() == 2:
-		var noise_name = property.split("/")[0]
-		var prop_name = property.split("/")[1]
 
-		if noise_list.has(noise_name):
-			return noise_list[noise_name]._get(prop_name)
+# ------------------------------------------------------------------------------
+func _set_ground_height(value : int) -> void:
+	ground_height = value
+	
+	if Engine.editor_hint:
+		generate()
+
+
+# ------------------------------------------------------------------------------
+func _get_noise_dict() -> Dictionary:
+	return noise_list
 
 
 # ------------------------------------------------------------------------------
 func clear():
-	if _foreground != null:
+	if (_foreground != null and _background != null) or _get_tilemaps():
 		_foreground.clear()
 		_background.clear()
 
 
 # ------------------------------------------------------------------------------
-func generate_world():
+func generate():
 	
-	if _foreground != null or _get_tilemaps():
+	if (_foreground != null and _background != null) or _get_tilemaps():
 		
 		var tiles = []
+		
+		for x in width:
+			tiles.append([])
+			
+			for y in cave_height + ground_height:
+				tiles[x].append(-1)
+		
+		noise_list.ground_height._noise.seed = noise_seed
 		noise_list.cave._noise.seed = noise_seed
 		noise_list.minerals._noise.seed = noise_seed
 		
-		for x in WIDTH:
-			tiles.append([])
-			
-			for y in HEIGHT:	
+		_generate_ground_height(tiles)
+		
+		for x in width:
+
+			for y in range(ground_height, ground_height + cave_height):	
+
 				var noise_sample = noise_list.cave._noise.get_noise_2d(x, y)
 				var normalised_sample = (noise_sample + 1.0) * 0.5
 				normalised_sample = min(normalised_sample 
 					+ _get_edge_dist_modifier(x, y), 1)
-				
-				tiles[x].append(_get_tile_from_height(normalised_sample))
-				
+
+				tiles[x][y] = _get_tile_from_cave_sample(normalised_sample)
+
 				if 0 == tiles[x][y]:
 					noise_sample = noise_list.minerals._noise.get_noise_2d(float(x), float(y))
 					tiles[x][y] = _get_tile_from_mineral(noise_sample)
@@ -144,7 +94,17 @@ func generate_world():
 
 
 # ------------------------------------------------------------------------------
-func _get_tile_from_height(noise_sample):
+func _generate_ground_height(tiles : Array):
+	for x in width:
+		var sample = noise_list.ground_height._noise.get_noise_1d(x)
+		var ground_y = (sample + 1.0) * 0.5 * ground_height
+		
+		for y in range(ground_y, ground_height):
+			tiles[x][y] = 0
+	
+
+# ------------------------------------------------------------------------------
+func _get_tile_from_cave_sample(noise_sample):
 	if noise_list.cave._params["sign"]:
 		if noise_sample > noise_list.cave._params["split"]:
 			return 0
@@ -167,36 +127,44 @@ func _get_tile_from_mineral(noise_sample):
 
 # ------------------------------------------------------------------------------
 func _get_edge_dist_modifier(x, y):
-	var top = 1 - (min(y, EDGE_SOFTENING) / EDGE_SOFTENING)
-	var bottom = 1 - (min(HEIGHT - y, EDGE_SOFTENING) / EDGE_SOFTENING)
+	var total_height = cave_height + ground_height
+	
+	var bottom = 1 - (min(total_height - y, EDGE_SOFTENING) / EDGE_SOFTENING)
 	var left = 1 - (min(x, EDGE_SOFTENING) / EDGE_SOFTENING)
-	var right = 1 - (min(WIDTH - x, EDGE_SOFTENING) / EDGE_SOFTENING)
-	return (top + bottom + left + right) / 2.0 * 0.3
+	var right = 1 - (min(width - x, EDGE_SOFTENING) / EDGE_SOFTENING)
+	
+	return (bottom + left + right) * 0.3
 
 
 # ------------------------------------------------------------------------------
 func _apply_tiles_to_tilemap(tiles : Array):
+	
+	# Clears any previous world.
 	clear()
 	
-	for x in WIDTH:
-		for y in HEIGHT:
-			_background.set_cellv(Vector2(x, y), 0)
+	# Applies the generated caves.
+	for x in tiles.size():
+		for y in tiles[x].size():
+			if y >= ground_height:
+				_background.set_cellv(Vector2(x, y), 0)
 			_foreground.set_cell(x, y, tiles[x][y])
 	
+	# Adds a buffer of unbreakable blocks around the level.
 	var buffer = 10
 	
-	for x in range(-buffer, WIDTH + buffer):
-		for y in range(0, buffer):
-			_foreground.set_cell(x, -1 - y, 1)
-			_foreground.set_cell(x, HEIGHT + y, 1)
+#	for x in range(-buffer, WIDTH + buffer):
+#		for y in range(0, buffer):
+#			_foreground.set_cell(x, -1 - y, 1)
+#			_foreground.set_cell(x, HEIGHT + y, 1)
+#
+#	for y in HEIGHT:
+#		for x in range(0, buffer):
+#			_foreground.set_cell(-1 - x, y, 1)
+#			_foreground.set_cell(HEIGHT + x, y, 1)
 	
-	for y in HEIGHT:
-		for x in range(0, buffer):
-			_foreground.set_cell(-1 - x, y, 1)
-			_foreground.set_cell(HEIGHT + x, y, 1)
-	
-	_foreground.update_bitmask_region(Vector2(-buffer, -buffer), 
-								   Vector2(WIDTH + buffer, HEIGHT + buffer))
+	# Updates the autotiles.
+	_foreground.update_bitmask_region(Vector2.ZERO, 
+		Vector2(width, cave_height + ground_height))
 
 
 # ------------------------------------------------------------------------------
@@ -208,7 +176,7 @@ func _ready():
 		call_deferred("clear")
 
 	elif _get_tilemaps():
-		generate_world()
+		generate()
 
 
 # ------------------------------------------------------------------------------
@@ -221,6 +189,6 @@ func _get_tilemaps() -> bool:
 	else:
 		print_debug("No terrain parent")
 	return false
-
-
+	
+	
 # ------------------------------------------------------------------------------
