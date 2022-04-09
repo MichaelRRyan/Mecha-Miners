@@ -29,6 +29,9 @@ class Noise:
 	func _set(property, value):
 		if _params.has(property):
 			_params[property] = value
+			
+			if property != "split" and property != "sign":
+				_noise.set(property, value)
 	
 	func _get(property):
 		if _params.has(property):
@@ -36,7 +39,8 @@ class Noise:
 
 var noise_list = {
 	cave = Noise.new(),
-	minerals = Noise.new()
+	minerals = Noise.new(),
+	ground_height = Noise.new(),
 }
 
 const WIDTH = 100
@@ -76,6 +80,8 @@ func _set(property : String, value):
 		if noise_list.has(noise_name):
 			noise_list[noise_name]._set(prop_name, value)
 		
+		generate_world()
+		
 	elif Engine.editor_hint: 
 		if property == "randomize_seed":
 			noise_seed = randi()
@@ -111,24 +117,10 @@ func clear():
 func generate_world():
 	
 	if _foreground != null or _get_tilemaps():
-
-#	var cave_map = OpenSimplexNoise.new()
-#	var minerals_map = OpenSimplexNoise.new()
-#
-#	# Sets the cave map noise properties.
-#	cave_map.seed = noise_seed
-#	cave_map.octaves = params["cave/octaves"]
-#	cave_map.period = params["cave/period"]
-#	cave_map.lacunarity = params["cave/lacunarity"]
-#	cave_map.persistence = params["cave/persistence"]
-#
-#	minerals_map.seed = noise_seed
-#	minerals_map.octaves = params["minerals/octaves"]
-#	minerals_map.period = params["minerals/period"]
-#	minerals_map.lacunarity = params["minerals/lacunarity"]
-#	minerals_map.persistence = params["minerals/persistence"]
 		
 		var tiles = []
+		noise_list.cave._noise.seed = noise_seed
+		noise_list.minerals._noise.seed = noise_seed
 		
 		for x in WIDTH:
 			tiles.append([])
@@ -188,9 +180,7 @@ func _apply_tiles_to_tilemap(tiles : Array):
 	
 	for x in WIDTH:
 		for y in HEIGHT:
-			if not Engine.editor_hint:
-				_background.set_cellv(Vector2(x, y), 6)
-			
+			_background.set_cellv(Vector2(x, y), 0)
 			_foreground.set_cell(x, y, tiles[x][y])
 	
 	var buffer = 10
