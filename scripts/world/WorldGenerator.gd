@@ -1,5 +1,4 @@
 extends ProceduralGenerator
-signal world_generated(terrain_tiles)
 tool
 
 export(int, 0, 200, 2) var width = 100 setget _set_width
@@ -16,6 +15,7 @@ export(int, 1, 20, 1) var max_main_cave_radius = 5 setget _set_max_main_cave_rad
 # Branches
 export(int, 1, 20, 1) var min_branch_radius = 2 setget _set_min_branch_radius
 export(int, 1, 20, 1) var max_branch_radius = 5 setget _set_max_branch_radius
+export(float, 0, 1, 0.001) var branch_threshold = 0.01 setget _set_branch_threshold
 export(float, 0, 0.1, 0.001) var chance_to_branch = 0.01 setget _set_chance_to_branch
 export(float, 0, 1, 0.001) var max_branch_rotation = 0.2 setget _set_max_branch_rotation
 
@@ -128,6 +128,14 @@ func _set_chance_to_branch(value : float) -> void:
 
 
 # ------------------------------------------------------------------------------
+func _set_branch_threshold(value : float) -> void:
+	branch_threshold = value
+	
+	if Engine.editor_hint:
+		generate()
+
+
+# ------------------------------------------------------------------------------
 func _set_max_branch_rotation(value : float) -> void:
 	max_branch_rotation = value
 	
@@ -146,7 +154,7 @@ func _get_noise_dict() -> Dictionary:
 
 # ------------------------------------------------------------------------------
 func clear():
-	if (_foreground != null and _background != null) or _get_tilemaps():
+	if _are_tilemaps_valid():
 		_background.clear()
 		_foreground.clear()
 		_details.clear()
@@ -155,45 +163,38 @@ func clear():
 
 # ------------------------------------------------------------------------------
 func generate():
-	
-	if (_foreground != null and _background != null) or _get_tilemaps():
-		
+	if _are_tilemaps_valid():
 		clear()
-		
-		var tiles = []
-		
-		for x in width:
-			tiles.append([])
-			
-			for y in cave_height + ground_height:
-				tiles[x].append(0)
-		
 		apply_seed()
 		
 		var surface = _generate_ground_height()
 		
 		_fill_area(Vector2(0, ground_height), 
 			Vector2(width, ground_height + cave_height), 0)
-			
+		
 		_generate_caves(surface)
 		_place_grass(surface)
-		
-		emit_signal("world_generated", tiles)
 		_update_autotiles()
+		
 	else:
-		print("No tiles")
+		print("No tile maps could be found")
 
 
 # ------------------------------------------------------------------------------
 func _generate_ground_height():
 	var surface = []
 	
+	# Loop across the width of the world.
 	for x in width:
+		
+		# Decides the height for this x based on noise.
 		var sample = noise_list.ground_height._noise.get_noise_1d(x)
 		var ground_y = (sample + 1.0) * 0.5 * ground_height
 		
+		# Appends the ground height.
 		surface.append(ground_y)
 		
+		# Fills in the ground from the ground height to the cave start.
 		for y in range(ground_y, ground_height):
 			_foreground.set_cell(x, y, 0)
 	
@@ -202,6 +203,7 @@ func _generate_ground_height():
 
 # ------------------------------------------------------------------------------
 func _generate_caves(surface : Array):
+	
 	# Picks a number of caves and then divides the map width by the number.
 	var number_of_caves = randi() % (max_caves + 1 - min_caves) + min_caves
 	var division_size = width / (number_of_caves + 2)
@@ -213,23 +215,21 @@ func _generate_caves(surface : Array):
 		cave_starts.append(randi() % division_size + division_size * i)
 	
 	# Loops for each cave start.
-	for prev_x in cave_starts:
+	for start_x in cave_starts:
+		var prev_x = start_x
 		
-		for y in range(surface[prev_x], ground_height + cave_height):
+		# Loops from the surface to the bottom of the world.
+		for y in range(surface[start_x], ground_height + cave_height):
 			
-			var change = (noise_list.cave_horizontal._noise.get_noise_2d(prev_x, y) 
-				* cave_movement_volatility)
-				
-			var next_x = prev_x + change
-			if next_x < 0 or change >= width:
-				next_x = prev_x - change
+			var sample = noise_list.cave_horizontal._noise.get_noise_2d(start_x, y) 
+			var next_x = start_x + sample * cave_movement_volatility
 			
 			for x in range(min(prev_x, next_x), max(prev_x, next_x) + 1):
-				var sample = noise_list.cave_radius._noise.get_noise_2d(x, y)
+				var r_sample = noise_list.cave_radius._noise.get_noise_2d(x, y)
 				var radius = max(abs(sample) * max_main_cave_radius, min_main_cave_radius)
 				_clear_circle(x, y, radius, surface)
-				
-			if randf() <= chance_to_branch:
+			
+			if abs(sample) <= branch_threshold and randf() <= chance_to_branch:
 				_generate_secondary_cave(prev_x, y, surface)
 			
 			prev_x = next_x
@@ -365,3 +365,6 @@ func apply_seed():
 	
 	
 # ------------------------------------------------------------------------------
+func _are_tilemaps_valid() -> bool:
+	return ((_foreground != null and _background != null and _details != null) 
+		or _get_tilemaps())
