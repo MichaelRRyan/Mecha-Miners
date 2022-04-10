@@ -2,6 +2,26 @@ extends Node
 class_name ProceduralGenerator
 
 # ------------------------------------------------------------------------------
+# SIMPLEX NOISE PROPERTY DESCRIPTIONS
+# ------------------------------------------------------------------------------
+# === OCTAVES ===
+# Number of OpenSimplex noise layers that are sampled to get the fractal noise. 
+# Higher values result in more detailed noise but take more time to generate.
+# Have a min vlaue of 1 and max of 9.
+#
+# === PERIOD ===
+# Period of the base octave. A lower period results in higher-frequency noise
+# 	(more value changes accross the same distance).
+#
+# === LACUNARITY ===
+# Difference in period between octaves.
+#
+# === PERSISTENCE ===
+# The contribution factor of the different octaves. A persistence value of 1 
+# 	means all octaves have the same contribution, a value of 0.5 means each
+# 	octave contributes half as much as the previous one.
+
+# ------------------------------------------------------------------------------
 class Noise:
 	var _noise = OpenSimplexNoise.new()
 	var _params = {
@@ -12,8 +32,8 @@ class Noise:
 	var _properies = [
 			{ name = "octaves", hint = PROPERTY_HINT_RANGE, hint_string = "1,9,1", type = TYPE_REAL },
 			{ name = "period", hint = PROPERTY_HINT_RANGE, hint_string = "0,500", type = TYPE_REAL },
-			{ name = "lacunarity", hint = PROPERTY_HINT_RANGE, hint_string = "0,5", type = TYPE_REAL },
-			{ name = "persistence", hint = PROPERTY_HINT_RANGE, hint_string = "0,5", type = TYPE_REAL },
+			{ name = "lacunarity", hint = PROPERTY_HINT_RANGE, hint_string = "0,100", type = TYPE_REAL },
+			{ name = "persistence", hint = PROPERTY_HINT_RANGE, hint_string = "0,100", type = TYPE_REAL },
 			{ name = "split", hint = PROPERTY_HINT_RANGE, hint_string = "0,1", type = TYPE_REAL },
 			{ name = "sign", type = TYPE_BOOL },
 		]

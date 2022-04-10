@@ -78,7 +78,7 @@ func get_cell_size() -> Vector2:
 
 # -----------------------------------------------------------------------------
 func set_background(x : int, y : int) -> void:
-	$Background.set_cell(x, y, TileType.Background)
+	$Background.set_cell(x, y, 0)
 
 
 # -----------------------------------------------------------------------------

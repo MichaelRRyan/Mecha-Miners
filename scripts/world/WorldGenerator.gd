@@ -7,12 +7,14 @@ export(int, 0, 200, 2) var ground_height = 50 setget _set_ground_height
 export(int, 0, 200, 2) var cave_height = 100 setget _set_cave_height
 
 const EDGE_SOFTENING = 5
-var _foreground : TileMap = null
 var _background : TileMap = null
+var _foreground : TileMap = null
+var _details : TileMap = null
 
 var noise_list = {
 	ground_height = Noise.new(),
-	cave = Noise.new(),
+	cave_horizontal = Noise.new(),
+	cave_radius = Noise.new(),
 	minerals = Noise.new(),
 }
 
@@ -49,8 +51,10 @@ func _get_noise_dict() -> Dictionary:
 # ------------------------------------------------------------------------------
 func clear():
 	if (_foreground != null and _background != null) or _get_tilemaps():
-		_foreground.clear()
 		_background.clear()
+		_foreground.clear()
+		_details.clear()
+		
 
 
 # ------------------------------------------------------------------------------
@@ -58,62 +62,99 @@ func generate():
 	
 	if (_foreground != null and _background != null) or _get_tilemaps():
 		
+		clear()
+		
 		var tiles = []
 		
 		for x in width:
 			tiles.append([])
 			
 			for y in cave_height + ground_height:
-				tiles[x].append(-1)
+				tiles[x].append(0)
 		
-		noise_list.ground_height._noise.seed = noise_seed
-		noise_list.cave._noise.seed = noise_seed
-		noise_list.minerals._noise.seed = noise_seed
+		apply_seed()
 		
-		_generate_ground_height(tiles)
+		var surface = _generate_ground_height()
 		
-		for x in width:
-
-			for y in range(ground_height, ground_height + cave_height):	
-
-				var noise_sample = noise_list.cave._noise.get_noise_2d(x, y)
-				var normalised_sample = (noise_sample + 1.0) * 0.5
-				normalised_sample = min(normalised_sample 
-					+ _get_edge_dist_modifier(x, y), 1)
-
-				tiles[x][y] = _get_tile_from_cave_sample(normalised_sample)
-
-				if 0 == tiles[x][y]:
-					noise_sample = noise_list.minerals._noise.get_noise_2d(float(x), float(y))
-					tiles[x][y] = _get_tile_from_mineral(noise_sample)
+		_fill_area(Vector2(0, ground_height), 
+			Vector2(width, ground_height + cave_height), 0)
+			
+		_generate_caves(surface)
+		_place_grass(surface)
 		
 		emit_signal("world_generated", tiles)
-		_apply_tiles_to_tilemap(tiles)
+		_update_autotiles()
 	else:
 		print("No tiles")
 
 
 # ------------------------------------------------------------------------------
-func _generate_ground_height(tiles : Array):
+func _generate_ground_height():
+	var surface = []
+	
 	for x in width:
 		var sample = noise_list.ground_height._noise.get_noise_1d(x)
 		var ground_y = (sample + 1.0) * 0.5 * ground_height
 		
+		surface.append(ground_y)
+		
 		for y in range(ground_y, ground_height):
-			tiles[x][y] = 0
+			_foreground.set_cell(x, y, 0)
 	
+	return surface
+
 
 # ------------------------------------------------------------------------------
-func _get_tile_from_cave_sample(noise_sample):
-	if noise_list.cave._params["sign"]:
-		if noise_sample > noise_list.cave._params["split"]:
-			return 0
-		return -1
+func _generate_caves(surface : Array):
+	var caves_max = 5
+	var caves_min = 3
+	
+	var caves = randi() % (caves_max - caves_min) + caves_min
+	
+	for i in caves:
+		var prev_x = randi() % width
+	
+		for y in range(surface[prev_x], ground_height + cave_height):
+			var next_x = prev_x + noise_list.cave_horizontal._noise.get_noise_2d(prev_x, y) * 10
+			
+			for x in range(min(prev_x, next_x), max(prev_x, next_x) + 1):
+				var sample = noise_list.cave_radius._noise.get_noise_2d(x, y)
+				var radius = (sample + 1) * 3
+				_clear_circle(x, y, radius, surface)
+			
+			prev_x = next_x
+
+
+# ------------------------------------------------------------------------------
+func _clear_circle(start_x, start_y, radius : int, surface : Array):
+	for x in range(-radius, radius + 1):
 		
-	else:
-		if noise_sample < noise_list.cave._params["split"]:
-			return 0
-		return -1
+		# Uses the circle formula to get the max y.
+		var max_y = sqrt((radius * radius) - (x * x))
+		
+		for y in range(-max_y, max_y + 1):
+			var new_x = start_x + x
+			var new_y = start_y + y
+			
+			if (new_x >= 0 and new_x < width 
+				and new_y >= surface[new_x] - 1 and new_y < ground_height + cave_height):
+					_foreground.set_cell(new_x, new_y, -1)
+					_background.set_cell(new_x, new_y, 0)
+
+
+# ------------------------------------------------------------------------------
+func _place_grass(surface : Array):
+	for x in surface.size():
+		var y = surface[x]
+		if _foreground.get_cell(x, y) == 0:
+			_details.set_cell(x, y - 1, randi() % 2)
+	
+	
+# ------------------------------------------------------------------------------
+func _fill_area(top_left : Vector2, bottom_right: Vector2, value : int) -> void:
+	for x in range(top_left.x, bottom_right.x):
+		for y in range(top_left.y, bottom_right.y):
+			_foreground.set_cell(x, y, value)
 
 
 # ------------------------------------------------------------------------------
@@ -137,36 +178,11 @@ func _get_edge_dist_modifier(x, y):
 
 
 # ------------------------------------------------------------------------------
-func _apply_tiles_to_tilemap(tiles : Array):
-	
-	# Clears any previous world.
-	clear()
-	
-	# Applies the generated caves.
-	for x in tiles.size():
-		for y in tiles[x].size():
-			if y >= ground_height:
-				_background.set_cellv(Vector2(x, y), 0)
-			_foreground.set_cell(x, y, tiles[x][y])
-	
-	# Adds a buffer of unbreakable blocks around the level.
-	var buffer = 10
-	
-#	for x in range(-buffer, WIDTH + buffer):
-#		for y in range(0, buffer):
-#			_foreground.set_cell(x, -1 - y, 1)
-#			_foreground.set_cell(x, HEIGHT + y, 1)
-#
-#	for y in HEIGHT:
-#		for x in range(0, buffer):
-#			_foreground.set_cell(-1 - x, y, 1)
-#			_foreground.set_cell(HEIGHT + x, y, 1)
-	
-	# Updates the autotiles.
+func _update_autotiles():
 	_foreground.update_bitmask_region(Vector2.ZERO, 
 		Vector2(width, cave_height + ground_height))
-
-
+		
+		
 # ------------------------------------------------------------------------------
 func _ready():
 	randomize()
@@ -183,12 +199,21 @@ func _ready():
 func _get_tilemaps() -> bool:
 	var parent = get_parent()
 	if parent != null and parent is Terrain:
-		_foreground = parent.get_node("Foreground")
 		_background = parent.get_node("Background")
+		_foreground = parent.get_node("Foreground")
+		_details = parent.get_node("Details")
 		return _foreground and _background
 	else:
 		print_debug("No terrain parent")
 	return false
+	
+	
+# ------------------------------------------------------------------------------
+func apply_seed():
+	for noise in noise_list.values():
+		noise._noise.seed = noise_seed
+	
+	seed(noise_seed)
 	
 	
 # ------------------------------------------------------------------------------

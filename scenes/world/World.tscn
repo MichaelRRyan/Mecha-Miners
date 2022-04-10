@@ -14,49 +14,65 @@
 
 [node name="WorldGenerator" type="Node2D" parent="Terrain"]
 script = ExtResource( 7 )
+width = 200
 randomize_seed = null
 clear = null
 ground_height/script = null
-ground_height/octaves = 4
-ground_height/period = 187.976
-ground_height/lacunarity = 2.322
-ground_height/persistence = 2.371
-ground_height/split = 0.546
-ground_height/sign = false
+ground_height/octaves = 3
+ground_height/period = 18.331
+ground_height/lacunarity = 1.365
+ground_height/persistence = 0.642
+ground_height/split = 0.489
+ground_height/sign = true
+cave_horizontal/script = null
+cave_horizontal/octaves = 3
+cave_horizontal/period = 43.713
+cave_horizontal/lacunarity = 5.617
+cave_horizontal/persistence = 0.772
+cave_horizontal/split = 0.392
+cave_horizontal/sign = true
+cave_radius/script = null
+cave_radius/octaves = 3
+cave_radius/period = 64.0
+cave_radius/lacunarity = 2.0
+cave_radius/persistence = 0.5
+cave_radius/split = 0.489
+cave_radius/sign = true
 cave/script = null
-cave/octaves = 4
-cave/period = 4.009
-cave/lacunarity = 0.731
-cave/persistence = 1.67
+cave/octaves = 3
+cave/period = 64.0
+cave/lacunarity = 2.0
+cave/persistence = 0.5
 cave/split = 0.489
 cave/sign = true
 minerals/script = null
-minerals/octaves = 4
-minerals/period = 3.25
-minerals/lacunarity = 0.603
-minerals/persistence = 0.251
-minerals/split = 0.658
-minerals/sign = false
+minerals/octaves = 3
+minerals/period = 64.0
+minerals/lacunarity = 2.0
+minerals/persistence = 0.5
+minerals/split = 0.489
+minerals/sign = true
 
 [node name="PlayerManager" type="Node2D" parent="." groups=["player_manager"]]
-visible = false
 script = ExtResource( 4 )
 
 [node name="SpawnPoint" type="Node2D" parent="PlayerManager"]
 position = Vector2( 707, 109 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 6 )]
-position = Vector2( 109, 113 )
+position = Vector2( 109.893, 113.3 )
 is_human = true
 
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player" groups=["main_camera"]]
 scale = Vector2( 2, 2 )
 current = true
 zoom = Vector2( 0.5, 0.5 )
+limit_left = 0
+limit_top = -100
 smoothing_enabled = true
 
 [node name="Player2" parent="PlayerManager" instance=ExtResource( 6 )]
-position = Vector2( 617, 116 )
+position = Vector2( 617.893, 116.3 )
 
 [node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 3 )]
 
