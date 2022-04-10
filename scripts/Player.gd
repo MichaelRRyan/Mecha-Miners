@@ -67,6 +67,9 @@ func _set(property, value):
 	if params.has(property):
 		params[property] = value
 		
+		if property == "horizontal_movement/max_speed":
+			max_speed = value
+		
 		if property == "horizontal_movement/time_to_max_speed":
 			acceleration = max_speed / value
 		

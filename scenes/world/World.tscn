@@ -14,11 +14,15 @@
 
 [node name="WorldGenerator" type="Node2D" parent="Terrain"]
 script = ExtResource( 7 )
-width = 200
-max_caves = 4
-cave_movement_volatility = 16
+width = 150
+cave_height = 300
+min_caves = 2
+max_caves = 3
+cave_movement_volatility = 20
 min_main_cave_radius = 1
-max_main_cave_radius = 10
+min_branch_radius = 1
+chance_to_branch = 0.015
+max_branch_rotation = 0.116
 randomize_seed = null
 clear = null
 ground_height/script = null
@@ -28,9 +32,9 @@ ground_height/lacunarity = 2.17
 ground_height/persistence = 0.271
 cave_horizontal/script = null
 cave_horizontal/octaves = 5
-cave_horizontal/period = 153.729
-cave_horizontal/lacunarity = 2.913
-cave_horizontal/persistence = 1.572
+cave_horizontal/period = 188.597
+cave_horizontal/lacunarity = 18.074
+cave_horizontal/persistence = 2.887
 cave_radius/script = null
 cave_radius/octaves = 5
 cave_radius/period = 22.932
@@ -49,19 +53,20 @@ script = ExtResource( 4 )
 position = Vector2( 707, 109 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 6 )]
-position = Vector2( 109.893, 113.3 )
+position = Vector2( 1166, 93 )
 is_human = true
+horizontal_movement/max_speed = 100.0
 
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player" groups=["main_camera"]]
 scale = Vector2( 2, 2 )
 current = true
-zoom = Vector2( 0.5, 0.5 )
+zoom = Vector2( 0.75, 0.75 )
 limit_left = 0
 limit_top = -100
 smoothing_enabled = true
 
 [node name="Player2" parent="PlayerManager" instance=ExtResource( 6 )]
-position = Vector2( 617.893, 116.3 )
+position = Vector2( 1479, 169 )
 
 [node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 3 )]
 

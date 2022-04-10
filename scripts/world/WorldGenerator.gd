@@ -4,12 +4,20 @@ tool
 
 export(int, 0, 200, 2) var width = 100 setget _set_width
 export(int, 0, 200, 2) var ground_height = 50 setget _set_ground_height
-export(int, 0, 200, 2) var cave_height = 100 setget _set_cave_height
+
+# Caves
+export(int, 0, 500, 2) var cave_height = 100 setget _set_cave_height
 export(int, 1, 10, 1) var min_caves = 3 setget _set_min_caves
 export(int, 1, 10, 1) var max_caves = 5 setget _set_max_caves
 export(int, 1, 50, 2) var cave_movement_volatility = 5 setget _set_cave_movement_volatility
 export(int, 1, 20, 1) var min_main_cave_radius = 2 setget _set_min_main_cave_radius
 export(int, 1, 20, 1) var max_main_cave_radius = 5 setget _set_max_main_cave_radius
+
+# Branches
+export(int, 1, 20, 1) var min_branch_radius = 2 setget _set_min_branch_radius
+export(int, 1, 20, 1) var max_branch_radius = 5 setget _set_max_branch_radius
+export(float, 0, 0.1, 0.001) var chance_to_branch = 0.01 setget _set_chance_to_branch
+export(float, 0, 1, 0.001) var max_branch_rotation = 0.2 setget _set_max_branch_rotation
 
 const EDGE_SOFTENING = 5
 var _background : TileMap = null
@@ -23,6 +31,10 @@ var noise_list = {
 	minerals = Noise.new(),
 }
 
+
+# ------------------------------------------------------------------------------
+# Setter Methods
+# ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
 func _set_width(value : int) -> void:
@@ -89,6 +101,43 @@ func _set_max_main_cave_radius(value : int) -> void:
 		if Engine.editor_hint:
 			generate()
 
+
+# ------------------------------------------------------------------------------
+func _set_min_branch_radius(value : int) -> void:
+	min_branch_radius = value
+	
+	if Engine.editor_hint:
+			generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_max_branch_radius(value : int) -> void:
+	if value >= min_branch_radius:
+		max_branch_radius = value
+		
+		if Engine.editor_hint:
+				generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_chance_to_branch(value : float) -> void:
+	chance_to_branch = value
+	
+	if Engine.editor_hint:
+		generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_max_branch_rotation(value : float) -> void:
+	max_branch_rotation = value
+	
+	if Engine.editor_hint:
+		generate()
+
+
+# ------------------------------------------------------------------------------
+# Regular Methods
+# ------------------------------------------------------------------------------
 
 # ------------------------------------------------------------------------------
 func _get_noise_dict() -> Dictionary:
@@ -179,9 +228,49 @@ func _generate_caves(surface : Array):
 				var sample = noise_list.cave_radius._noise.get_noise_2d(x, y)
 				var radius = max(abs(sample) * max_main_cave_radius, min_main_cave_radius)
 				_clear_circle(x, y, radius, surface)
+				
+			if randf() <= chance_to_branch:
+				_generate_secondary_cave(prev_x, y, surface)
 			
 			prev_x = next_x
 
+
+
+# ------------------------------------------------------------------------------
+func _generate_secondary_cave(x, y, surface : Array):
+	var distance = randi() % 100
+	var direction = Vector2.LEFT if randi() % 2 == 0 else Vector2.RIGHT
+	
+	var prev_round_x = int(x)
+	var prev_round_y = int(y)
+	
+	var nodes = []
+	
+	for i in distance:
+		var round_x = int(x)
+		var round_y = int(y)
+		
+		if prev_round_x != round_x or prev_round_y != round_y:
+			if _foreground.get_cell(round_x, round_y) != -1:
+				nodes.append(Vector2(round_x, round_y))
+				
+			prev_round_x = round_x
+			prev_round_y = round_y
+		
+		x += direction.x
+		y += direction.y
+		
+		var sample = noise_list.cave_horizontal._noise.get_noise_2d(round_x, round_y)
+		direction = direction.rotated(sample * PI * max_branch_rotation)
+
+	for node in nodes:
+		var sample = noise_list.cave_radius._noise.get_noise_2d(node.x, node.y)
+		var radius = max(abs(sample) * max_branch_radius, min_branch_radius)
+		_clear_circle(node.x, node.y, radius, surface)
+		
+		if randf() <= chance_to_branch:
+			_generate_secondary_cave(x, y, surface)
+		
 
 # ------------------------------------------------------------------------------
 func _clear_circle(start_x, start_y, radius : int, surface : Array):
