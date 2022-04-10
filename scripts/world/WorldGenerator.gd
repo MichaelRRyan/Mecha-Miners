@@ -5,6 +5,11 @@ tool
 export(int, 0, 200, 2) var width = 100 setget _set_width
 export(int, 0, 200, 2) var ground_height = 50 setget _set_ground_height
 export(int, 0, 200, 2) var cave_height = 100 setget _set_cave_height
+export(int, 1, 10, 1) var min_caves = 3 setget _set_min_caves
+export(int, 1, 10, 1) var max_caves = 5 setget _set_max_caves
+export(int, 1, 50, 2) var cave_movement_volatility = 5 setget _set_cave_movement_volatility
+export(int, 1, 20, 1) var min_main_cave_radius = 2 setget _set_min_main_cave_radius
+export(int, 1, 20, 1) var max_main_cave_radius = 5 setget _set_max_main_cave_radius
 
 const EDGE_SOFTENING = 5
 var _background : TileMap = null
@@ -41,6 +46,48 @@ func _set_ground_height(value : int) -> void:
 	
 	if Engine.editor_hint:
 		generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_min_caves(value : int) -> void:
+	min_caves = value
+	
+	if Engine.editor_hint:
+		generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_max_caves(value : int) -> void:
+	if value >= min_caves:
+		max_caves = value
+		
+		if Engine.editor_hint:
+			generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_cave_movement_volatility(value : int) -> void:
+	cave_movement_volatility = value
+		
+	if Engine.editor_hint:
+		generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_min_main_cave_radius(value : int) -> void:
+	min_main_cave_radius = value
+		
+	if Engine.editor_hint:
+		generate()
+
+
+# ------------------------------------------------------------------------------
+func _set_max_main_cave_radius(value : int) -> void:
+	if value >= min_main_cave_radius:
+		max_main_cave_radius = value
+			
+		if Engine.editor_hint:
+			generate()
 
 
 # ------------------------------------------------------------------------------
@@ -106,20 +153,31 @@ func _generate_ground_height():
 
 # ------------------------------------------------------------------------------
 func _generate_caves(surface : Array):
-	var caves_max = 5
-	var caves_min = 3
+	# Picks a number of caves and then divides the map width by the number.
+	var number_of_caves = randi() % (max_caves + 1 - min_caves) + min_caves
+	var division_size = width / (number_of_caves + 2)
 	
-	var caves = randi() % (caves_max - caves_min) + caves_min
+	var cave_starts = []
 	
-	for i in caves:
-		var prev_x = randi() % width
+	# Randomly chooses the start x of each cave in their own division.
+	for i in range(1, number_of_caves + 1):
+		cave_starts.append(randi() % division_size + division_size * i)
 	
+	# Loops for each cave start.
+	for prev_x in cave_starts:
+		
 		for y in range(surface[prev_x], ground_height + cave_height):
-			var next_x = prev_x + noise_list.cave_horizontal._noise.get_noise_2d(prev_x, y) * 10
+			
+			var change = (noise_list.cave_horizontal._noise.get_noise_2d(prev_x, y) 
+				* cave_movement_volatility)
+				
+			var next_x = prev_x + change
+			if next_x < 0 or change >= width:
+				next_x = prev_x - change
 			
 			for x in range(min(prev_x, next_x), max(prev_x, next_x) + 1):
 				var sample = noise_list.cave_radius._noise.get_noise_2d(x, y)
-				var radius = (sample + 1) * 3
+				var radius = max(abs(sample) * max_main_cave_radius, min_main_cave_radius)
 				_clear_circle(x, y, radius, surface)
 			
 			prev_x = next_x
@@ -160,8 +218,9 @@ func _fill_area(top_left : Vector2, bottom_right: Vector2, value : int) -> void:
 # ------------------------------------------------------------------------------
 func _get_tile_from_mineral(noise_sample):
 	var normalised_sample = (noise_sample + 1.0) * 0.5
+	var split = 0.5
 	
-	if normalised_sample > noise_list.minerals._params["split"]:
+	if normalised_sample > split:
 		return 2
 	return 0
 

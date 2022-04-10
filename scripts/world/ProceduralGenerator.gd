@@ -24,18 +24,12 @@ class_name ProceduralGenerator
 # ------------------------------------------------------------------------------
 class Noise:
 	var _noise = OpenSimplexNoise.new()
-	var _params = {
-		"split": 0.489,
-		"sign": true,
-	}
 	
 	var _properies = [
 			{ name = "octaves", hint = PROPERTY_HINT_RANGE, hint_string = "1,9,1", type = TYPE_REAL },
 			{ name = "period", hint = PROPERTY_HINT_RANGE, hint_string = "0,500", type = TYPE_REAL },
 			{ name = "lacunarity", hint = PROPERTY_HINT_RANGE, hint_string = "0,100", type = TYPE_REAL },
 			{ name = "persistence", hint = PROPERTY_HINT_RANGE, hint_string = "0,100", type = TYPE_REAL },
-			{ name = "split", hint = PROPERTY_HINT_RANGE, hint_string = "0,1", type = TYPE_REAL },
-			{ name = "sign", type = TYPE_BOOL },
 		]
 	
 	# --------------------------------------------------------------------------
@@ -44,17 +38,11 @@ class Noise:
 	
 	# --------------------------------------------------------------------------
 	func _set(property, value):
-		if _params.has(property):
-			_params[property] = value
-		else:
-			_noise.set(property, value)
+		_noise.set(property, value)
 	
 	# --------------------------------------------------------------------------
 	func _get(property):
-		if _params.has(property):
-			return _params[property]
-		else:
-			return _noise.get(property)
+		return _noise.get(property)
 
 
 # ------------------------------------------------------------------------------
