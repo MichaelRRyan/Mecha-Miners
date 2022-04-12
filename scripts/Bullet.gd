@@ -50,12 +50,13 @@ func __check_for_collision():
 	if raycast.is_colliding():
 		var collider = raycast.get_collider()
 		
-		if collider.is_in_group("terrain"):
+		if collider.get_parent() != null and collider.get_parent().is_in_group("terrain"):
+			collider = collider.get_parent()
 			
 			var normal = raycast.get_collision_normal()
 			
 			# Gets the terrain as a tilemap.
-			var terrain : TileMap = collider
+			var terrain : Terrain = collider
 			
 			# Works out the position of the tile hit.
 			var collision_point = raycast.get_collision_point()
@@ -81,12 +82,12 @@ func __on_impact():
 # -----------------------------------------------------------------------------
 func __on_player_impact(player):
 	# If online and the collided player is not the ignored peer id.
-	if Network.is_online: # and player.get_network_master() != ignore_id:
-		if player.has_method("take_damage"):
-			player.take_damage(damage)
-		
-		queue_free()
-		create_hit_particles()
+	#if Network.is_online: # and player.get_network_master() != ignore_id:
+	if player.has_method("take_damage"):
+		player.take_damage(damage)
+	
+	queue_free()
+	create_hit_particles()
 
 
 # -----------------------------------------------------------------------------

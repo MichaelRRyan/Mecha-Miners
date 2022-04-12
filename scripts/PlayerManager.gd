@@ -16,12 +16,15 @@ func get_local_player():
 
 # -----------------------------------------------------------------------------
 func _ready():
-	local_player = $Player
+	var players_instances = get_tree().get_nodes_in_group("player")
+	for player in players_instances:
+		var _r = player.connect("died", self, "_on_player_died", [player])
+	
 	spawn_point = $SpawnPoint.position
-	
+	local_player = $Player
 	local_player.position = spawn_point
-	var _r = local_player.connect("died", self, "_on_player_died", [local_player])
 	
+	var _r
 	_r = Network.connect("player_connected", self, "_on_player_connected")
 	_r = Network.connect("player_disconnected", self, "_on_player_disconnected")
 	_r = Network.connect("connection_succeeded", self, "_on_connection_succeeded")

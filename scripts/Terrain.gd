@@ -1,4 +1,4 @@
-extends TileMap
+extends Node2D
 class_name Terrain
 
 onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
@@ -6,17 +6,14 @@ onready var CrystalShard = preload("res://scenes/CrystalShard.tscn")
 
 enum TileType {
 	Empty = -1,
-	Solid = 3,
-	Unbreakable = 4,
-	Crystal = 5,
+	Solid = 0,
+	Unbreakable = 1,
+	Crystal = 2,
 	Background = 6,
 }
 
 # A mapping of tile type to tile max health.
 const MAX_TILE_HEALTHS = [
-	0, # NULL
-	0, # NULL
-	0, # NULL
 	10.0, # Solid
 	100000000000.0, # Unbreakable
 	5.0, # Crystal
@@ -34,23 +31,38 @@ export var tile_heal_time = 1.0
 var damaged_tiles = {}
 var crystal_container = null
 var _pathfinding : AStar2D = AStar2D.new()
+	
+	
+# -----------------------------------------------------------------------------
+func clear() -> void:
+	$Foreground.clear()
 
 
 # -----------------------------------------------------------------------------
 func is_empty(cell_position : Vector2) -> bool:
-	var type = get_cellv(cell_position)
+	var type = $Foreground.get_cellv(cell_position)
 	return (TileType.Empty == type
 		or TileType.Background == type)
 
 
 # -----------------------------------------------------------------------------
 func is_mineral(cell_position : Vector2) -> bool:
-	return TileType.Crystal == get_cellv(cell_position)
+	return TileType.Crystal == $Foreground.get_cellv(cell_position)
+
+
+# -----------------------------------------------------------------------------
+func world_to_map(world_position : Vector2) -> Vector2:
+	return $Foreground.world_to_map(world_position)
+
+
+# -----------------------------------------------------------------------------
+func map_to_world(cell_position : Vector2) -> Vector2:
+	return $Foreground.map_to_world(cell_position)
 
 
 # -----------------------------------------------------------------------------
 func map_to_world_centred(cell_position : Vector2) -> Vector2:
-	return map_to_world(cell_position) + (get_cell_size() * 0.5)
+	return $Foreground.map_to_world(cell_position) + (get_cell_size() * 0.5)
 
 
 # -----------------------------------------------------------------------------
@@ -60,12 +72,12 @@ func get_pathfinding() -> AStar2D:
 	
 # -----------------------------------------------------------------------------
 func get_cell_size() -> Vector2:
-	return cell_size
+	return $Foreground.cell_size
 
 
 # -----------------------------------------------------------------------------
 func set_background(x : int, y : int) -> void:
-	$Background.set_cell(x, y, TileType.Background)
+	$Background.set_cell(x, y, 0)
 
 
 # -----------------------------------------------------------------------------
@@ -76,7 +88,7 @@ func _ready():
 	else:
 		crystal_container = self
 		
-	_generate_pathfinding_grid()
+	#generate_pathfinding_grid()
 
 
 # -----------------------------------------------------------------------------
@@ -107,7 +119,7 @@ func _physics_process(_delta):
 # -----------------------------------------------------------------------------
 func damage_tile(tile_position : Vector2, damage : float):
 	# If the tile is not empty.
-	var tile_type = get_cellv(tile_position)
+	var tile_type = $Foreground.get_cellv(tile_position)
 	if (tile_type != TileType.Empty 
 		and tile_type != TileType.Background
 		and tile_type != TileType.Unbreakable):
@@ -138,7 +150,7 @@ func damage_tile(tile_position : Vector2, damage : float):
 
 # -----------------------------------------------------------------------------
 func __set_damage_indicator(tile_position : Vector2):
-	var tile_type = get_cellv(tile_position)
+	var tile_type = $Foreground.get_cellv(tile_position)
 	var damage = damaged_tiles[tile_position].damage
 	var damage_stage = floor(damage / MAX_TILE_HEALTHS[tile_type] * DAMAGE_STAGES)
 	$DamageIndicators.set_cellv(tile_position, damage_stage)
@@ -147,18 +159,17 @@ func __set_damage_indicator(tile_position : Vector2):
 # -----------------------------------------------------------------------------
 func __destroy_tile(tile_position : Vector2):
 	
-	var type = get_cellv(tile_position)
+	var type = $Foreground.get_cellv(tile_position)
 	
 	if TileType.Crystal == type:
 		spawn_crystals(tile_position * 16.0 + Vector2(8.0, 9.0), 
 			randi() % 5 + 1)
 	
 	# Removes the cell and updates the surrounding cells.
-	#if tile_position.y > 10:
-	set_cellv(tile_position, TileType.Empty)
-	set_background(tile_position.x, tile_position.y)
-#	else:
-	update_bitmask_area(tile_position)
+	$Foreground.set_cellv(tile_position, TileType.Empty)
+	set_background(int(tile_position.x), int(tile_position.y))
+	$Foreground.update_bitmask_area(tile_position)
+	$Details.set_cell(tile_position.x, tile_position.y - 1, -1)
 	
 	# Removes the damage information and visual.
 	damaged_tiles.erase(tile_position)
@@ -180,20 +191,21 @@ func spawn_crystals(_position, amount):
 		
 
 # -----------------------------------------------------------------------------
-func _generate_pathfinding_grid() -> void:
-	for x in range(-100, 100):
-		for y in range(-50, 100):
+func generate_pathfinding_grid(start : Vector2, end : Vector2) -> void:
+	
+	for x in range(start.x, end.x):
+		for y in range(start.y, end.y):
 			
-			if get_cell(x, y) == TileType.Empty:		
+			if $Foreground.get_cell(x, y) == TileType.Empty:		
 				var new_point = _pathfinding.get_available_point_id()
 				_pathfinding.add_point(new_point, map_to_world_centred(Vector2(x, y)))
 				
-				if get_cell(x - 1, y) == TileType.Empty:
+				if $Foreground.get_cell(x - 1, y) == TileType.Empty:
 					var other_point = _pathfinding.get_closest_point(map_to_world_centred(Vector2(x - 1, y)))
 					if other_point != new_point:
 						_pathfinding.connect_points(other_point, new_point)
 				
-				if get_cell(x, y - 1) == TileType.Empty:
+				if $Foreground.get_cell(x, y - 1) == TileType.Empty:
 					var other_point = _pathfinding.get_closest_point(map_to_world_centred(Vector2(x, y - 1)))
 					if other_point != new_point:
 						_pathfinding.connect_points(other_point, new_point)
@@ -206,7 +218,7 @@ func _update_pathfinding_connections(cell_position : Vector2, new_point_id : int
 	for _i in range(4):
 		var next_cell = cell_position + dir
 		
-		if get_cellv(next_cell) == TileType.Empty or get_cellv(next_cell) == TileType.Background:
+		if $Foreground.get_cellv(next_cell) == TileType.Empty or $Foreground.get_cellv(next_cell) == TileType.Background:
 			var other_point = _pathfinding.get_closest_point(map_to_world_centred(next_cell))
 			if other_point != new_point_id:
 				_pathfinding.connect_points(other_point, new_point_id)

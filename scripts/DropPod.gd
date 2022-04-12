@@ -2,6 +2,9 @@ extends KinematicBody2D
 
 signal menu_toggled
 
+export var gravity = 60.0
+
+var velocity = Vector2.ZERO
 var player_in_range = false
 
 
@@ -27,3 +30,7 @@ func _input(event):
 		emit_signal("menu_toggled")
 
 # -----------------------------------------------------------------------------
+func _physics_process(delta):
+	if not get_tree().paused:
+		velocity.y += gravity * delta
+		velocity = move_and_slide(velocity, Vector2.UP)

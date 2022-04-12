@@ -44,15 +44,25 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/Inventory.gd"
 }, {
+"base": "Node",
+"class": "ProceduralGenerator",
+"language": "GDScript",
+"path": "res://scripts/world/ProceduralGenerator.gd"
+}, {
 "base": "Behaviour",
 "class": "PursueBehaviour",
 "language": "GDScript",
 "path": "res://scripts/ai/behaviours/PursueBehaviour.gd"
 }, {
-"base": "TileMap",
+"base": "Node2D",
 "class": "Terrain",
 "language": "GDScript",
 "path": "res://scripts/Terrain.gd"
+}, {
+"base": "TileSet",
+"class": "Tile",
+"language": "GDScript",
+"path": "res://scripts/misc/TerrainTiles.gd"
 } ]
 _global_script_class_icons={
 "AIBrain": "",
@@ -62,15 +72,17 @@ _global_script_class_icons={
 "HarvestMineralsBehaviour": "",
 "IdleBehaviour": "",
 "Inventory": "",
+"ProceduralGenerator": "",
 "PursueBehaviour": "",
-"Terrain": ""
+"Terrain": "",
+"Tile": ""
 }
 
 [application]
 
 config/name="Mecha-Miners"
 config/description="Descend into the depths of volatile planets to claim the crypto treasures of its core before it explodes!"
-run/main_scene="res://scenes/Gameplay.tscn"
+run/main_scene="res://scenes/world/World.tscn"
 config/icon="res://assets/images/icon/icon.png"
 config/windows_native_icon="res://assets/images/icon/icon.ico"
 
@@ -83,6 +95,8 @@ Utility="*res://scripts/Utility.gd"
 
 [display]
 
+window/size/borderless=true
+window/size/fullscreen=true
 window/stretch/mode="2d"
 window/stretch/aspect="expand"
 

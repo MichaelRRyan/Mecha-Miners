@@ -41,8 +41,7 @@ func _process(_delta : float) -> void:
 		_mech_arms.equipped1.activate()
 		_mech_arms.equipped2.activate()
 		
-		var type = _terrain.get_cellv(_target_cell)
-		if type == _terrain.TileType.Empty or type == _terrain.TileType.Background:
+		if _terrain.is_empty(_target_cell):
 			_brain.subject.set_target(_previous_target)
 			_brain.pop_behaviour()
 			emit_signal("cell_destroyed")

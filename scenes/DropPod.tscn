@@ -4,7 +4,7 @@
 [ext_resource path="res://scripts/DropPod.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 24, 30.5 )
+extents = Vector2( 24, 29.5 )
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 32, 32 )
@@ -22,8 +22,7 @@ region_enabled = true
 region_rect = Rect2( 0, 128, 64, 64 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
-position = Vector2( 0, 1.5 )
+position = Vector2( 0, 0.5 )
 shape = SubResource( 1 )
 
 [node name="PlayerDetector" type="Area2D" parent="."]

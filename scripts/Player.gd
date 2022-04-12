@@ -4,6 +4,7 @@ tool
 
 signal died
 signal crystal_amount_changed(total_crystals)
+signal new_velocity(velocity)
 
 export var is_human : bool = false
 export var health : float = 5.0
@@ -66,6 +67,9 @@ var params = {
 func _set(property, value):
 	if params.has(property):
 		params[property] = value
+		
+		if property == "horizontal_movement/max_speed":
+			max_speed = value
 		
 		if property == "horizontal_movement/time_to_max_speed":
 			acceleration = max_speed / value
@@ -130,6 +134,9 @@ func _physics_process(delta):
 	__handle_vertical_movement(delta)
 	__handle_horizontal_movement(delta)
 	__handle_sprite_flip()
+	
+	emit_signal("new_velocity", velocity)
+	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	__handle_network_syncing()
 
@@ -268,11 +275,12 @@ func die():
 	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
-		
-		var terrain = terrains[0]
+		var terrain = terrains.front()
 		
 		if (terrain.has_method("spawn_crystals")):
 			terrain.spawn_crystals(position, gems)
+		else:
+			print_debug("ERROR: Terrain does not have a 'spawn_crystals' method.")
 			
 	emit_signal("crystal_amount_changed", 0)
 	emit_signal("died")
