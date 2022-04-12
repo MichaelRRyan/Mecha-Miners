@@ -4,6 +4,7 @@ tool
 
 signal died
 signal crystal_amount_changed(total_crystals)
+signal new_velocity(velocity)
 
 export var is_human : bool = false
 export var health : float = 5.0
@@ -133,6 +134,9 @@ func _physics_process(delta):
 	__handle_vertical_movement(delta)
 	__handle_horizontal_movement(delta)
 	__handle_sprite_flip()
+	
+	emit_signal("new_velocity", velocity)
+	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	__handle_network_syncing()
 

@@ -49,8 +49,13 @@ func _process(delta : float) -> void:
 			if not found_new_path and not _is_within_range_of_path():
 				_find_new_path()
 				found_new_path = true
-			
-			_follow_path(delta)
+				
+				# If the new path is valid.
+				if _path and _path.size() > 1:
+					_follow_path(delta)
+				
+			else:
+				_follow_path(delta)
 			
 		else:
 			_brain.subject.direction = 0.0

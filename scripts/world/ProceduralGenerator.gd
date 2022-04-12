@@ -78,7 +78,8 @@ func _set(property : String, value):
 		if noise_dict.has(noise_name):
 			noise_dict[noise_name]._set(prop_name, value)
 		
-		generate()
+		if Engine.editor_hint:
+			generate()
 		
 	elif Engine.editor_hint:
 		if property == "clear":

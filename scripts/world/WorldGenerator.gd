@@ -19,6 +19,13 @@ export(float, 0, 1, 0.001) var branch_threshold = 0.01 setget _set_branch_thresh
 export(float, 0, 0.1, 0.001) var chance_to_branch = 0.01 setget _set_chance_to_branch
 export(float, 0, 1, 0.001) var max_branch_rotation = 0.2 setget _set_max_branch_rotation
 
+# Minerals
+export(float, -1, 1, 0.001) var minerals_lower_threshold = 0.01 setget _set_minerals_lower_threshold
+export(float, -1, 1, 0.001) var minerals_upper_threshold = 0.2 setget _set_minerals_upper_threshold
+
+# Walls
+export(int, 0, 100, 1) var wall_buffer = 5 setget _set_wall_buffer
+
 const EDGE_SOFTENING = 5
 var _background : TileMap = null
 var _foreground : TileMap = null
@@ -39,113 +46,93 @@ var noise_list = {
 # ------------------------------------------------------------------------------
 func _set_width(value : int) -> void:
 	width = value
-	
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_cave_height(value : int) -> void:
 	cave_height = value
-	
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_ground_height(value : int) -> void:
 	ground_height = value
-	
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_min_caves(value : int) -> void:
 	min_caves = value
-	
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_max_caves(value : int) -> void:
 	if value >= min_caves:
 		max_caves = value
-		
-		if Engine.editor_hint:
-			generate()
-
+		_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_cave_movement_volatility(value : int) -> void:
 	cave_movement_volatility = value
-		
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_min_main_cave_radius(value : int) -> void:
 	min_main_cave_radius = value
-		
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_max_main_cave_radius(value : int) -> void:
 	if value >= min_main_cave_radius:
 		max_main_cave_radius = value
-			
-		if Engine.editor_hint:
-			generate()
-
+		_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_min_branch_radius(value : int) -> void:
 	min_branch_radius = value
-	
-	if Engine.editor_hint:
-			generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_max_branch_radius(value : int) -> void:
 	if value >= min_branch_radius:
 		max_branch_radius = value
-		
-		if Engine.editor_hint:
-				generate()
-
+		_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_chance_to_branch(value : float) -> void:
 	chance_to_branch = value
-	
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_branch_threshold(value : float) -> void:
 	branch_threshold = value
-	
-	if Engine.editor_hint:
-		generate()
-
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 func _set_max_branch_rotation(value : float) -> void:
 	max_branch_rotation = value
-	
-	if Engine.editor_hint:
-		generate()
+	_consider_regenerating()
 
+# ------------------------------------------------------------------------------
+func _set_wall_buffer(value : int) -> void:
+	wall_buffer = value
+	_consider_regenerating()
+
+# ------------------------------------------------------------------------------
+func _set_minerals_lower_threshold(value : int) -> void:
+	minerals_lower_threshold = value
+	_consider_regenerating()
+		
+# ------------------------------------------------------------------------------
+func _set_minerals_upper_threshold(value : int) -> void:
+	minerals_upper_threshold = value
+	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
 # Regular Methods
 # ------------------------------------------------------------------------------
+func _consider_regenerating():
+	if Engine.editor_hint:
+		generate()
+
 
 # ------------------------------------------------------------------------------
 func _get_noise_dict() -> Dictionary:
@@ -173,8 +160,11 @@ func generate():
 			Vector2(width, ground_height + cave_height), 0)
 		
 		_generate_caves(surface)
+		_generate_minerals()
 		_place_grass(surface)
+		_place_borders()
 		_update_autotiles()
+		_set_camera_bounds()
 		
 	else:
 		print("No tile maps could be found")
@@ -290,6 +280,16 @@ func _clear_circle(start_x, start_y, radius : int, surface : Array):
 
 
 # ------------------------------------------------------------------------------
+func _generate_minerals():
+	for x in width:
+		for y in range(cave_height + ground_height):
+			if _foreground.get_cell(x, y) == 0:
+				var sample = noise_list.minerals._noise.get_noise_2d(x, y)
+				if sample > 0.5:
+					_foreground.set_cell(x, y, 2)
+	
+
+# ------------------------------------------------------------------------------
 func _place_grass(surface : Array):
 	for x in surface.size():
 		var y = surface[x]
@@ -326,11 +326,37 @@ func _get_edge_dist_modifier(x, y):
 
 
 # ------------------------------------------------------------------------------
+func _place_borders() -> void:
+	var map_bottom = cave_height + ground_height
+	
+	for x in width:
+		for y in range(map_bottom, map_bottom + wall_buffer):
+			_foreground.set_cell(x, y, 1)
+	
+	for x in range(1, wall_buffer):
+		for y in range(-wall_buffer, map_bottom + wall_buffer):
+			_foreground.set_cell(-x, y, 1)
+			_foreground.set_cell(width + x - 1, y, 1)
+	
+
+# ------------------------------------------------------------------------------
 func _update_autotiles():
-	_foreground.update_bitmask_region(Vector2.ZERO, 
-		Vector2(width, cave_height + ground_height))
+	_foreground.update_bitmask_region(Vector2(-wall_buffer, -wall_buffer), 
+		Vector2(width + wall_buffer, cave_height + ground_height + wall_buffer))
 		
 		
+# ------------------------------------------------------------------------------
+func _set_camera_bounds():
+	var cams = get_tree().get_nodes_in_group("main_camera")
+	if cams and not cams.empty():
+		var cam : Camera2D = cams.front()
+		
+		cam.limit_top = -100
+		cam.limit_left = 0
+		cam.limit_right = width * 16
+		cam.limit_bottom = (cave_height + ground_height) * 16
+		
+
 # ------------------------------------------------------------------------------
 func _ready():
 	randomize()
@@ -368,3 +394,6 @@ func apply_seed():
 func _are_tilemaps_valid() -> bool:
 	return ((_foreground != null and _background != null and _details != null) 
 		or _get_tilemaps())
+
+
+# ------------------------------------------------------------------------------

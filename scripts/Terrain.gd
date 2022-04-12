@@ -170,6 +170,7 @@ func __destroy_tile(tile_position : Vector2):
 	_foreground.set_cellv(tile_position, TileType.Empty)
 	set_background(tile_position.x, tile_position.y)
 	_foreground.update_bitmask_area(tile_position)
+	$Details.set_cell(tile_position.x, tile_position.y - 1, -1)
 	
 	# Removes the damage information and visual.
 	damaged_tiles.erase(tile_position)
