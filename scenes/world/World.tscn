@@ -29,6 +29,31 @@ min_branch_radius = 1
 branch_threshold = 0.35
 chance_to_branch = 0.02
 max_branch_rotation = 0.05
+minerals_lower_threshold = 0.659
+minerals_upper_threshold = 1.0
+minerals_height_modifier_intensity = 0.302
+randomize_seed = null
+clear = null
+ground_height/script = null
+ground_height/octaves = 7
+ground_height/period = 24.223
+ground_height/lacunarity = 2.17
+ground_height/persistence = 0.271
+cave_horizontal/script = null
+cave_horizontal/octaves = 5
+cave_horizontal/period = 35.503
+cave_horizontal/lacunarity = 2.236
+cave_horizontal/persistence = 0.5
+cave_radius/script = null
+cave_radius/octaves = 5
+cave_radius/period = 22.932
+cave_radius/lacunarity = 5.0
+cave_radius/persistence = 0.204
+minerals/script = null
+minerals/octaves = 3
+minerals/period = 6.217
+minerals/lacunarity = 0.843
+minerals/persistence = 0.374
 
 [node name="PlayerManager" type="Node2D" parent="." groups=["player_manager"]]
 script = ExtResource( 4 )
@@ -54,12 +79,42 @@ limit_top = -100
 limit_right = 2400
 limit_bottom = 5600
 smoothing_enabled = true
-smoothing_speed = 4.0
+smoothing_speed = 3.8
 
 [node name="Player2" parent="PlayerManager" instance=ExtResource( 6 )]
-position = Vector2( 1479, 169 )
+position = Vector2( 1454, 10 )
 
 [node name="AIController" parent="PlayerManager/Player2" instance=ExtResource( 3 )]
+
+[node name="Player3" parent="PlayerManager" instance=ExtResource( 6 )]
+position = Vector2( 818, 23 )
+
+[node name="AIController" parent="PlayerManager/Player3" instance=ExtResource( 3 )]
+
+[node name="Player4" parent="PlayerManager" instance=ExtResource( 6 )]
+position = Vector2( 358, 19 )
+
+[node name="AIController" parent="PlayerManager/Player4" instance=ExtResource( 3 )]
+
+[node name="Player5" parent="PlayerManager" instance=ExtResource( 6 )]
+position = Vector2( 2011, 13 )
+
+[node name="AIController" parent="PlayerManager/Player5" instance=ExtResource( 3 )]
+
+[node name="Player6" parent="PlayerManager" instance=ExtResource( 6 )]
+position = Vector2( 1712, 32 )
+
+[node name="AIController" parent="PlayerManager/Player6" instance=ExtResource( 3 )]
+
+[node name="Player7" parent="PlayerManager" instance=ExtResource( 6 )]
+position = Vector2( 1108, 36 )
+
+[node name="AIController" parent="PlayerManager/Player7" instance=ExtResource( 3 )]
+
+[node name="Player8" parent="PlayerManager" instance=ExtResource( 6 )]
+position = Vector2( 591, 17 )
+
+[node name="AIController" parent="PlayerManager/Player8" instance=ExtResource( 3 )]
 
 [node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
 script = ExtResource( 5 )

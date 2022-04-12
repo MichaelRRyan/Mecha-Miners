@@ -20,8 +20,9 @@ export(float, 0, 0.1, 0.001) var chance_to_branch = 0.01 setget _set_chance_to_b
 export(float, 0, 1, 0.001) var max_branch_rotation = 0.2 setget _set_max_branch_rotation
 
 # Minerals
-export(float, -1, 1, 0.001) var minerals_lower_threshold = 0.01 setget _set_minerals_lower_threshold
-export(float, -1, 1, 0.001) var minerals_upper_threshold = 0.2 setget _set_minerals_upper_threshold
+export(float, 0, 1, 0.001) var minerals_lower_threshold = 0.01 setget _set_minerals_lower_threshold
+export(float, 0, 1, 0.001) var minerals_upper_threshold = 0.2 setget _set_minerals_upper_threshold
+export(float, 0, 1, 0.001) var minerals_height_modifier_intensity = 0.2 setget _set_minerals_height_modifier_intensity
 
 # Walls
 export(int, 0, 100, 1) var wall_buffer = 5 setget _set_wall_buffer
@@ -117,13 +118,17 @@ func _set_wall_buffer(value : int) -> void:
 	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
-func _set_minerals_lower_threshold(value : int) -> void:
+func _set_minerals_lower_threshold(value : float) -> void:
 	minerals_lower_threshold = value
 	_consider_regenerating()
 		
 # ------------------------------------------------------------------------------
-func _set_minerals_upper_threshold(value : int) -> void:
+func _set_minerals_upper_threshold(value : float) -> void:
 	minerals_upper_threshold = value
+	_consider_regenerating()
+
+func _set_minerals_height_modifier_intensity(value : float) -> void:
+	minerals_height_modifier_intensity = value
 	_consider_regenerating()
 
 # ------------------------------------------------------------------------------
@@ -281,12 +286,19 @@ func _clear_circle(start_x, start_y, radius : int, surface : Array):
 
 # ------------------------------------------------------------------------------
 func _generate_minerals():
+	var one_over_height = 1.0 / (cave_height + ground_height)
 	for x in width:
 		for y in range(cave_height + ground_height):
+			
 			if _foreground.get_cell(x, y) == 0:
-				var sample = noise_list.minerals._noise.get_noise_2d(x, y)
-				if sample > 0.5:
-					_foreground.set_cell(x, y, 2)
+				
+				var sample = abs(noise_list.minerals._noise.get_noise_2d(x, y))
+				var height_modifier = y * one_over_height * minerals_height_modifier_intensity
+				sample = min(sample + height_modifier, 1)
+				
+				if (sample >= minerals_lower_threshold 
+					and sample <= minerals_upper_threshold):
+						_foreground.set_cell(x, y, 2)
 	
 
 # ------------------------------------------------------------------------------
@@ -302,16 +314,6 @@ func _fill_area(top_left : Vector2, bottom_right: Vector2, value : int) -> void:
 	for x in range(top_left.x, bottom_right.x):
 		for y in range(top_left.y, bottom_right.y):
 			_foreground.set_cell(x, y, value)
-
-
-# ------------------------------------------------------------------------------
-func _get_tile_from_mineral(noise_sample):
-	var normalised_sample = (noise_sample + 1.0) * 0.5
-	var split = 0.5
-	
-	if normalised_sample > split:
-		return 2
-	return 0
 
 
 # ------------------------------------------------------------------------------
