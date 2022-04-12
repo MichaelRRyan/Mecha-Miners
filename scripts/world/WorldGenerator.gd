@@ -39,6 +39,8 @@ var noise_list = {
 	minerals = Noise.new(),
 }
 
+var _terrain : Terrain = null
+
 
 # ------------------------------------------------------------------------------
 # Setter Methods
@@ -411,12 +413,15 @@ func _ready():
 
 	elif _get_tilemaps():
 		generate()
+		_terrain.generate_pathfinding_grid(Vector2(-wall_buffer, -wall_buffer), 
+			Vector2(width + wall_buffer, cave_height + ground_height + wall_buffer))
 
 
 # ------------------------------------------------------------------------------
 func _get_tilemaps() -> bool:
 	var parent = get_parent()
 	if parent != null and parent is Terrain:
+		_terrain = parent
 		_background = parent.get_node("Background")
 		_foreground = parent.get_node("Foreground")
 		_details = parent.get_node("Details")
