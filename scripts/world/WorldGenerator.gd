@@ -198,6 +198,12 @@ func _generate_ground_height():
 
 # ------------------------------------------------------------------------------
 func _generate_caves(surface : Array):
+	var cave_starts = _generate_cave_starts(surface)
+	_generate_primary_caves(cave_starts, surface)
+
+
+# ------------------------------------------------------------------------------
+func _generate_cave_starts(surface : Array) -> Array:
 	
 	# Picks a number of caves and then divides the map width by the number.
 	var number_of_caves = randi() % (max_caves + 1 - min_caves) + min_caves
@@ -207,7 +213,31 @@ func _generate_caves(surface : Array):
 	
 	# Randomly chooses the start x of each cave in their own division.
 	for i in range(1, number_of_caves + 1):
-		cave_starts.append(randi() % division_size + division_size * i)
+		var start = division_size * i
+		var lowest = []
+		
+		# Orders all the x positions in the division by lowest surface height.
+		for x in range(start, start + division_size):
+			var found = false
+			
+			for j in lowest.size():
+				if surface[x] > surface[lowest[j]]:
+					lowest.insert(j, x)
+					found = true
+					break
+					
+			if not found:
+				lowest.append(x)
+		
+		# Chooses a random position out of lowest quarter of the positions.
+		cave_starts.append(lowest[randi() % int(division_size * 0.25)])
+	
+	return cave_starts
+
+
+# ------------------------------------------------------------------------------
+func _generate_primary_caves(cave_starts : Array, surface : Array) -> void:
+	var one_over_ground_height = 1.0 / ground_height
 	
 	# Loops for each cave start.
 	for start_x in cave_starts:
@@ -216,19 +246,27 @@ func _generate_caves(surface : Array):
 		# Loops from the surface to the bottom of the world.
 		for y in range(surface[start_x], ground_height + cave_height):
 			
-			var sample = noise_list.cave_horizontal._noise.get_noise_2d(start_x, y) 
-			var next_x = start_x + sample * cave_movement_volatility
+			 # Stops the caves moving so much when closer to the surface.
+			var surface_modifier = min(y * one_over_ground_height, 1.0)
 			
+			# Picks the next x position using noise.
+			var sample = noise_list.cave_horizontal._noise.get_noise_2d(start_x, y) 
+			var next_x = start_x + sample * cave_movement_volatility * surface_modifier
+			
+			# Loops from the previous x to the next x and clears a path.
 			for x in range(min(prev_x, next_x), max(prev_x, next_x) + 1):
+				
+				# Picks a radius using noise based on x, y position.
 				var r_sample = noise_list.cave_radius._noise.get_noise_2d(x, y)
-				var radius = max(abs(sample) * max_main_cave_radius, min_main_cave_radius)
+				var radius = max(abs(r_sample) * max_main_cave_radius, min_main_cave_radius)
 				_clear_circle(x, y, radius, surface)
 			
-			if abs(sample) <= branch_threshold and randf() <= chance_to_branch:
-				_generate_secondary_cave(prev_x, y, surface)
+			# If not near the surface, randomly chooses to branch out.
+			if y > ground_height:
+				if abs(sample) <= branch_threshold and randf() <= chance_to_branch:
+					_generate_secondary_cave(prev_x, y, surface)
 			
 			prev_x = next_x
-
 
 
 # ------------------------------------------------------------------------------
@@ -244,6 +282,10 @@ func _generate_secondary_cave(x, y, surface : Array):
 	for i in distance:
 		var round_x = int(x)
 		var round_y = int(y)
+		
+		# If approaching the surface, stops expanding.
+		if round_y < ground_height:
+			break
 		
 		if prev_round_x != round_x or prev_round_y != round_y:
 			if _foreground.get_cell(round_x, round_y) != -1:

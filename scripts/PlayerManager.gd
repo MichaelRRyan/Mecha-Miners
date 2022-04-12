@@ -16,8 +16,8 @@ func get_local_player():
 
 # -----------------------------------------------------------------------------
 func _ready():
-	var players = get_tree().get_nodes_in_group("player")
-	for player in players:
+	var players_instances = get_tree().get_nodes_in_group("player")
+	for player in players_instances:
 		var _r = player.connect("died", self, "_on_player_died", [player])
 	
 	spawn_point = $SpawnPoint.position

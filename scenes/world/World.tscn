@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/Terrain.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Cursor.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://scripts/world/WorldGenerator.gd" type="Script" id=7]
 [ext_resource path="res://scripts/player/FollowPoint.gd" type="Script" id=8]
 [ext_resource path="res://scenes/GUIManager.tscn" type="PackedScene" id=9]
+[ext_resource path="res://scenes/DropPod.tscn" type="PackedScene" id=10]
 
 [node name="World" type="Node2D"]
 
@@ -24,13 +25,13 @@ min_caves = 2
 max_caves = 3
 cave_movement_volatility = 50
 min_main_cave_radius = 1
-max_main_cave_radius = 10
+max_main_cave_radius = 8
 min_branch_radius = 1
 branch_threshold = 0.35
 chance_to_branch = 0.02
 max_branch_rotation = 0.05
 minerals_lower_threshold = 0.659
-minerals_upper_threshold = 1.0
+minerals_upper_threshold = 0.85
 minerals_height_modifier_intensity = 0.302
 randomize_seed = null
 clear = null
@@ -46,9 +47,9 @@ cave_horizontal/lacunarity = 2.236
 cave_horizontal/persistence = 0.5
 cave_radius/script = null
 cave_radius/octaves = 5
-cave_radius/period = 22.932
-cave_radius/lacunarity = 5.0
-cave_radius/persistence = 0.204
+cave_radius/period = 61.404
+cave_radius/lacunarity = 22.52
+cave_radius/persistence = 0.428
 minerals/script = null
 minerals/octaves = 3
 minerals/period = 6.217
@@ -78,6 +79,7 @@ limit_left = 0
 limit_top = -100
 limit_right = 2400
 limit_bottom = 5600
+limit_smoothed = true
 smoothing_enabled = true
 smoothing_speed = 3.8
 
@@ -124,5 +126,10 @@ pause_mode = 2
 
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
 
+[node name="DropPod" parent="." instance=ExtResource( 10 )]
+position = Vector2( 144, 28 )
+
+[connection signal="menu_toggled" from="GUIManager" to="Cursor" method="_on_GUIManager_menu_toggled"]
 [connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
 [connection signal="new_velocity" from="PlayerManager/Player" to="PlayerManager/Player/FollowPoint" method="_on_Player_new_velocity"]
+[connection signal="menu_toggled" from="DropPod" to="GUIManager" method="_on_DropPod_menu_toggled"]
