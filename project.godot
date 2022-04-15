@@ -196,5 +196,5 @@ common/enable_pause_aware_picking=true
 [rendering]
 
 quality/subsurface_scattering/quality=2
-environment/default_clear_color=Color( 0.572549, 0.792157, 0.898039, 1 )
+environment/default_clear_color=Color( 0.898039, 0.670588, 0.572549, 1 )
 environment/default_environment="res://default_env.tres"

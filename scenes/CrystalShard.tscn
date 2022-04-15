@@ -1,6 +1,6 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
 [ext_resource path="res://scripts/CrystalShard.gd" type="Script" id=2]
 [ext_resource path="res://assets/images/particle_small.png" type="Texture" id=3]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
 [ext_resource path="res://scripts/ui/InventoryUI.gd" type="Script" id=2]
 [ext_resource path="res://scenes/ui/ItemSlot.tscn" type="PackedScene" id=4]
 

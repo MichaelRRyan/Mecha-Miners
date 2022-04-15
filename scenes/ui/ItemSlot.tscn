@@ -1,9 +1,10 @@
 [gd_scene load_steps=10 format=2]
 
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
 [ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=2]
 [ext_resource path="res://assets/fonts/matchup_pro.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://scripts/ui/ItemSlot.gd" type="Script" id=4]
+
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )

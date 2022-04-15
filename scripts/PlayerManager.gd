@@ -1,6 +1,6 @@
 extends Node2D
 
-onready var PlayerScene = preload("res://scenes/Player.tscn")
+onready var PlayerScene = preload("res://scenes/entities/Player.tscn")
 
 export var base_player_health : float = 5.0
 
