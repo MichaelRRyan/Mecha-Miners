@@ -43,14 +43,3 @@ func _handle_horizontal_movement(delta):
 
 	
 # -----------------------------------------------------------------------------
-#func _input(event):
-#
-#	#if is_human and event is InputEventMouseMotion:
-#	if is_human and event is InputEventMouseMotion:
-#		_target = get_global_mouse_position()
-	
-#	if event is InputEventKey and event.scancode == KEY_K and event.is_pressed():
-#		die()
-
-
-# -----------------------------------------------------------------------------
