@@ -81,7 +81,7 @@ func get_sync_data():
 
 
 # -----------------------------------------------------------------------------
-func apply_sync_date(data):
+func apply_sync_data(data):
 	scale.x = data.scale_x
 	
 	equipped1.position.x = data.equipped1_position_x
@@ -93,6 +93,26 @@ func apply_sync_date(data):
 	equipped2.rotation =	data.equipped2_rotation
 	equipped2.z_index = data.equipped2_z_index
 	equipped2.frame = data.equipped2_frame
+
+
+# -----------------------------------------------------------------------------
+func _on_Player_sync_began(sync_data):
+	sync_data["arms_data"] = get_sync_data()
+
+
+# -----------------------------------------------------------------------------
+func _on_Player_sync_data_recieved(sync_data):
+	apply_sync_data(sync_data)
+
+
+# -----------------------------------------------------------------------------
+func _on_Player_died():
+	set_process(false)
+
+
+# -----------------------------------------------------------------------------
+func _on_Player_respawn_complete():
+	set_process(true)
 
 
 # -----------------------------------------------------------------------------

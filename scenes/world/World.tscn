@@ -29,7 +29,7 @@ position = Vector2( 957, -42 )
 [node name="Player" parent="PlayerManager" instance=ExtResource( 6 )]
 position = Vector2( 1166, 93 )
 is_human = true
-horizontal_movement/max_speed = 100.0
+_max_speed = 100.0
 
 [node name="FollowPoint" type="Node2D" parent="PlayerManager/Player"]
 script = ExtResource( 8 )

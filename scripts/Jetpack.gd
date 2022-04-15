@@ -1,6 +1,7 @@
 extends Node2D
 
 export var acceleration = 250.0
+export var velocity_multiplier = 1.5
 
 var holder = null
 var flying = false
@@ -14,7 +15,7 @@ func _ready():
 
 
 # -----------------------------------------------------------------------------
-func _physics_process(_delta):
+func _process(_delta):
 	flying_last_frame = flying
 	flying = false
 	$ParticlesLarge.emitting = flying_last_frame
@@ -24,7 +25,7 @@ func _physics_process(_delta):
 # -----------------------------------------------------------------------------
 func equip(equiper : Node2D):
 	# Sets the equiper as the jetpack holder if it has the necessary method.
-	if equiper and equiper.has_method("accelerate"):
+	if equiper and equiper.has_method("accelerate") and equiper.has_method("get_velocity"):
 		holder = equiper
 		process_priority = equiper.process_priority - 1
 
@@ -32,7 +33,14 @@ func equip(equiper : Node2D):
 # -----------------------------------------------------------------------------
 func activate(delta):
 	if holder:
-		holder.accelerate(Vector2(0.0, -acceleration * delta))
+		
+		# Adds extra force to the acceleration if moving downwards.
+		var velocity = holder.get_velocity()
+		var accel = -acceleration
+		if velocity.y > 0:
+			accel -= velocity.y * velocity_multiplier
+			
+		holder.accelerate(Vector2(0.0, accel * delta))
 		flying = true
 
 
