@@ -69,7 +69,8 @@ func _process(delta : float) -> void:
 func _find_new_path():
 	var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
 	var target_point = _pathfinding.get_closest_point(_brain.get_target())
-	_path = _pathfinding.get_id_path(subject_point, target_point)
+	if subject_point != -1 and target_point != -1:
+		_path = _pathfinding.get_id_path(subject_point, target_point)
 
 
 #-------------------------------------------------------------------------------

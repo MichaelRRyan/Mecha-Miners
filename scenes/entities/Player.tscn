@@ -1,47 +1,7 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://resources/sprite_frames/mecha_green.tres" type="SpriteFrames" id=1]
+[ext_resource path="res://scenes/entities/Humanoid.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=2]
-[ext_resource path="res://scenes/Gun.tscn" type="PackedScene" id=3]
-[ext_resource path="res://scenes/Jetpack.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scripts/MechArms.gd" type="Script" id=5]
-[ext_resource path="res://scenes/Drill.tscn" type="PackedScene" id=6]
 
-[sub_resource type="CapsuleShape2D" id=13]
-radius = 5.0
-height = 4.0
-
-[node name="Player" type="KinematicBody2D" groups=["player"]]
-collision_layer = 2
-collision_mask = 3
+[node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
-
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-frames = ExtResource( 1 )
-animation = "idle"
-offset = Vector2( 0, -2.5 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 13 )
-
-[node name="Jetpack" parent="." instance=ExtResource( 4 )]
-
-[node name="Arms" type="Node2D" parent="."]
-script = ExtResource( 5 )
-
-[node name="Equipped1" parent="Arms" instance=ExtResource( 3 )]
-position = Vector2( -1.5, 1 )
-z_index = 2
-region_rect = Rect2( 192, 48, 32, 16 )
-
-[node name="Equipped2" parent="Arms" instance=ExtResource( 6 )]
-position = Vector2( 6, 0 )
-region_rect = Rect2( 192, 32, 32, 16 )
-
-[node name="Feet" type="Node2D" parent="."]
-position = Vector2( 0, 9 )
-
-[connection signal="died" from="." to="Arms" method="_on_Player_died"]
-[connection signal="respawn_complete" from="." to="Arms" method="_on_Player_respawn_complete"]
-[connection signal="sync_began" from="." to="Arms" method="_on_Player_sync_began"]
-[connection signal="sync_data_recieved" from="." to="Arms" method="_on_Player_sync_data_recieved"]
