@@ -1,4 +1,4 @@
-extends "res://scripts/equipment/Tool.gd"
+extends Tool
 
 export var cooldown = 0.25
 var bullet_manager = null

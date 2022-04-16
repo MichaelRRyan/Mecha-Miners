@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=3 format=2]
+[gd_resource type="SpriteFrames" load_steps=4 format=2]
 
 [ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
 
@@ -6,25 +6,19 @@
 atlas = ExtResource( 1 )
 region = Rect2( 224, 32, 16, 16 )
 
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 1 )
+region = Rect2( 240, 32, 16, 16 )
+
 [resource]
 animations = [ {
 "frames": [ SubResource( 1 ) ],
 "loop": true,
 "name": "idle",
-"speed": 5.0
+"speed": 1.0
 }, {
-"frames": [ SubResource( 1 ) ],
-"loop": true,
-"name": "jump",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 1 ) ],
-"loop": true,
-"name": "walk_reversed",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 1 ) ],
-"loop": true,
-"name": "walk",
-"speed": 5.0
+"frames": [ SubResource( 2 ) ],
+"loop": false,
+"name": "hurt",
+"speed": 1.0
 } ]

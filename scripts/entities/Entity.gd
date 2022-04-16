@@ -2,14 +2,14 @@ extends KinematicBody2D
 
 tool
 
-signal died
+signal died()
+signal damage_taken(health)
 signal crystal_amount_changed(total_crystals)
 signal new_velocity(velocity)
 signal respawn_complete()
 signal sync_began(sync_data)
 signal sync_data_recieved(sync_data)
 
-export var is_human : bool = false
 export var health : float = 5.0
 
 # -- Configurable Properties --
@@ -27,31 +27,17 @@ var _gravity_acceleration = 0.0
 var velocity = Vector2.ZERO
 
 # -- Private Variables --
-var animation_id = 0
 var respawning = false
 var was_on_floor = false
 var _target = Vector2.ZERO
 var direction : float = 0.0
 
-var inventory = Inventory.new()
+var inventory : Inventory = Inventory.new()
+var equipped : Array = [] # Array<Tool>
 
 onready var LandingParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 
 var sync_data = {}
-
-enum AnimationName {
-	Idle = 0,
-	Jump = 1,
-	Walk = 2,
-	WalkReversed = 3,
-}
-
-var animation_names = [
-	"idle",
-	"jump",
-	"walk",
-	"walk_reversed",
-]
 
 
 # ------------------------------------------------------------------------------
@@ -109,6 +95,17 @@ func get_velocity() -> Vector2:
 
 
 # -----------------------------------------------------------------------------
+func get_direction() -> float:
+	return direction
+
+
+# -----------------------------------------------------------------------------
+func equip(new_tool : Tool):
+	equipped.append(new_tool)
+	new_tool.set_holder(self)
+	
+	
+# -----------------------------------------------------------------------------
 func _ready():
 	calculate_vertical_motion_vars()
 	set_time_to_max_speed(_time_to_max_speed)
@@ -165,33 +162,13 @@ func thrust_jetpack(delta):
 # -----------------------------------------------------------------------------
 func _handle_horizontal_movement(delta):
 	
-	# If there's no input.
+	# Applies deceleration if no movement input.
 	if direction == 0.0:
-		# Applies deceleration.
 		velocity.x -= min(_deceleration * delta, abs(velocity.x)) * sign(velocity.x)
-		
-		# Play the appropriate no movement animation.
-		if is_on_floor():
-			_set_animation(AnimationName.Idle)
-		else:
-			_set_animation(AnimationName.Jump)	
 	
-	# If there is input.
+	# Else applies acceleration in the movement direction.
 	else:
-		# Applies acceleration in the movement direction.
 		velocity.x += _acceleration * direction * delta
-		
-		# Play the appropriate movement animation.
-		if is_on_floor():
-			var dir_to_mouse = _target.x - global_position.x
-			var reversed = sign(dir_to_mouse) != sign(direction)
-			
-			if reversed:
-				_set_animation(AnimationName.WalkReversed)
-			else:
-				_set_animation(AnimationName.Walk)
-		else:
-			_set_animation(AnimationName.Jump)
 	
 	# Clamps the horizontal movement to the max speed.
 	if abs(velocity.x) > _max_speed:
@@ -210,17 +187,10 @@ func _handle_network_syncing():
 		sync_data = {
 			position = position,
 			flip_h = $AnimatedSprite.flip_h,
-			animation_id = animation_id,
 		}
 		
 		emit_signal("sync_began", sync_data)
 		rpc_unreliable("set_puppet_state", sync_data)
-
-
-# -----------------------------------------------------------------------------
-func _set_animation(id):
-	animation_id = id
-	$AnimatedSprite.play(animation_names[id])
 
 
 # -----------------------------------------------------------------------------
@@ -232,13 +202,14 @@ func accelerate(acceleration : Vector2):
 puppet func set_puppet_state(state):
 	position = state.position
 	$AnimatedSprite.flip_h = state.flip_h
-	_set_animation(state.animation_id)
 	emit_signal("sync_data_recieved", state)
 	
 	
 # -----------------------------------------------------------------------------
 func take_damage(damage):
 	health -= damage
+	
+	emit_signal("damage_taken", health)
 	
 	if health <= 0:
 		die()

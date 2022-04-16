@@ -27,7 +27,6 @@ script = ExtResource( 4 )
 position = Vector2( 957, -42 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 6 )]
-is_human = true
 _max_speed = 100.0
 
 [node name="FollowPoint" type="Node2D" parent="PlayerManager/Player"]
@@ -35,6 +34,7 @@ script = ExtResource( 8 )
 dampener = 0.25
 
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player/FollowPoint" groups=["main_camera"]]
+scale = Vector2( 2, 2 )
 current = true
 zoom = Vector2( 0.75, 0.75 )
 limit_left = 0

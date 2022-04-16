@@ -11,6 +11,9 @@ frames = ExtResource( 3 )
 playing = true
 offset = Vector2( 0, -6 )
 
+[node name="CollisionShape2D" parent="." index="1"]
+visible = false
+
 [node name="Equipped1" parent="Arms" index="0"]
 region_rect = Rect2( 160, 48, 32, 16 )
 

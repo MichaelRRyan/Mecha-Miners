@@ -10,9 +10,9 @@ onready var _parent = get_parent()
 
 # -----------------------------------------------------------------------------
 func _ready():
-	if _parent:
-		equipped1.set_holder(_parent)
-		equipped2.set_holder(_parent)
+	if _parent and _parent.has_method("equip"):
+		_parent.equip(equipped1)
+		_parent.equip(equipped2)
 	else:
 		set_process(false)
 
@@ -52,15 +52,6 @@ func _process(_delta):
 	if flip: angle = deg2rad(180.0) - angle
 	equipped1.rotation = angle
 	equipped2.rotation = angle
-	
-	if _parent.is_human:
-		if (equipped1.automatic and Input.is_action_pressed("action1")
-				or Input.is_action_just_pressed("action1")):
-					equipped1.activate()
-		
-		if (equipped2.automatic and Input.is_action_pressed("action2")
-				or Input.is_action_just_pressed("action2")):
-					equipped2.activate()
 
 
 # -----------------------------------------------------------------------------

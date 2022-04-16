@@ -1,4 +1,4 @@
-extends "res://scripts/equipment/Tool.gd"
+extends Tool
 
 onready var _raycast = $RayCast2D
 
