@@ -34,6 +34,8 @@ var direction : float = 0.0
 
 var inventory : Inventory = Inventory.new()
 var equipped : Array = [] # Array<Tool>
+var _drills : Array = [] # Array<Tool>
+var _guns : Array = [] # Array<Tool>
 
 onready var LandingParticleScene = preload("res://scenes/BulletHitParticle.tscn")
 
@@ -100,11 +102,39 @@ func get_direction() -> float:
 
 
 # -----------------------------------------------------------------------------
-func equip(new_tool : Tool):
+func equip(new_tool : Tool) -> void:
 	equipped.append(new_tool)
 	new_tool.set_holder(self)
 	
-	
+	if Tool.Type.DRILL == new_tool.tool_type:
+		_drills.append(new_tool)
+		
+	elif Tool.Type.GUN == new_tool.tool_type:
+		_guns.append(new_tool)
+
+
+# -----------------------------------------------------------------------------
+func mine() -> void:
+	for drill in _drills:
+		drill.activate()
+
+
+# -----------------------------------------------------------------------------
+func attack() -> void:
+	for gun in _guns:
+		gun.activate()
+		
+
+# -----------------------------------------------------------------------------
+func get_drill_count() -> int:
+	return _drills.size()
+
+
+# -----------------------------------------------------------------------------
+func get_gun_count() -> int:
+	return _drills.size()
+
+
 # -----------------------------------------------------------------------------
 func _ready():
 	calculate_vertical_motion_vars()

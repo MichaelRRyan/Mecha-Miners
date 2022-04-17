@@ -1,7 +1,19 @@
 extends "res://scripts/ai/AIController.gd"
 
 # The maximum downward velocity before the bot will try to slow itself.
-export(float) var max_velocity_y = 60.0
+export(float) var max_velocity_y = 100.0
+
+
+#-------------------------------------------------------------------------------
+func _ready():
+	._ready()
+	call_deferred("_equip_laser")
+	
+
+#-------------------------------------------------------------------------------
+func _equip_laser():
+	var laser = subject.find_node("MiningLaser")
+	subject.equip(laser)
 
 
 #-------------------------------------------------------------------------------

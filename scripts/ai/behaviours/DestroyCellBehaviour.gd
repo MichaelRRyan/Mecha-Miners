@@ -8,7 +8,6 @@ var _terrain = null
 
 var _target_cell = Vector2.ZERO
 var _previous_target = null
-var _mech_arms = null
 
 
 #-------------------------------------------------------------------------------
@@ -28,9 +27,9 @@ func _ready() -> void:
 	_previous_target = _brain.subject.get_target()
 	_brain.subject.set_target(_terrain.map_to_world_centred(_target_cell))
 	
-	_mech_arms = _brain.subject.find_node("Arms")
-	if _mech_arms == null:
-		print_debug("Unable to find mech arms node")
+	var equipment_count = _brain.subject.get_drill_count() + _brain.subject.get_gun_count()
+	if equipment_count == 0:
+		print_debug("No suitable equipment found.")
 		_brain.subject.set_target(_previous_target)
 		_brain.pop_behaviour()
 
@@ -38,8 +37,8 @@ func _ready() -> void:
 #-------------------------------------------------------------------------------
 func _process(_delta : float) -> void:
 	if _active:
-		_mech_arms.equipped1.activate()
-		_mech_arms.equipped2.activate()
+		_brain.subject.mine()
+		_brain.subject.attack()
 		
 		if _terrain.is_empty(_target_cell):
 			_brain.subject.set_target(_previous_target)

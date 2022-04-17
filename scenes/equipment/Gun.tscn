@@ -8,7 +8,7 @@ texture = ExtResource( 2 )
 offset = Vector2( 4, -1 )
 hframes = 2
 region_enabled = true
-region_rect = Rect2( 32, 80, 32, 16 )
+region_rect = Rect2( 192, 48, 32, 16 )
 script = ExtResource( 1 )
 
 [node name="Tip" type="Node2D" parent="."]

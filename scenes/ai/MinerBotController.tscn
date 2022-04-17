@@ -7,4 +7,5 @@
 script = ExtResource( 2 )
 
 [node name="GroundSensor" type="RayCast2D" parent="." index="3"]
+visible = false
 cast_to = Vector2( 0, 16 )
