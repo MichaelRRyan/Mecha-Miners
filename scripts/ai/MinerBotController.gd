@@ -6,7 +6,6 @@ export(float) var max_velocity_y = 100.0
 
 #-------------------------------------------------------------------------------
 func _ready():
-	._ready()
 	call_deferred("_equip_laser")
 	
 

@@ -113,6 +113,7 @@ func _disable(behaviour : Behaviour) -> void:
 #-------------------------------------------------------------------------------
 func _ready() -> void:
 	subject = get_parent()
+	var _r = subject.connect("died", self, "_on_subject_died")
 	add_behaviour(IdleBehaviour.new())
 	
 	var main_cameras = get_tree().get_nodes_in_group("main_camera")
@@ -146,6 +147,18 @@ func _input(event):
 					_previous_camera_focus = null
 					
 				_main_camera.position = Vector2.ZERO
+
+
+#-------------------------------------------------------------------------------
+func _on_subject_died():
+	# Pops all behaviours.
+	while not _behaviour_stack.empty():
+		var behaviour = _behaviour_stack.pop_back()
+		remove_child(behaviour)
+		behaviour.queue_free()
+	
+	_highest_priority_behaviour = null
+	add_behaviour(IdleBehaviour.new())
 
 
 #-------------------------------------------------------------------------------

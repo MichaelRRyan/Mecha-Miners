@@ -23,7 +23,6 @@ position = Vector2( 60, 99 )
 
 [node name="Player" parent="PlayerManager" instance=ExtResource( 5 )]
 position = Vector2( 102, 116 )
-is_human = true
 
 [node name="Camera2D" type="Camera2D" parent="PlayerManager/Player" groups=["main_camera"]]
 current = true
