@@ -190,7 +190,7 @@ ai_perspective={
 [layer_names]
 
 2d_physics/layer_1="world"
-2d_physics/layer_2="player"
+2d_physics/layer_2="entity"
 2d_physics/layer_3="projectile"
 2d_physics/layer_4="item"
 

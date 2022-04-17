@@ -28,11 +28,26 @@ script = ExtResource( 3 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ItemSensor"]
 shape = SubResource( 1 )
 
-[node name="PlayerSensor" type="Area2D" parent="."]
+[node name="EntityAvoidanceSensor" type="Area2D" parent="."]
 visible = false
+collision_layer = 2
+collision_mask = 2
 script = ExtResource( 5 )
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerSensor"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntityAvoidanceSensor"]
+shape = SubResource( 2 )
+
+[node name="EntitySensor" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntitySensor"]
 shape = SubResource( 2 )
 
 [connection signal="body_entered" from="ItemSensor" to="ItemSensor" method="_on_ItemSensor_body_entered"]
+[connection signal="body_entered" from="EntityAvoidanceSensor" to="." method="_on_EntityAvoidanceSensor_body_entered"]
+[connection signal="body_exited" from="EntityAvoidanceSensor" to="." method="_on_EntityAvoidanceSensor_body_exited"]
+[connection signal="body_entered" from="EntitySensor" to="." method="_on_EntitySensor_body_entered"]
+[connection signal="body_exited" from="EntitySensor" to="." method="_on_EntitySensor_body_exited"]
