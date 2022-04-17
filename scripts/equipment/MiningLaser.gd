@@ -3,6 +3,7 @@ extends Tool
 onready var _raycast : RayCast2D = $RayCast2D
 var _mining = true
 var _mining_last_frame = true
+var _mine_point = Vector2.ZERO
 
 
 # -----------------------------------------------------------------------------
@@ -34,6 +35,8 @@ func activate():
 			var collision_point = _raycast.get_collision_point()
 			var tile_pos = terrain.world_to_map(terrain.to_local(
 				collision_point - normal * 0.5))
+				
+			_mine_point = collision_point - global_position
 			
 			# Tells the terrain to damage that tile.
 			terrain.damage_tile(tile_pos, 0.2)
@@ -45,7 +48,7 @@ func activate():
 # -----------------------------------------------------------------------------
 func _draw():
 	if _mining or _mining_last_frame:
-		draw_line(Vector2.ZERO, $RayCast2D.cast_to, Color.red, 1.5)
+		draw_line(Vector2.ZERO, _mine_point, Color.red, 1.5)
 
 
 # -----------------------------------------------------------------------------
