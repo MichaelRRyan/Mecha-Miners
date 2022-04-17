@@ -1,8 +1,7 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/world/Terrain.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/Cursor.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/entities/BattleMinerBot.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/PlayerManager.gd" type="Script" id=4]
 [ext_resource path="res://scripts/BulletManager.gd" type="Script" id=5]
 [ext_resource path="res://scenes/entities/Player.tscn" type="PackedScene" id=6]
@@ -45,53 +44,8 @@ limit_smoothed = true
 smoothing_enabled = true
 smoothing_speed = 3.8
 
-[node name="BattleMinerBot" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 196, 55 )
-
-[node name="BattleMinerBot2" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 407, 55 )
-
-[node name="BattleMinerBot3" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 701, 55 )
-
-[node name="BattleMinerBot4" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 1383, 66 )
-
-[node name="BattleMinerBot5" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 1634, 66 )
-
-[node name="BattleMinerBot6" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 1874, 77 )
-
-[node name="BattleMinerBot7" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 624, 66 )
-
-[node name="MinerBot" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 123, 57 )
-
-[node name="MinerBot2" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 343, 61 )
-
-[node name="MinerBot3" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 562, 65 )
-
-[node name="MinerBot4" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 675, 57 )
-
-[node name="MinerBot5" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 867, 53 )
-
 [node name="MinerBot6" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 1163, 43 )
-
-[node name="MinerBot7" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 1423, 39 )
-
-[node name="MinerBot8" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 1641, 38 )
-
-[node name="MinerBot9" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 1874, 38 )
+position = Vector2( 1109, 30 )
 
 [node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
 script = ExtResource( 5 )

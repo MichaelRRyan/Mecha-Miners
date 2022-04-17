@@ -21,8 +21,8 @@ func _process(delta):
 	if subject.get_velocity().y > max_velocity_y:
 		subject.thrust_jetpack(delta)
 		
-	# Else thrusts if too close to the ground.
-	else:
+	# Else thrusts if too close to the ground and our target is not below us.
+	elif subject.get_target().y < global_position.y:
 		var raycast : RayCast2D = $GroundSensor
 		raycast.force_raycast_update()
 		if raycast.is_colliding():

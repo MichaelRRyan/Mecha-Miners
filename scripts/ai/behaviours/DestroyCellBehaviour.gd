@@ -42,7 +42,7 @@ func _process(_delta : float) -> void:
 		
 		if _terrain.is_empty(_target_cell):
 			_brain.subject.set_target(_previous_target)
-			_brain.pop_behaviour()
+			set_active(false)
 			emit_signal("cell_destroyed")
 
 

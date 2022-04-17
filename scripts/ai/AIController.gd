@@ -1,14 +1,10 @@
 extends AIBrain
 
-export(float) var entity_avoidance_modifier = 1
-
 var _behaviour_stack : Array = []
-var _debug : bool = false
+var _debug : bool = true
 var _main_camera = null
 var _previous_camera_focus = null
 var _highest_priority_behaviour = null
-var _entites_to_avoid = []
-var _entities_in_range = []
 
 
 #-------------------------------------------------------------------------------
@@ -97,11 +93,6 @@ func get_highest_priority():
 
 
 #-------------------------------------------------------------------------------
-func get_entities_in_range() -> Array:
-	return _entities_in_range
-
-
-#-------------------------------------------------------------------------------
 func _set_as_current(behaviour : Behaviour) -> void:
 	if _debug:
 		print("AI " + subject.name + " entering " + behaviour.get_class())
@@ -157,16 +148,6 @@ func _input(event):
 					
 				_main_camera.position = Vector2.ZERO
 
-
-#-------------------------------------------------------------------------------
-func _process(delta):
-	var force = Vector2.ZERO
-	for entity in _entites_to_avoid:
-		var vec_from = global_position - entity.position
-		force += vec_from
-	
-	subject.accelerate(force * entity_avoidance_modifier * delta)
-	
 	
 #-------------------------------------------------------------------------------
 func _on_subject_died():
@@ -178,26 +159,6 @@ func _on_subject_died():
 	
 	_highest_priority_behaviour = null
 	add_behaviour(IdleBehaviour.new())
-
-
-#-------------------------------------------------------------------------------
-func _on_EntityAvoidanceSensor_body_entered(body):
-	_entites_to_avoid.append(body)
-
-
-#-------------------------------------------------------------------------------
-func _on_EntityAvoidanceSensor_body_exited(body):
-	_entites_to_avoid.erase(body)
-
-
-#-------------------------------------------------------------------------------
-func _on_EntitySensor_body_entered(body):
-	_entities_in_range.append(body)
-
-
-#-------------------------------------------------------------------------------
-func _on_EntitySensor_body_exited(body):
-	_entities_in_range.erase(body)
 
 
 #-------------------------------------------------------------------------------

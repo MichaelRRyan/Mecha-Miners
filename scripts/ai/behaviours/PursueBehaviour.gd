@@ -12,12 +12,14 @@ var _cell_size : Vector2 = Vector2.ZERO
 var _cell_size_squared : float = 0.0
 var _path : PoolIntArray
 var _last_target : Vector2 = Vector2.ZERO
+var _disable_when_goal_reached = true
 
 
 #---------------------------------------------------------------------------
-func _init():
+func _init(disable_when_goal_reached = true):
 	_name = "PursueBehaviour"
 	_priority = 5
+	_disable_when_goal_reached = disable_when_goal_reached
 	
 	
 #-------------------------------------------------------------------------------
@@ -37,7 +39,7 @@ func _process(delta : float) -> void:
 		var found_new_path = false
 		
 		# If the target has changed since last time, regenerates the path.
-		if target != _last_target:
+		if _path == null or _path.size() <= 1 or target != _last_target:
 			_last_target = target
 			_find_new_path()
 			found_new_path = true
@@ -58,8 +60,10 @@ func _process(delta : float) -> void:
 				_follow_path(delta)
 			
 		else:
+			if _disable_when_goal_reached:
+				set_active(false)
+				
 			_brain.subject.direction = 0.0
-			_brain.pop_behaviour()
 			emit_signal("target_reached")
 			
 	update()

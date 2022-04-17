@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://scripts/ai/AIController.gd" type="Script" id=1]
 [ext_resource path="res://scripts/ai/sensors/SpatialSensor.gd" type="Script" id=2]
 [ext_resource path="res://scripts/ai/sensors/ItemSensor.gd" type="Script" id=3]
 [ext_resource path="res://scripts/ai/sensors/MineralSensor.gd" type="Script" id=4]
-[ext_resource path="res://scripts/ai/sensors/PlayerSensor.gd" type="Script" id=5]
+[ext_resource path="res://scripts/ai/sensors/EntityAvoider.gd" type="Script" id=5]
+[ext_resource path="res://scripts/ai/sensors/EntitySensor.gd" type="Script" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 100.0
@@ -28,26 +29,26 @@ script = ExtResource( 3 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ItemSensor"]
 shape = SubResource( 1 )
 
-[node name="EntityAvoidanceSensor" type="Area2D" parent="."]
-visible = false
-collision_layer = 2
-collision_mask = 2
-script = ExtResource( 5 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EntityAvoidanceSensor"]
-shape = SubResource( 2 )
-
 [node name="EntitySensor" type="Area2D" parent="."]
 visible = false
 collision_layer = 2
 collision_mask = 2
-script = ExtResource( 5 )
+script = ExtResource( 6 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EntitySensor"]
 shape = SubResource( 2 )
 
+[node name="EntityAvoider" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntityAvoider"]
+shape = SubResource( 2 )
+
 [connection signal="body_entered" from="ItemSensor" to="ItemSensor" method="_on_ItemSensor_body_entered"]
-[connection signal="body_entered" from="EntityAvoidanceSensor" to="." method="_on_EntityAvoidanceSensor_body_entered"]
-[connection signal="body_exited" from="EntityAvoidanceSensor" to="." method="_on_EntityAvoidanceSensor_body_exited"]
-[connection signal="body_entered" from="EntitySensor" to="." method="_on_EntitySensor_body_entered"]
-[connection signal="body_exited" from="EntitySensor" to="." method="_on_EntitySensor_body_exited"]
+[connection signal="body_entered" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_entered"]
+[connection signal="body_exited" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_exited"]
+[connection signal="body_entered" from="EntityAvoider" to="EntityAvoider" method="_on_EntityAvoidanceSensor_body_entered"]
+[connection signal="body_exited" from="EntityAvoider" to="EntityAvoider" method="_on_EntityAvoidanceSensor_body_exited"]
