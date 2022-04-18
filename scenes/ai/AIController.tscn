@@ -24,6 +24,8 @@ script = ExtResource( 4 )
 
 [node name="ItemSensor" type="Area2D" parent="."]
 visible = false
+collision_layer = 8
+collision_mask = 8
 script = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ItemSensor"]
@@ -48,6 +50,7 @@ script = ExtResource( 5 )
 shape = SubResource( 2 )
 
 [connection signal="body_entered" from="ItemSensor" to="ItemSensor" method="_on_ItemSensor_body_entered"]
+[connection signal="body_exited" from="ItemSensor" to="ItemSensor" method="_on_ItemSensor_body_exited"]
 [connection signal="body_entered" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_entered"]
 [connection signal="body_exited" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_exited"]
 [connection signal="body_entered" from="EntityAvoider" to="EntityAvoider" method="_on_EntityAvoidanceSensor_body_entered"]

@@ -1,7 +1,8 @@
 extends AIBrain
 
+var _debug : bool = false
+
 var _behaviour_stack : Array = []
-var _debug : bool = true
 var _main_camera = null
 var _previous_camera_focus = null
 var _highest_priority_behaviour = null
@@ -63,7 +64,7 @@ func pop_behaviour() -> void:
 		
 		# If still not empty.
 		if not _behaviour_stack.empty():
-			_set_as_current(_behaviour_stack.back())
+			_set_as_current(_behaviour_stack.back(), true)
 		else:
 			add_behaviour(IdleBehaviour.new())
 
@@ -93,9 +94,12 @@ func get_highest_priority():
 
 
 #-------------------------------------------------------------------------------
-func _set_as_current(behaviour : Behaviour) -> void:
+func _set_as_current(behaviour : Behaviour, var rentering = false) -> void:
 	if _debug:
-		print("AI " + subject.name + " entering " + behaviour.get_class())
+		if rentering:
+			print("AI " + subject.name + " reentering " + behaviour.get_class())
+		else:
+			print("AI " + subject.name + " entering " + behaviour.get_class())
 		
 	behaviour.set_brain(self)
 	behaviour.set_active(true)

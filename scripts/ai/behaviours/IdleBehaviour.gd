@@ -15,7 +15,7 @@ func _ready() -> void:
 	
 	var item_sensor : Node2D = _brain.find_node("ItemSensor")
 	if item_sensor:
-		var _v = item_sensor.connect("mineral_found", self, "_on_ItemSensor_mineral_found")
+		var _v = item_sensor.connect("item_found", self, "_on_ItemSensor_item_found")
 		
 		
 #-------------------------------------------------------------------------------
@@ -26,16 +26,14 @@ func _process(_delta):
 		
 		
 #-------------------------------------------------------------------------------
-func _on_MineralSensor_mineral_found(mineral_cell : Vector2) -> void:
+func _on_MineralSensor_mineral_found(_mineral_cell : Vector2) -> void:
 	var behaviour = HarvestMineralsBehaviour.new()
-	behaviour.add_spotted_mineral_cell(mineral_cell)
 	_brain.request_add_behaviour(behaviour)
 
 
 #-------------------------------------------------------------------------------
-func _on_ItemSensor_mineral_found(mineral_item : Node2D) -> void:
-	var behaviour = HarvestMineralsBehaviour.new()
-	behaviour.add_spotted_mineral_item(mineral_item)
+func _on_ItemSensor_item_found(_item_obj : Node2D) -> void:
+	var behaviour = CollectItemsBehaviour.new()
 	_brain.request_add_behaviour(behaviour)
 
 

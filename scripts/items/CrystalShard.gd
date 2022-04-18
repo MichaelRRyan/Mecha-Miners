@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends "res://scripts/items/ItemObject.gd"
 
 export var gravity = 200.0
 export var friction_multiplier = 0.96
@@ -7,11 +7,13 @@ var velocity = Vector2.ZERO
 var was_on_floor = false
 
 
+#-------------------------------------------------------------------------------
 func _ready():
 	$ShadowSprite.hide()
 	$PickupParticles.restart()
 	
 
+#-------------------------------------------------------------------------------
 func _physics_process(delta):
 	velocity.y += gravity * delta
 	velocity = move_and_slide(velocity, Vector2.UP)
@@ -19,6 +21,7 @@ func _physics_process(delta):
 	__check_for_floor()
 	
 
+#-------------------------------------------------------------------------------
 func __check_for_floor():
 	if $DestroyTimer.is_stopped():
 		var on_floor = is_on_floor()
@@ -36,6 +39,7 @@ func __check_for_floor():
 			was_on_floor = on_floor
 	
 
+#-------------------------------------------------------------------------------
 func _on_Area2D_body_entered(body):
 	if $DestroyTimer.is_stopped():
 		if body.is_in_group("player"):
@@ -44,7 +48,10 @@ func _on_Area2D_body_entered(body):
 					__on_picked_up()
 
 
+#-------------------------------------------------------------------------------
 func __on_picked_up():
+	_on_picked_up() # From base class.
+	
 	if $Sprite.visible:
 		$Sprite.hide()
 		$ShadowSprite.hide()
@@ -52,5 +59,9 @@ func __on_picked_up():
 		$DestroyTimer.start()
 
 
+#-------------------------------------------------------------------------------
 func _on_DestroyTimer_timeout():
 	queue_free()
+
+
+#-------------------------------------------------------------------------------

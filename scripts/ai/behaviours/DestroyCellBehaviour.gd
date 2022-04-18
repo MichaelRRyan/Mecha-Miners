@@ -7,15 +7,18 @@ signal cell_destroyed()
 var _terrain = null
 
 var _target_cell = Vector2.ZERO
-var _previous_target = null
 
 
 #-------------------------------------------------------------------------------
-func _init(target_cell : Vector2) -> void:
+func _init() -> void:
 	_name = "DestroyCellBehaviour"
 	_priority = 1
-	_target_cell = target_cell
 	
+	
+#-------------------------------------------------------------------------------
+# Updates the target cell to match the target.
+func update_target_cell() -> void:
+	_target_cell = _terrain.world_to_map(_brain.subject.get_target())
 	
 	
 #-------------------------------------------------------------------------------
@@ -24,13 +27,11 @@ func _ready() -> void:
 	if not terrain_container.empty():
 		_terrain = terrain_container.front()
 
-	_previous_target = _brain.subject.get_target()
-	_brain.subject.set_target(_terrain.map_to_world_centred(_target_cell))
+	update_target_cell()
 	
 	var equipment_count = _brain.subject.get_drill_count() + _brain.subject.get_gun_count()
 	if equipment_count == 0:
 		print_debug("No suitable equipment found.")
-		_brain.subject.set_target(_previous_target)
 		_brain.pop_behaviour()
 
 
@@ -41,7 +42,6 @@ func _process(_delta : float) -> void:
 		_brain.subject.attack()
 		
 		if _terrain.is_empty(_target_cell):
-			_brain.subject.set_target(_previous_target)
 			set_active(false)
 			emit_signal("cell_destroyed")
 
