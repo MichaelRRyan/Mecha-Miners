@@ -1,5 +1,7 @@
 extends Area2D
 
+signal entity_spotted(entity)
+
 var _entities_in_range = []
 
 
@@ -24,6 +26,7 @@ func _on_EntitySensor_body_entered(body):
 	# Adds the body to the container if it's not a parent.
 	if not body.is_a_parent_of(self):
 		_entities_in_range.append(body)
+		emit_signal("entity_spotted", body)
 
 
 #-------------------------------------------------------------------------------

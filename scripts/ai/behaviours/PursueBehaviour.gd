@@ -18,7 +18,6 @@ var _disable_when_goal_reached = true
 #---------------------------------------------------------------------------
 func _init(disable_when_goal_reached = true):
 	_name = "PursueBehaviour"
-	_priority = 5
 	_disable_when_goal_reached = disable_when_goal_reached
 	
 	

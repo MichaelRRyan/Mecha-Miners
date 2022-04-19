@@ -13,7 +13,7 @@ var _pursue_created = false # Set to true once a sub pursue behaviour is created
 #-------------------------------------------------------------------------------
 func _init():
 	_name = "CollectItemsBehaviour"
-	_priority = 10
+	_priority = 4
 
 
 #-------------------------------------------------------------------------------
