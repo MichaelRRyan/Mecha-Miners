@@ -136,6 +136,11 @@ func get_gun_count() -> int:
 
 
 # -----------------------------------------------------------------------------
+func get_health() -> float:
+	return health
+
+
+# -----------------------------------------------------------------------------
 func _ready():
 	calculate_vertical_motion_vars()
 	set_time_to_max_speed(_time_to_max_speed)

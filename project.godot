@@ -39,6 +39,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/ai/behaviours/ExploreBehaviour.gd"
 }, {
+"base": "Reference",
+"class": "FightOrFlight",
+"language": "GDScript",
+"path": "res://scripts/ai/FightOrFlightDecision.gd"
+}, {
+"base": "Behaviour",
+"class": "FleeBehaviour",
+"language": "GDScript",
+"path": "res://scripts/ai/behaviours/FleeBehaviour.gd"
+}, {
 "base": "Behaviour",
 "class": "HarvestMineralsBehaviour",
 "language": "GDScript",
@@ -86,6 +96,8 @@ _global_script_class_icons={
 "CollectItemsBehaviour": "",
 "DestroyCellBehaviour": "",
 "ExploreBehaviour": "",
+"FightOrFlight": "",
+"FleeBehaviour": "",
 "HarvestMineralsBehaviour": "",
 "IdleBehaviour": "",
 "Inventory": "",

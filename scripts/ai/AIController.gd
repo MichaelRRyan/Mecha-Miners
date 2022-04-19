@@ -6,6 +6,7 @@ var _behaviour_stack : Array = []
 var _main_camera = null
 var _previous_camera_focus = null
 var _highest_priority_behaviour = null
+var _bravado = 0.5
 
 
 #-------------------------------------------------------------------------------
@@ -91,6 +92,11 @@ func request_add_behaviour(new_behaviour : Behaviour) -> void:
 #-------------------------------------------------------------------------------
 func get_highest_priority():
 	return _highest_priority_behaviour
+
+
+#-------------------------------------------------------------------------------
+func bravado(certainty : float) -> bool:
+	return randf() < (_bravado * 2.0) * certainty
 
 
 #-------------------------------------------------------------------------------

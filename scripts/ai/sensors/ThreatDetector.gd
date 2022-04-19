@@ -3,6 +3,15 @@ extends Node2D
 var _entity_sensor = null
 var _brain : AIBrain = null
 var _has_weapon = false
+var _fight_or_flight : FightOrFlight.DecisionNode = null # A decision tree.
+var _threats = []
+
+
+#-------------------------------------------------------------------------------
+func add_threat(entity):
+	if not _threats.has(entity):
+		_threats.append(entity)
+
 
 #-------------------------------------------------------------------------------
 func _ready():
@@ -16,6 +25,7 @@ func _ready():
 		if _entity_sensor == null:
 			print_debug("Can't find EntitySensor.")
 		
+		_construct_decision_tree()
 		call_deferred("_check_for_guns")
 		
 
@@ -30,6 +40,37 @@ func _check_for_guns():
 func _on_EntitySensor_entity_spotted(_entity):
 	if _has_weapon:
 		_brain.request_add_behaviour(AttackBehaviour.new())
+
+
+#-------------------------------------------------------------------------------
+func _construct_decision_tree():
+	
+	# Takes a shorthand alias of the class.
+	var fof = FightOrFlight
+	
+	var second_branch = fof.HasLowHealth.new() \
+		.map(true, fof.Flee.new()) \
+		.map(false, fof.AssessRiskReward.new())
+	# TODO: Finish the above.
+	
+	_fight_or_flight = fof.HasWeapon.new() \
+		.map(false, fof.AssessThreatLevel.new() \
+			.map(fof.Values.LOW, fof.Ignore.new()) \
+			.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.5) \
+				.map(false, fof.Flee.new()) \
+				.map(true, fof.Ignore.new())) \
+			.map(fof.Values.HIGH, fof.CalculateBravado.new(0.2) \
+				.map(false, fof.Flee.new()) \
+				.map(true, fof.Ignore.new()))) \
+		.map(true, fof.AssessThreatLevel.new() \
+			.map(fof.Values.LOW, fof.AssessPotentialReward.new() \
+				.map(fof.Values.LOW, fof.Ignore.new()) \
+				.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.7) \
+					.map(false, fof.Ignore.new()) \
+					.map(true, fof.Attack.new())) \
+				.map(fof.Values.HIGH, fof.Attack.new())) \
+			.map(fof.Values.MEDIUM, second_branch) \
+			.map(fof.Values.HIGH, second_branch))
 
 
 #-------------------------------------------------------------------------------
