@@ -31,6 +31,11 @@ func get_priority() -> int:
 
 
 #-------------------------------------------------------------------------------
+func on_rentered():
+	pass
+
+
+#-------------------------------------------------------------------------------
 func _add_sub_behaviour(behaviour : Behaviour):
 	behaviour.set_brain(_brain)
 	_sub_behaviours.append(behaviour)

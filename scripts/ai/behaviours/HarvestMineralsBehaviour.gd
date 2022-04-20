@@ -6,18 +6,25 @@ const AVOID_ENTITY_RANGE = 64.0
 var _terrain : Terrain = null
 var _mineral_sensor = null
 var _entity_sensor = null
+
+var _pursue_created = false
 var _destroy_cell_behaviour = null
 
 var _target_found = false
-var _pursue_created = false
 var _harvesting = false
-var _collect_items_when_ready = false
+var _target_cell = Vector2.ZERO
 
 
 #-------------------------------------------------------------------------------
 func _init():
 	_name = "HarvestMineralsBehaviour"
 	_priority = 2
+
+
+#-------------------------------------------------------------------------------
+func on_rentered():
+	if _target_found:
+		_brain.set_target(_terrain.map_to_world_centred(_target_cell))
 
 
 #-------------------------------------------------------------------------------
@@ -44,54 +51,61 @@ func _ready() -> void:
 #-------------------------------------------------------------------------------
 func _on_ItemSensor_item_found(_item_obj : Node2D) -> void:
 	if _active:
-		_collect_items_when_ready = true
+		_brain.add_behaviour(CollectItemsBehaviour.new())
 
 
 #-------------------------------------------------------------------------------
 func _process(_delta : float) -> void:
-	if _active and not _target_found:
+	if _active:
+		if not _target_found:
+			_find_target()
+				
+		elif not _terrain.is_mineral(_target_cell):
+			if _destroy_cell_behaviour != null:
+				_destroy_cell_behaviour.set_active(false)
+			_target_found = false
+			_harvesting = false
+
+
+#-------------------------------------------------------------------------------
+func _find_target():
+	var mineral_found = false
+	var mineral_pos = Vector2.ZERO
+	var closest_dist = 0
+	
+	var deletion_queue = []
+	
+	for mineral_cell in _mineral_sensor.get_minerals_found():
 		
-		if _collect_items_when_ready:
-			_collect_items_when_ready = false
-			_brain.add_behaviour(CollectItemsBehaviour.new())
-		
+		# Checks the cell is still a mineral and has not been destroyed.
+		if _terrain.is_mineral(mineral_cell):
+			
+			# Checks there's no other entity too close to the cell.
+			var pos = _terrain.map_to_world_centred(mineral_cell)
+			if not _entity_sensor.is_entity_within_range_of(pos, AVOID_ENTITY_RANGE):
+				
+				var dist = (pos - global_position).length_squared()
+				if not mineral_found or dist < closest_dist:
+					mineral_pos = pos
+					closest_dist = dist
+					mineral_found = true
+					_target_cell = mineral_cell
 		else:
-			var mineral_found = false
-			var mineral_pos = Vector2.ZERO
-			var closest_dist = 0
+			deletion_queue.append(mineral_cell)
 			
-			var deletion_queue = []
-			
-			for mineral_cell in _mineral_sensor.get_minerals_found():
-				
-				# Checks the cell is still a mineral and has not been destroyed.
-				if _terrain.is_mineral(mineral_cell):
-					
-					# Checks there's no other entity too close to the cell.
-					var pos = _terrain.map_to_world_centred(mineral_cell)
-					if not _entity_sensor.is_entity_within_range_of(pos, AVOID_ENTITY_RANGE):
-						
-						var dist = (pos - global_position).length_squared()
-						if not mineral_found or dist < closest_dist:
-							mineral_pos = pos
-							closest_dist = dist
-							mineral_found = true
-				else:
-					deletion_queue.append(mineral_cell)
-					
-			for cell in deletion_queue:
-				_mineral_sensor.erase_cell_reference(cell)
-				
-			# If no mineral tiles could be found, returns from behaviour.
-			if not mineral_found:
-				_brain.pop_behaviour()
-				
-			else:
-				if _brain.is_debug():
-					print("AI " + _brain.subject.name + " found target in " + get_class() + ".")
-				
-				_target_found = true
-				_pursue(mineral_pos)
+	for cell in deletion_queue:
+		_mineral_sensor.erase_cell_reference(cell)
+		
+	# If no mineral tiles could be found, returns from behaviour.
+	if not mineral_found:
+		_brain.pop_behaviour()
+		
+	else:
+		if _brain.is_debug():
+			print("AI " + _brain.subject.name + " found target in " + get_class() + ".")
+		
+		_target_found = true
+		_pursue(mineral_pos)
 			
 			
 #-------------------------------------------------------------------------------

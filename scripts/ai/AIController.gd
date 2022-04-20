@@ -124,6 +124,9 @@ func _set_as_current(behaviour : Behaviour, var rentering = false) -> void:
 	behaviour.set_brain(self)
 	behaviour.set_active(true)
 	
+	if rentering:
+		behaviour.on_rentered()
+	
 	if (_highest_priority_behaviour == null 
 		or behaviour.get_priority() > _highest_priority_behaviour.get_priority()):
 			_highest_priority_behaviour = behaviour

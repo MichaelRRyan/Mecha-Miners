@@ -31,7 +31,7 @@ func _ready() -> void:
 	var equipment_count = _brain.subject.get_drill_count() + _brain.subject.get_gun_count()
 	if equipment_count == 0:
 		print_debug("No suitable equipment found.")
-		_brain.pop_behaviour()
+		set_active(false)
 
 
 #-------------------------------------------------------------------------------

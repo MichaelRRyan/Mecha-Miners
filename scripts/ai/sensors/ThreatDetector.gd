@@ -1,4 +1,4 @@
-extends Node2D
+extends Area2D
 
 var _entity_sensor = null
 var _brain : AIBrain = null
@@ -53,6 +53,12 @@ func _on_EntitySensor_entity_out_of_sight(entity):
 
 
 #-------------------------------------------------------------------------------
+func _on_ThreatDetector_body_entered(body):
+	if not body.is_a_parent_of(self):
+		_fight_or_flight.make_decision(_brain, body)
+
+
+#-------------------------------------------------------------------------------
 func _construct_decision_tree():
 	
 	# Takes a shorthand alias of the class.
@@ -91,7 +97,7 @@ func _construct_decision_tree():
 	_fight_or_flight = fof.HasWeapon.new() \
 		.map(false, fof.AssessThreatLevel.new() \
 			.map(fof.Values.LOW, fof.Ignore.new()) \
-			.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.5) \
+			.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.8) \
 				.map(false, fof.Flee.new()) \
 				.map(true, fof.Ignore.new())) \
 			.map(fof.Values.HIGH, fof.CalculateBravado.new(0.2) \

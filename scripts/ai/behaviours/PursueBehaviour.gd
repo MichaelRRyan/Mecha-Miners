@@ -104,10 +104,14 @@ func _follow_path(delta : float):
 
 #-------------------------------------------------------------------------------
 func _move_towards(pos : Vector2, delta : float) -> void:
-	_brain.subject.direction = sign(pos.x - _brain.subject.position.x)
+	var diff = pos.x - _brain.subject.position.x
+	if abs(diff) > 5.0:
+		_brain.subject.direction = sign(diff)
+	else:
+		_brain.subject.direction = 0
 			
-	if pos.y < _brain.subject.position.y:
-		_brain.subject.thrust_jetpack(delta)
+	if pos.y + 5.0 < _brain.subject.position.y:
+		_brain.subject.jump(delta)
 		
 		
 #-------------------------------------------------------------------------------
