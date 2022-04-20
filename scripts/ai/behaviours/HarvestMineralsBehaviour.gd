@@ -101,9 +101,6 @@ func _find_target():
 		_brain.pop_behaviour()
 		
 	else:
-		if _brain.is_debug():
-			print("AI " + _brain.subject.name + " found target in " + get_class() + ".")
-		
 		_target_found = true
 		_pursue(mineral_pos)
 			
@@ -127,9 +124,6 @@ func _pursue(pos : Vector2) -> void:
 func _on_PursueBehaviour_target_reached() -> void:
 	if not _harvesting:
 		
-		if _brain.is_debug():
-			print("AI " + _brain.subject.name + " target reached in " + get_class() + ".")
-		
 		var target_cell = _terrain.world_to_map(_brain.subject.get_target())
 		if _terrain.is_mineral(target_cell):
 			_harvesting = true
@@ -148,9 +142,6 @@ func _on_PursueBehaviour_target_reached() -> void:
 
 #-------------------------------------------------------------------------------
 func _on_DestroyCellBehaviour_cell_destroyed() -> void:
-	if _brain.is_debug():
-		print("AI " + _brain.subject.name + " destroyed the target cell while harvesting minerals.")
-	
 	_destroy_cell_behaviour.set_active(false)
 	_target_found = false
 	_harvesting = false

@@ -6,6 +6,7 @@ signal target_reached()
 
 const _IDEAL_DISTANCE_SQUARED = 4.0 * 4.0
 
+var _terrain : Terrain = null
 var _pathfinding : AStar2D = null
 
 var _cell_size : Vector2 = Vector2.ZERO
@@ -13,6 +14,7 @@ var _cell_size_squared : float = 0.0
 var _path : PoolIntArray
 var _last_target : Vector2 = Vector2.ZERO
 var _disable_when_goal_reached = true
+var _entity_avoider = null
 
 
 #---------------------------------------------------------------------------
@@ -25,10 +27,12 @@ func _init(disable_when_goal_reached = true):
 func _ready() -> void:
 	var terrain_container = get_tree().get_nodes_in_group("terrain")
 	if not terrain_container.empty():
-		var terrain = terrain_container.front()
-		_pathfinding = terrain.get_pathfinding()
-		_cell_size = terrain.get_cell_size()
+		_terrain = terrain_container.front()
+		_pathfinding = _terrain.get_pathfinding()
+		_cell_size = _terrain.get_cell_size()
 		_cell_size_squared = _cell_size.length_squared()
+		
+		_entity_avoider = _brain.find_node("EntityAvoider")
 		
 
 #-------------------------------------------------------------------------------
@@ -40,6 +44,10 @@ func _process(delta : float) -> void:
 		# If the target has changed since last time, regenerates the path.
 		if _path == null or _path.size() <= 1 or target != _last_target:
 			_last_target = target
+			_find_new_path()
+			found_new_path = true
+		
+		if not _entity_avoider.get_entities_to_avoid().empty():
 			_find_new_path()
 			found_new_path = true
 			
@@ -54,10 +62,8 @@ func _process(delta : float) -> void:
 				# If the new path is valid.
 				if _path and _path.size() > 1:
 					_follow_path(delta)
-				
 			else:
 				_follow_path(delta)
-			
 		else:
 			if _disable_when_goal_reached:
 				set_active(false)
@@ -70,10 +76,30 @@ func _process(delta : float) -> void:
 
 #-------------------------------------------------------------------------------
 func _find_new_path():
+	
+	# Temporarily disables any points blocked by nearby entities.
+	var point_ids = []
+	var entities = _entity_avoider.get_entities_to_avoid()
+	if not entities.empty():
+		for entity in entities:
+			
+			var cell = _terrain.world_to_map(entity.global_position)
+			if _terrain.is_empty(cell):
+				var point = _pathfinding.get_closest_point(entity.global_position, true)
+				
+				_pathfinding.set_point_disabled(point, true)
+				point_ids.append(point)
+	
+	# Finds a new path.
 	var subject_point = _pathfinding.get_closest_point(_brain.subject.position)
 	var target_point = _pathfinding.get_closest_point(_brain.get_target())
 	if subject_point != -1 and target_point != -1:
 		_path = _pathfinding.get_id_path(subject_point, target_point)
+	
+	# Enables any disabled points.
+	if not point_ids.empty():
+		for point in point_ids:
+			_pathfinding.set_point_disabled(point, false)
 
 
 #-------------------------------------------------------------------------------
@@ -104,16 +130,20 @@ func _follow_path(delta : float):
 
 #-------------------------------------------------------------------------------
 func _move_towards(pos : Vector2, delta : float) -> void:
-	var diff = pos.x - _brain.subject.position.x
+	var diff = pos.x - _brain.subject.global_position.x
+	
 	if abs(diff) > 5.0:
 		_brain.subject.direction = sign(diff)
 	else:
 		_brain.subject.direction = 0
-			
+	
+	_brain.set_hover(true)
 	if pos.y + 5.0 < _brain.subject.position.y:
 		_brain.subject.jump(delta)
-		
-		
+	else:
+		_brain.set_hover(false)
+
+
 #-------------------------------------------------------------------------------
 func _draw():
 	if _brain.is_debug() and _active:

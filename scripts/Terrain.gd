@@ -224,3 +224,6 @@ func _update_pathfinding_connections(cell_position : Vector2, new_point_id : int
 				_pathfinding.connect_points(other_point, new_point_id)
 		
 		dir = Vector2(-dir.y, dir.x)
+
+
+# -----------------------------------------------------------------------------

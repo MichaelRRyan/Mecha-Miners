@@ -12,7 +12,7 @@
 radius = 5.0
 height = 4.0
 
-[node name="Humanoid" type="KinematicBody2D" groups=["player"]]
+[node name="Humanoid" type="KinematicBody2D" groups=["entity", "player"]]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource( 2 )
@@ -34,11 +34,9 @@ script = ExtResource( 5 )
 [node name="Equipped1" parent="Arms" instance=ExtResource( 3 )]
 position = Vector2( -1.5, 1 )
 z_index = 2
-region_rect = Rect2( 192, 48, 32, 16 )
 
 [node name="Equipped2" parent="Arms" instance=ExtResource( 6 )]
 position = Vector2( 6, 0 )
-region_rect = Rect2( 192, 32, 32, 16 )
 
 [node name="Feet" type="Node2D" parent="."]
 position = Vector2( 0, 9 )

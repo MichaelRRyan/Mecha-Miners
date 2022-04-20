@@ -1,5 +1,7 @@
 extends Node
 
+var _debug_mode = true
+
 
 #-------------------------------------------------------------------------------
 func get_dependency(group_name : String) -> Node:
@@ -7,6 +9,11 @@ func get_dependency(group_name : String) -> Node:
 	if not container.empty():
 		return container.front()
 	return null
+
+
+#-------------------------------------------------------------------------------
+func is_debug_mode() -> bool:
+	return _debug_mode
 
 
 #-------------------------------------------------------------------------------

@@ -1,9 +1,11 @@
 extends AIBrain
 
+# The maximum downward velocity before the bot will try to slow itself.
+export(float) var max_velocity_y = 100.0
+
 var _debug : bool = false
 
 var _behaviour_stack : Array = []
-var _main_camera = null
 var _previous_camera_focus = null
 var _highest_priority_behaviour = null
 var _bravado = 0.5
@@ -119,7 +121,7 @@ func _set_as_current(behaviour : Behaviour, var rentering = false) -> void:
 		else:
 			print("AI " + subject.name + " entering " + behaviour.get_class())
 		
-		$Status.text = behaviour.get_class()
+		$Status.text = subject.name + "\n" + behaviour.get_class()
 		
 	behaviour.set_brain(self)
 	behaviour.set_active(true)
@@ -142,44 +144,20 @@ func _ready() -> void:
 	subject = get_parent()
 	var _r = subject.connect("died", self, "_on_subject_died")
 	add_behaviour(IdleBehaviour.new())
-	
-	var main_cameras = get_tree().get_nodes_in_group("main_camera")
-	if main_cameras != null and not main_cameras.empty():
-		_main_camera = main_cameras.front()
 
 
 #-------------------------------------------------------------------------------
 func _input(event):
-	# Toggles AI debug mode.
-	if event.is_action_pressed("ai_debug"):
-		_debug = not _debug
-		$Status.visible = _debug
-		
-		if not _behaviour_stack.empty():
-			$Status.text = _behaviour_stack.back().get_class()
-		else:
-			$Status.text = "None"
-	
-	if event.is_action_pressed("ai_perspective"):
-		
-		# If the main camera exists.
-		if _main_camera != null:
+	if Utility.is_debug_mode():
+		# Toggles AI debug mode.
+		if event.is_action_pressed("ai_debug"):
+			_debug = not _debug
+			$Status.visible = _debug
 			
-			# If the camera is following a node.
-			var camera_focus : Node = _main_camera.get_parent()
-			if camera_focus != null:
-				
-				camera_focus.remove_child(_main_camera)
-				
-				if _previous_camera_focus == null:
-					_previous_camera_focus = camera_focus
-					add_child(_main_camera)
-					
-				else:
-					_previous_camera_focus.add_child(_main_camera)
-					_previous_camera_focus = null
-					
-				_main_camera.position = Vector2.ZERO
+			if not _behaviour_stack.empty():
+				$Status.text = subject.name + "\n" + _behaviour_stack.back().get_class()
+			else:
+				$Status.text = subject.name + "\nNone"
 
 	
 #-------------------------------------------------------------------------------
@@ -195,3 +173,11 @@ func _on_subject_died():
 
 
 #-------------------------------------------------------------------------------
+func _process(delta):
+	# Slows itself if falling too fast.
+	if subject.get_velocity().y > max_velocity_y:
+		subject.thrust_jetpack(delta)
+		
+		
+#-------------------------------------------------------------------------------
+	

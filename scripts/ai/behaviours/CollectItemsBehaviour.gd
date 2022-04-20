@@ -65,9 +65,6 @@ func _process(_delta : float) -> void:
 			_brain.pop_behaviour()
 			
 		else:
-			if _brain.is_debug():
-				print("AI " + _brain.subject.name + " item found in " + get_class() + ".")
-			
 			if not _target_item.is_connected("picked_up", self, "_on_target_item_picked_up"):
 				_target_item.connect("picked_up", self, "_on_target_item_picked_up")
 			_pursue(_target_item.global_position)
@@ -91,9 +88,6 @@ func _pursue(pos : Vector2) -> void:
 #-------------------------------------------------------------------------------
 func _on_PursueBehaviour_target_reached() -> void:
 	call_deferred("_target_found")
-	
-	if _brain.is_debug():
-		print("AI " + _brain.subject.name + " item reached while in " + get_class() + ".")
 
 
 #-------------------------------------------------------------------------------

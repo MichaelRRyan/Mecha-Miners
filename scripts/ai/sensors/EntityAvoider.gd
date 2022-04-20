@@ -1,9 +1,14 @@
 extends Area2D
 
-export(float) var avoidance_force_modifier = 2.0
+export(float) var avoidance_force_modifier = 5.0
 
 var _entites_to_avoid = []
 var _brain : AIBrain = null
+
+
+#-------------------------------------------------------------------------------
+func get_entities_to_avoid() -> Array:
+	return _entites_to_avoid
 
 
 #-------------------------------------------------------------------------------
