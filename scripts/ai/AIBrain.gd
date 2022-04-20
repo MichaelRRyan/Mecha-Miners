@@ -52,9 +52,21 @@ func get_highest_priority():
 	
 	
 #-------------------------------------------------------------------------------
-func bravado(certainty : float) -> bool:
+func bravado(_certainty : float) -> bool:
 	assert(false)
 	return false
+
+
+#-------------------------------------------------------------------------------
+func get_ideal_value() -> int:
+	assert(false)
+	return 0
+
+
+#-------------------------------------------------------------------------------
+func get_real_value() -> int:
+	assert(false)
+	return 0
 
 
 #-------------------------------------------------------------------------------

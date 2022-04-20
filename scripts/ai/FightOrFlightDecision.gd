@@ -124,25 +124,22 @@ class CalculateBravado:
 
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
-class AssessRiskReward:
+class AssessRisk:
 	extends DecisionNode
 	
-	# TODO: Implement class correctly.
-	
-	# TODO: Move to a global script.
-	const WORLD_HEIGHT = 350
-	
-	# The threshold at which point the reward changes.
-	const MEDIUM_REWARD_THRESHOLD = 0.5
-	const HIGH_REWARD_THRESHOLD = 0.8
+	# The threshold at which point the risk changes.
+	const MEDIUM_RISK_THRESHOLD = 0.5
+	const HIGH_RISK_THRESHOLD = 0.8
 	
 	# --------------------------------------------------------------------------
 	func make_decision(brain : AIBrain, entity : Node2D) -> void:
-		var depth = entity.global_position.y / WORLD_HEIGHT
+		var ideal_value = brain.get_ideal_value()
+		var real_value = brain.get_real_value()
+		var interp = real_value / ideal_value
 
-		if depth < MEDIUM_REWARD_THRESHOLD:
+		if interp < MEDIUM_RISK_THRESHOLD:
 			_branch(Values.LOW, brain, entity)
-		elif depth < HIGH_REWARD_THRESHOLD:
+		elif interp < HIGH_RISK_THRESHOLD:
 			_branch(Values.MEDIUM, brain, entity)
 		else:
 			_branch(Values.HIGH, brain, entity)

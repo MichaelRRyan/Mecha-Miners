@@ -48,11 +48,36 @@ func _construct_decision_tree():
 	# Takes a shorthand alias of the class.
 	var fof = FightOrFlight
 	
+	# Creates the second half of the tree to place into the first half.
 	var second_branch = fof.HasLowHealth.new() \
 		.map(true, fof.Flee.new()) \
-		.map(false, fof.AssessRiskReward.new())
-	# TODO: Finish the above.
+		.map(false, fof.AssessRisk.new() \
+			.map(fof.Values.HIGH, fof.AssessPotentialReward.new() \
+				.map(fof.Values.LOW, fof.CalculateBravado.new(0.1) \
+					.map(false, fof.Flee.new()) \
+					.map(true, fof.Attack.new())) \
+				.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.5) \
+					.map(false, fof.Flee.new()) \
+					.map(true, fof.Attack.new())) \
+				.map(fof.Values.HIGH, fof.CalculateBravado.new(0.8) \
+					.map(false, fof.Flee.new()) \
+					.map(true, fof.Attack.new()))) \
+			.map(fof.Values.MEDIUM, fof.AssessPotentialReward.new() \
+				.map(fof.Values.LOW, fof.Ignore.new()) \
+				.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.5) \
+					.map(false, fof.Ignore.new()) \
+					.map(true, fof.Attack.new())) \
+				.map(fof.Values.HIGH, fof.CalculateBravado.new(0.8) \
+					.map(false, fof.Ignore.new()) \
+					.map(true, fof.Attack.new()))) \
+			.map(fof.Values.LOW, fof.AssessPotentialReward.new() \
+				.map(fof.Values.LOW, fof.Ignore.new()) \
+				.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.7) \
+					.map(false, fof.Ignore.new()) \
+					.map(true, fof.Attack.new())) \
+				.map(fof.Values.HIGH, fof.Attack.new())))
 	
+	# Creates the first half of the tree and places the second half into it.
 	_fight_or_flight = fof.HasWeapon.new() \
 		.map(false, fof.AssessThreatLevel.new() \
 			.map(fof.Values.LOW, fof.Ignore.new()) \

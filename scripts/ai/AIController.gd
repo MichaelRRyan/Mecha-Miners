@@ -7,6 +7,7 @@ var _main_camera = null
 var _previous_camera_focus = null
 var _highest_priority_behaviour = null
 var _bravado = 0.5
+var _ideal_crystal_count = 40
 
 
 #-------------------------------------------------------------------------------
@@ -97,6 +98,16 @@ func get_highest_priority():
 #-------------------------------------------------------------------------------
 func bravado(certainty : float) -> bool:
 	return randf() < (_bravado * 2.0) * certainty
+
+
+#-------------------------------------------------------------------------------
+func get_ideal_value() -> int:
+	return _ideal_crystal_count
+
+
+#-------------------------------------------------------------------------------
+func get_real_value() -> int:
+	return subject.inventory.get_gem_count()
 
 
 #-------------------------------------------------------------------------------
