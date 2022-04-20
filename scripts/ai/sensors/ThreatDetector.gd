@@ -14,6 +14,11 @@ func add_threat(entity):
 
 
 #-------------------------------------------------------------------------------
+func get_threats() -> Array:
+	return _threats
+
+
+#-------------------------------------------------------------------------------
 func _ready():
 	# Gets the parent as the brain if it's an AI brain.
 	var parent = get_parent()
@@ -37,9 +42,14 @@ func _check_for_guns():
 
 
 #-------------------------------------------------------------------------------
-func _on_EntitySensor_entity_spotted(_entity):
-	if _has_weapon:
-		_brain.request_add_behaviour(AttackBehaviour.new())
+func _on_EntitySensor_entity_spotted(entity):
+	_fight_or_flight.make_decision(_brain, entity)
+		
+		
+#-------------------------------------------------------------------------------
+func _on_EntitySensor_entity_out_of_sight(entity):
+	if _threats.has(entity):
+		_threats.erase(entity)
 
 
 #-------------------------------------------------------------------------------

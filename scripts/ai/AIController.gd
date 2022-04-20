@@ -43,6 +43,7 @@ func pop_behaviour() -> void:
 		
 		var behaviour = _behaviour_stack.back()
 		
+		# Assigns the new highest priority behaviour.
 		if _highest_priority_behaviour == behaviour:
 			if _behaviour_stack.size() > 1:
 				var index = _behaviour_stack.find(behaviour)
@@ -118,6 +119,8 @@ func _set_as_current(behaviour : Behaviour, var rentering = false) -> void:
 		else:
 			print("AI " + subject.name + " entering " + behaviour.get_class())
 		
+		$Status.text = behaviour.get_class()
+		
 	behaviour.set_brain(self)
 	behaviour.set_active(true)
 	
@@ -147,6 +150,12 @@ func _input(event):
 	# Toggles AI debug mode.
 	if event.is_action_pressed("ai_debug"):
 		_debug = not _debug
+		$Status.visible = _debug
+		
+		if not _behaviour_stack.empty():
+			$Status.text = _behaviour_stack.back().get_class()
+		else:
+			$Status.text = "None"
 	
 	if event.is_action_pressed("ai_perspective"):
 		

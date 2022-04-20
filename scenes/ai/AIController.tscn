@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://scripts/ai/AIController.gd" type="Script" id=1]
 [ext_resource path="res://scripts/ai/sensors/SpatialSensor.gd" type="Script" id=2]
@@ -7,12 +7,17 @@
 [ext_resource path="res://scripts/ai/sensors/EntityAvoider.gd" type="Script" id=5]
 [ext_resource path="res://scripts/ai/sensors/EntitySensor.gd" type="Script" id=6]
 [ext_resource path="res://scripts/ai/sensors/ThreatDetector.gd" type="Script" id=7]
+[ext_resource path="res://assets/fonts/matchup_pro.ttf" type="DynamicFontData" id=8]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 100.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 100.0
+radius = 150.0
+
+[sub_resource type="DynamicFont" id=3]
+outline_size = 2
+font_data = ExtResource( 8 )
 
 [node name="AIController" type="Node2D"]
 script = ExtResource( 1 )
@@ -53,10 +58,27 @@ script = ExtResource( 5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EntityAvoider"]
 shape = SubResource( 2 )
 
+[node name="Status" type="Label" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -51.0
+margin_top = 14.0
+margin_right = 79.0
+margin_bottom = 38.0
+rect_scale = Vector2( 0.8, 0.8 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "IDLE"
+align = 1
+
 [connection signal="body_entered" from="ItemSensor" to="ItemSensor" method="_on_ItemSensor_body_entered"]
 [connection signal="body_exited" from="ItemSensor" to="ItemSensor" method="_on_ItemSensor_body_exited"]
 [connection signal="body_entered" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_entered"]
 [connection signal="body_exited" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_exited"]
+[connection signal="entity_out_of_sight" from="EntitySensor" to="ThreatDetector" method="_on_EntitySensor_entity_out_of_sight"]
 [connection signal="entity_spotted" from="EntitySensor" to="ThreatDetector" method="_on_EntitySensor_entity_spotted"]
 [connection signal="body_entered" from="EntityAvoider" to="EntityAvoider" method="_on_EntityAvoidanceSensor_body_entered"]
 [connection signal="body_exited" from="EntityAvoider" to="EntityAvoider" method="_on_EntityAvoidanceSensor_body_exited"]

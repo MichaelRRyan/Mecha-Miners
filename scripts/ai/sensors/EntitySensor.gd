@@ -1,6 +1,7 @@
 extends Area2D
 
 signal entity_spotted(entity)
+signal entity_out_of_sight(entity)
 
 var _entities_in_range = []
 
@@ -32,6 +33,7 @@ func _on_EntitySensor_body_entered(body):
 #-------------------------------------------------------------------------------
 func _on_EntitySensor_body_exited(body):
 	_entities_in_range.erase(body)
+	emit_signal("entity_out_of_sight", body)
 
 
 #-------------------------------------------------------------------------------

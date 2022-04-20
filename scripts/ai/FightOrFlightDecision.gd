@@ -72,15 +72,16 @@ class AssessPotentialReward:
 	extends DecisionNode
 	
 	# TODO: Move to a global script.
-	const WORLD_HEIGHT = 350
+	const WORLD_HEIGHT = 350.0 * 16.0
+	const ONE_OVER_WORLD_HEIGHT = 1.0 / WORLD_HEIGHT
 	
 	# The threshold at which point the reward changes.
-	const MEDIUM_REWARD_THRESHOLD = 0.5
-	const HIGH_REWARD_THRESHOLD = 0.8
+	const MEDIUM_REWARD_THRESHOLD = 0.3
+	const HIGH_REWARD_THRESHOLD = 0.7
 	
 	# --------------------------------------------------------------------------
 	func make_decision(brain : AIBrain, entity : Node2D) -> void:
-		var depth = entity.global_position.y / WORLD_HEIGHT
+		var depth = entity.global_position.y * ONE_OVER_WORLD_HEIGHT
 
 		if depth < MEDIUM_REWARD_THRESHOLD:
 			_branch(Values.LOW, brain, entity)
