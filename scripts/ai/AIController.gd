@@ -144,6 +144,13 @@ func _ready() -> void:
 	subject = get_parent()
 	var _r = subject.connect("died", self, "_on_subject_died")
 	add_behaviour(IdleBehaviour.new())
+	
+	# Uses noise to get a random number that tends towards a middle point of 0.5.
+	var noise = OpenSimplexNoise.new()
+	noise.seed = randi()
+	noise.period = 0.0000001
+	noise.persistence = 5
+	_bravado = 1 - (noise.get_noise_1d(0) + 1) * 0.5
 
 
 #-------------------------------------------------------------------------------

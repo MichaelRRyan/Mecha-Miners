@@ -28,12 +28,23 @@ func _on_EntitySensor_body_entered(body):
 	if not body.is_a_parent_of(self):
 		_entities_in_range.append(body)
 		emit_signal("entity_spotted", body)
+		
+		if not body.is_connected("died", self, "_on_entity_died"):
+			var _r = body.connect("died", self, "_on_entity_died", [body])
 
 
 #-------------------------------------------------------------------------------
 func _on_EntitySensor_body_exited(body):
-	_entities_in_range.erase(body)
-	emit_signal("entity_out_of_sight", body)
+	if _entities_in_range.has(body):
+		_entities_in_range.erase(body)
+		emit_signal("entity_out_of_sight", body)
 
+
+#-------------------------------------------------------------------------------
+func _on_entity_died(entity):
+	if _entities_in_range.has(entity):
+		_entities_in_range.erase(entity)
+		emit_signal("entity_out_of_sight", entity)
+	
 
 #-------------------------------------------------------------------------------

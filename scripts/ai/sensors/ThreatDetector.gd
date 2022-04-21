@@ -44,6 +44,9 @@ func _check_for_guns():
 #-------------------------------------------------------------------------------
 func _on_EntitySensor_entity_spotted(entity):
 	_fight_or_flight.make_decision(_brain, entity)
+	
+	if not entity.is_connected("died", self, "_on_entity_died"):
+		var _r = entity.connect("died", self, "_on_entity_died", [entity])
 		
 		
 #-------------------------------------------------------------------------------
@@ -56,8 +59,17 @@ func _on_EntitySensor_entity_out_of_sight(entity):
 func _on_ThreatDetector_body_entered(body):
 	if not body.is_a_parent_of(self):
 		_fight_or_flight.make_decision(_brain, body)
+		
+		if not body.is_connected("died", self, "_on_entity_died"):
+			var _r = body.connect("died", self, "_on_entity_died", [body])
 
 
+#-------------------------------------------------------------------------------
+func _on_entity_died(entity):
+	if _threats.has(entity):
+		_threats.erase(entity)
+	
+	
 #-------------------------------------------------------------------------------
 func _construct_decision_tree():
 	

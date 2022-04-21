@@ -70,7 +70,7 @@ func get_real_value() -> int:
 
 
 #-------------------------------------------------------------------------------
-func set_hover(value : bool) -> void:
+func set_hover(_value : bool) -> void:
 	pass
 
 
