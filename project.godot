@@ -112,7 +112,7 @@ _global_script_class_icons={
 
 config/name="Mecha-Miners"
 config/description="Descend into the depths of volatile planets to claim the crypto treasures of its core before it explodes!"
-run/main_scene="res://scenes/world/World.tscn"
+run/main_scene="res://scenes/ui/screens/TitleScreen.tscn"
 config/icon="res://assets/images/icon/icon.png"
 config/windows_native_icon="res://assets/images/icon/icon.ico"
 
@@ -122,6 +122,7 @@ Network="*res://scripts/misc/Network.gd"
 GameState="*res://scripts/misc/GameState.gd"
 ItemData="*res://scripts/misc/ItemData.gd"
 Utility="*res://scripts/misc/Utility.gd"
+UserPreferences="*res://scripts/misc/UserPreferences.gd"
 
 [display]
 

@@ -15,7 +15,7 @@ var start_position = null
 onready var raycast = $RayCast2D
 
 
-# -----------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 func _ready():
 	velocity = Vector2(cos(rotation), sin(rotation)) * speed
 	

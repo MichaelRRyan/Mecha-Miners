@@ -8,7 +8,8 @@ func _on_StartButton_pressed():
 	
 # ------------------------------------------------------------------------------
 func _on_OptionsButton_pressed():
-	pass # Replace with function body.
+	if get_tree().change_scene("res://scenes/ui/screens/OptionsScreen.tscn") != OK:
+		print_debug("Cannot change scene to OptionsScreen.")
 
 
 # ------------------------------------------------------------------------------
