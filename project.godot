@@ -62,7 +62,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Inventory",
 "language": "GDScript",
-"path": "res://scripts/Inventory.gd"
+"path": "res://scripts/misc/Inventory.gd"
 }, {
 "base": "Node",
 "class": "ProceduralGenerator",
@@ -77,12 +77,12 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "Terrain",
 "language": "GDScript",
-"path": "res://scripts/Terrain.gd"
+"path": "res://scripts/world/Terrain.gd"
 }, {
 "base": "TileSet",
 "class": "Tile",
 "language": "GDScript",
-"path": "res://scripts/misc/TerrainTiles.gd"
+"path": "res://scripts/world/TerrainTiles.gd"
 }, {
 "base": "Node2D",
 "class": "Tool",
@@ -118,10 +118,10 @@ config/windows_native_icon="res://assets/images/icon/icon.ico"
 
 [autoload]
 
-Network="*res://scripts/Network.gd"
-GameState="*res://scripts/GameState.gd"
-ItemData="*res://scripts/ItemData.gd"
-Utility="*res://scripts/Utility.gd"
+Network="*res://scripts/misc/Network.gd"
+GameState="*res://scripts/misc/GameState.gd"
+ItemData="*res://scripts/misc/ItemData.gd"
+Utility="*res://scripts/misc/Utility.gd"
 
 [display]
 

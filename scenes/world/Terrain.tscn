@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://resources/tile_sets/DamageIndicatorTiles.tres" type="TileSet" id=1]
-[ext_resource path="res://scripts/Terrain.gd" type="Script" id=2]
+[ext_resource path="res://scripts/world/Terrain.gd" type="Script" id=2]
 [ext_resource path="res://resources/tile_sets/DetailTiles.tres" type="TileSet" id=3]
 [ext_resource path="res://resources/tile_sets/ForegroundTiles.tres" type="TileSet" id=4]
 [ext_resource path="res://resources/tile_sets/BackgroundTiles.tres" type="TileSet" id=5]

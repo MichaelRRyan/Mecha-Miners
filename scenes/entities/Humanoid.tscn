@@ -3,8 +3,8 @@
 [ext_resource path="res://resources/sprite_frames/mecha_green.tres" type="SpriteFrames" id=1]
 [ext_resource path="res://scripts/entities/Entity.gd" type="Script" id=2]
 [ext_resource path="res://scenes/equipment/Gun.tscn" type="PackedScene" id=3]
-[ext_resource path="res://scenes/Jetpack.tscn" type="PackedScene" id=4]
-[ext_resource path="res://scripts/MechArms.gd" type="Script" id=5]
+[ext_resource path="res://scenes/equipment/Jetpack.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/entities/MechArms.gd" type="Script" id=5]
 [ext_resource path="res://scenes/equipment/Drill.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scripts/animators/HumanoidAnimator.gd" type="Script" id=7]
 

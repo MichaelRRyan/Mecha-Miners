@@ -1,0 +1,167 @@
+[gd_scene load_steps=13 format=2]
+
+[ext_resource path="res://scripts/items/CrystalShard.gd" type="Script" id=1]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/particle_small.png" type="Texture" id=3]
+
+[sub_resource type="CapsuleShape2D" id=9]
+radius = 4.0
+height = 4.0
+
+[sub_resource type="Animation" id=1]
+length = 0.001
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/1/type = "bezier"
+tracks/1/path = NodePath("ShadowSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Sprite:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0 )
+}
+
+[sub_resource type="Animation" id=2]
+resource_name = "bob"
+length = 3.0
+loop = true
+tracks/0/type = "bezier"
+tracks/0/path = NodePath("Sprite:position:y")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"points": PoolRealArray( 0, -0.7, 0, 0.7, 0, -4, -0.7, 0, 0.7, 0, 0, -0.7, 0, 0.7, 0 ),
+"times": PoolRealArray( 0, 1.5, 3.1 )
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ShadowSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4, 1, 1.6, 2.3, 2.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 2, 1, 0 ]
+}
+tracks/2/type = "bezier"
+tracks/2/path = NodePath("Sprite:rotation_degrees")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"points": PoolRealArray( 0, -0.25, 0, 0.25, 0, 10, -0.25, 0, 0.25, 0, -10, -0.25, 0, 0.25, 0, 0, -0.25, 0, 0.25, 0 ),
+"times": PoolRealArray( 0, 0.7, 2.3, 3.1 )
+}
+
+[sub_resource type="CapsuleShape2D" id=3]
+radius = 5.0
+height = 6.0
+
+[sub_resource type="Gradient" id=4]
+colors = PoolColorArray( 0.926758, 0.633526, 0.825024, 0.862745, 0.981445, 0.977612, 0.980095, 0 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[sub_resource type="Curve" id=6]
+min_value = -1.0
+_data = [ Vector2( 0, -0.0954545 ), 0.0, -4.53886, 0, 0, Vector2( 0.503311, 0.00227273 ), -4.0953, -4.0953, 0, 0, Vector2( 1, 0.0318183 ), -4.16108, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=7]
+curve = SubResource( 6 )
+
+[sub_resource type="ParticlesMaterial" id=8]
+emission_shape = 1
+emission_sphere_radius = 4.0
+flag_disable_z = true
+spread = 180.0
+gravity = Vector3( 0, -20, 0 )
+initial_velocity = 35.0
+orbit_velocity = 0.0
+orbit_velocity_random = 1.0
+orbit_velocity_curve = SubResource( 7 )
+linear_accel = -1.0
+radial_accel = 35.34
+damping = 60.0
+color_ramp = SubResource( 5 )
+hue_variation = 0.1
+hue_variation_random = 0.5
+
+[node name="CrystalShard" type="KinematicBody2D" groups=["item", "mineral"]]
+collision_layer = 8
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2( 0, 1 )
+shape = SubResource( 9 )
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 1.05, 1.05, 1.05, 1 )
+z_index = 1
+texture = ExtResource( 2 )
+offset = Vector2( 0.5, 0.5 )
+region_enabled = true
+region_rect = Rect2( 144, 160, 16, 16 )
+
+[node name="ShadowSprite" type="Sprite" parent="."]
+position = Vector2( 0, 8.5 )
+texture = ExtResource( 2 )
+vframes = 3
+region_enabled = true
+region_rect = Rect2( 160, 160, 16, 9 )
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 1 )
+anims/bob = SubResource( 2 )
+
+[node name="Area2D" type="Area2D" parent="."]
+visible = false
+z_index = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 0, -2 )
+shape = SubResource( 3 )
+
+[node name="PickupParticles" type="Particles2D" parent="."]
+position = Vector2( 0, -3 )
+z_index = 100
+emitting = false
+amount = 12
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource( 8 )
+texture = ExtResource( 3 )
+
+[node name="DestroyTimer" type="Timer" parent="."]
+wait_time = 0.6
+one_shot = true
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="timeout" from="DestroyTimer" to="." method="_on_DestroyTimer_timeout"]

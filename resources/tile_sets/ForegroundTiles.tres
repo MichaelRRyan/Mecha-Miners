@@ -1,6 +1,6 @@
 [gd_resource type="TileSet" load_steps=141 format=2]
 
-[ext_resource path="res://scripts/misc/TerrainTiles.gd" type="Script" id=1]
+[ext_resource path="res://scripts/world/TerrainTiles.gd" type="Script" id=1]
 [ext_resource path="res://assets/images/tile_sheet.png" type="Texture" id=2]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]

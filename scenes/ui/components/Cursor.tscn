@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://scripts/ui/components/Cursor.gd" type="Script" id=1]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 1.0
+
+[node name="Cursor" type="Sprite"]
+z_index = 100
+texture = ExtResource( 2 )
+region_enabled = true
+region_rect = Rect2( 176, 144, 16, 16 )
+script = ExtResource( 1 )
+hover_color = Color( 0.960784, 0.313726, 0.313726, 1 )
+
+[node name="Detector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Detector"]
+shape = SubResource( 1 )
+
+[connection signal="body_entered" from="Detector" to="." method="_on_Detector_body_entered"]
+[connection signal="body_exited" from="Detector" to="." method="_on_Detector_body_exited"]
