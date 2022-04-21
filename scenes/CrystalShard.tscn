@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
-[ext_resource path="res://scripts/CrystalShard.gd" type="Script" id=2]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
+[ext_resource path="res://scripts/items/CrystalShard.gd" type="Script" id=2]
 [ext_resource path="res://assets/images/particle_small.png" type="Texture" id=3]
 
 [sub_resource type="CapsuleShape2D" id=9]
@@ -112,7 +112,7 @@ color_ramp = SubResource( 5 )
 hue_variation = 0.1
 hue_variation_random = 0.5
 
-[node name="CrystalShard" type="KinematicBody2D" groups=["mineral"]]
+[node name="CrystalShard" type="KinematicBody2D" groups=["item", "mineral"]]
 collision_layer = 8
 script = ExtResource( 2 )
 
@@ -127,14 +127,14 @@ z_index = 1
 texture = ExtResource( 1 )
 offset = Vector2( 0.5, 0.5 )
 region_enabled = true
-region_rect = Rect2( 144, 80, 16, 16 )
+region_rect = Rect2( 144, 160, 16, 16 )
 
 [node name="ShadowSprite" type="Sprite" parent="."]
 position = Vector2( 0, 8.5 )
 texture = ExtResource( 1 )
 vframes = 3
 region_enabled = true
-region_rect = Rect2( 160, 80, 16, 9 )
+region_rect = Rect2( 160, 160, 16, 9 )
 
 [node name="Animator" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 1 )

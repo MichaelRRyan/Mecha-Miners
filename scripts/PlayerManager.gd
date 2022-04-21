@@ -1,12 +1,15 @@
 extends Node2D
 
-onready var PlayerScene = preload("res://scenes/Player.tscn")
+onready var PlayerScene = preload("res://scenes/entities/Player.tscn")
 
 export var base_player_health : float = 5.0
 
 var spawn_point : Vector2 = Vector2.ZERO
 var players = {} # Peer id: player instance
 var local_player = null
+var _entities = []
+var _main_camera = null
+var _focused_entity_id = 0
 
 
 # -----------------------------------------------------------------------------
@@ -16,9 +19,9 @@ func get_local_player():
 
 # -----------------------------------------------------------------------------
 func _ready():
-	var players_instances = get_tree().get_nodes_in_group("player")
-	for player in players_instances:
-		var _r = player.connect("died", self, "_on_player_died", [player])
+	_entities = get_tree().get_nodes_in_group("entity")
+	for entity in _entities:
+		var _r = entity.connect("died", self, "_on_player_died", [entity])
 	
 	spawn_point = $SpawnPoint.position
 	local_player = $Player
@@ -29,6 +32,10 @@ func _ready():
 	_r = Network.connect("player_disconnected", self, "_on_player_disconnected")
 	_r = Network.connect("connection_succeeded", self, "_on_connection_succeeded")
 	_r = Network.connect("server_opened", self, "_on_server_opened")
+	
+	var main_cameras = get_tree().get_nodes_in_group("main_camera")
+	if main_cameras != null and not main_cameras.empty():
+		_main_camera = main_cameras.front()
 	
 
 # -----------------------------------------------------------------------------
@@ -94,6 +101,39 @@ func _on_respawn_timer_timout(player : Node2D, respawn_timer : Timer):
 # -----------------------------------------------------------------------------
 func get_player_by_peer_id(peer_id):
 	return players[peer_id]
-
+	
 
 # -----------------------------------------------------------------------------
+func get_entity_by_rid(rid):
+	var matching_entity = null
+	
+	for entity in _entities:
+		if entity.get_rid() == rid:
+			matching_entity = entity
+			break
+			
+	return matching_entity
+
+
+#-------------------------------------------------------------------------------
+func _input(event):
+	if Utility.is_debug_mode():
+		if event.is_action_pressed("ai_perspective"):
+			
+			# If the main camera exists.
+			if _main_camera != null:
+				
+				# If the camera is following a node.
+				var camera_focus : Node = _main_camera.get_parent()
+				if camera_focus != null:
+					
+					camera_focus.remove_child(_main_camera)
+					_focused_entity_id = (_focused_entity_id + 1) % _entities.size()
+					var next_entity = _entities[_focused_entity_id]
+					
+					if next_entity != null:
+						next_entity.add_child(_main_camera)
+						_main_camera.position = Vector2.ZERO
+						
+
+#-------------------------------------------------------------------------------

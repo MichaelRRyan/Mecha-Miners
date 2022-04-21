@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/world/WorldGenerator.gd" type="Script" id=1]
+
+[node name="WorldGenerator" type="Node2D"]
+script = ExtResource( 1 )
+width = 150
+cave_height = 300
+min_caves = 2
+max_caves = 3
+cave_movement_volatility = 50
+min_main_cave_radius = 1
+max_main_cave_radius = 8
+min_branch_radius = 1
+branch_threshold = 0.35
+chance_to_branch = 0.02
+max_branch_rotation = 0.05
+minerals_lower_threshold = 0.659
+minerals_upper_threshold = 0.85
+minerals_height_modifier_intensity = 0.302
+randomize_seed = null
+clear = null
+ground_height/script = null
+ground_height/octaves = 7
+ground_height/period = 24.223
+ground_height/lacunarity = 2.17
+ground_height/persistence = 0.271
+cave_horizontal/script = null
+cave_horizontal/octaves = 5
+cave_horizontal/period = 35.503
+cave_horizontal/lacunarity = 2.236
+cave_horizontal/persistence = 0.5
+cave_radius/script = null
+cave_radius/octaves = 5
+cave_radius/period = 61.404
+cave_radius/lacunarity = 22.52
+cave_radius/persistence = 0.428
+minerals/script = null
+minerals/octaves = 3
+minerals/period = 6.217
+minerals/lacunarity = 0.843
+minerals/persistence = 0.374

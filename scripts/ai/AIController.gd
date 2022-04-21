@@ -1,10 +1,15 @@
 extends AIBrain
 
-var _behaviour_stack : Array = []
+# The maximum downward velocity before the bot will try to slow itself.
+export(float) var max_velocity_y = 100.0
+
 var _debug : bool = false
-var _main_camera = null
+
+var _behaviour_stack : Array = []
 var _previous_camera_focus = null
 var _highest_priority_behaviour = null
+var _bravado = 0.5
+var _ideal_crystal_count = 40
 
 
 #-------------------------------------------------------------------------------
@@ -40,6 +45,7 @@ func pop_behaviour() -> void:
 		
 		var behaviour = _behaviour_stack.back()
 		
+		# Assigns the new highest priority behaviour.
 		if _highest_priority_behaviour == behaviour:
 			if _behaviour_stack.size() > 1:
 				var index = _behaviour_stack.find(behaviour)
@@ -63,7 +69,7 @@ func pop_behaviour() -> void:
 		
 		# If still not empty.
 		if not _behaviour_stack.empty():
-			_set_as_current(_behaviour_stack.back())
+			_set_as_current(_behaviour_stack.back(), true)
 		else:
 			add_behaviour(IdleBehaviour.new())
 
@@ -93,12 +99,35 @@ func get_highest_priority():
 
 
 #-------------------------------------------------------------------------------
-func _set_as_current(behaviour : Behaviour) -> void:
+func bravado(certainty : float) -> bool:
+	return randf() < (_bravado * 2.0) * certainty
+
+
+#-------------------------------------------------------------------------------
+func get_ideal_value() -> int:
+	return _ideal_crystal_count
+
+
+#-------------------------------------------------------------------------------
+func get_real_value() -> int:
+	return subject.inventory.get_gem_count()
+
+
+#-------------------------------------------------------------------------------
+func _set_as_current(behaviour : Behaviour, var rentering = false) -> void:
 	if _debug:
-		print("AI " + subject.name + " entering " + behaviour.get_class())
+		if rentering:
+			print("AI " + subject.name + " reentering " + behaviour.get_class())
+		else:
+			print("AI " + subject.name + " entering " + behaviour.get_class())
+		
+		$Status.text = subject.name + "\n" + behaviour.get_class()
 		
 	behaviour.set_brain(self)
 	behaviour.set_active(true)
+	
+	if rentering:
+		behaviour.on_rentered()
 	
 	if (_highest_priority_behaviour == null 
 		or behaviour.get_priority() > _highest_priority_behaviour.get_priority()):
@@ -113,39 +142,49 @@ func _disable(behaviour : Behaviour) -> void:
 #-------------------------------------------------------------------------------
 func _ready() -> void:
 	subject = get_parent()
+	var _r = subject.connect("died", self, "_on_subject_died")
 	add_behaviour(IdleBehaviour.new())
 	
-	var main_cameras = get_tree().get_nodes_in_group("main_camera")
-	if main_cameras != null and not main_cameras.empty():
-		_main_camera = main_cameras.front()
+	# Uses noise to get a random number that tends towards a middle point of 0.5.
+	var noise = OpenSimplexNoise.new()
+	noise.seed = randi()
+	noise.period = 0.0000001
+	noise.persistence = 5
+	_bravado = 1 - (noise.get_noise_1d(0) + 1) * 0.5
 
 
 #-------------------------------------------------------------------------------
 func _input(event):
-	# Toggles AI debug mode.
-	if event.is_action_pressed("ai_debug"):
-		_debug = not _debug
-	
-	if event.is_action_pressed("ai_perspective"):
-		
-		# If the main camera exists.
-		if _main_camera != null:
+	if Utility.is_debug_mode():
+		# Toggles AI debug mode.
+		if event.is_action_pressed("ai_debug"):
+			_debug = not _debug
+			$Status.visible = _debug
 			
-			# If the camera is following a node.
-			var camera_focus : Node = _main_camera.get_parent()
-			if camera_focus != null:
-				
-				camera_focus.remove_child(_main_camera)
-				
-				if _previous_camera_focus == null:
-					_previous_camera_focus = camera_focus
-					add_child(_main_camera)
-					
-				else:
-					_previous_camera_focus.add_child(_main_camera)
-					_previous_camera_focus = null
-					
-				_main_camera.position = Vector2.ZERO
+			if not _behaviour_stack.empty():
+				$Status.text = subject.name + "\n" + _behaviour_stack.back().get_class()
+			else:
+				$Status.text = subject.name + "\nNone"
+
+	
+#-------------------------------------------------------------------------------
+func _on_subject_died():
+	# Pops all behaviours.
+	while not _behaviour_stack.empty():
+		var behaviour = _behaviour_stack.pop_back()
+		remove_child(behaviour)
+		behaviour.queue_free()
+	
+	_highest_priority_behaviour = null
+	add_behaviour(IdleBehaviour.new())
 
 
 #-------------------------------------------------------------------------------
+func _process(delta):
+	# Slows itself if falling too fast.
+	if subject.get_velocity().y > max_velocity_y:
+		subject.thrust_jetpack(delta)
+		
+		
+#-------------------------------------------------------------------------------
+	

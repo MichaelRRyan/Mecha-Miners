@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://scripts/Cursor.gd" type="Script" id=1]
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=2]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 1.0
@@ -10,7 +10,7 @@ radius = 1.0
 z_index = 100
 texture = ExtResource( 2 )
 region_enabled = true
-region_rect = Rect2( 175, 64, 17, 17 )
+region_rect = Rect2( 176, 144, 16, 16 )
 script = ExtResource( 1 )
 hover_color = Color( 0.960784, 0.313726, 0.313726, 1 )
 

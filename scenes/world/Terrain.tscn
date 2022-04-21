@@ -1,54 +1,10 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://resources/tile_sets/DamageIndicatorTiles.tres" type="TileSet" id=1]
 [ext_resource path="res://scripts/Terrain.gd" type="Script" id=2]
 [ext_resource path="res://resources/tile_sets/DetailTiles.tres" type="TileSet" id=3]
 [ext_resource path="res://resources/tile_sets/ForegroundTiles.tres" type="TileSet" id=4]
 [ext_resource path="res://resources/tile_sets/BackgroundTiles.tres" type="TileSet" id=5]
-
-[sub_resource type="TileSet" id=49]
-0/name = "spritesheet.png 0"
-0/texture = ExtResource( 1 )
-0/tex_offset = Vector2( 0, 0 )
-0/modulate = Color( 1, 1, 1, 1 )
-0/region = Rect2( 96, 64, 16, 16 )
-0/tile_mode = 0
-0/occluder_offset = Vector2( 0, 0 )
-0/navigation_offset = Vector2( 0, 0 )
-0/shape_offset = Vector2( 0, 0 )
-0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-0/shape_one_way = false
-0/shape_one_way_margin = 0.0
-0/shapes = [  ]
-0/z_index = 0
-1/name = "spritesheet.png 1"
-1/texture = ExtResource( 1 )
-1/tex_offset = Vector2( 0, 0 )
-1/modulate = Color( 1, 1, 1, 1 )
-1/region = Rect2( 112, 64, 16, 16 )
-1/tile_mode = 0
-1/occluder_offset = Vector2( 0, 0 )
-1/navigation_offset = Vector2( 0, 0 )
-1/shape_offset = Vector2( 0, 0 )
-1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-1/shape_one_way = false
-1/shape_one_way_margin = 0.0
-1/shapes = [  ]
-1/z_index = 0
-2/name = "spritesheet.png 2"
-2/texture = ExtResource( 1 )
-2/tex_offset = Vector2( 0, 0 )
-2/modulate = Color( 1, 1, 1, 1 )
-2/region = Rect2( 128, 64, 16, 16 )
-2/tile_mode = 0
-2/occluder_offset = Vector2( 0, 0 )
-2/navigation_offset = Vector2( 0, 0 )
-2/shape_offset = Vector2( 0, 0 )
-2/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
-2/shape_one_way = false
-2/shape_one_way_margin = 0.0
-2/shapes = [  ]
-2/z_index = 0
 
 [node name="Terrain" type="Node2D" groups=["terrain"]]
 z_index = -100
@@ -70,7 +26,7 @@ tile_data = PoolIntArray( -524321, 0, 8, -524320, 0, 10, -524319, 0, 10, -524318
 
 [node name="DamageIndicators" type="TileMap" parent="."]
 z_index = 1
-tile_set = SubResource( 49 )
+tile_set = ExtResource( 1 )
 cell_size = Vector2( 16, 16 )
 format = 1
 

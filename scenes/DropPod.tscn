@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
 [ext_resource path="res://scripts/DropPod.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
@@ -19,9 +19,10 @@ script = ExtResource( 2 )
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 region_enabled = true
-region_rect = Rect2( 0, 128, 64, 64 )
+region_rect = Rect2( 0, 208, 64, 64 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 position = Vector2( 0, 0.5 )
 shape = SubResource( 1 )
 

@@ -1,11 +1,11 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://assets/images/spritesheet.png" type="Texture" id=1]
+[ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
 [ext_resource path="res://assets/fonts/kraken.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
-region = Rect2( 144, 80, 16, 16 )
+region = Rect2( 144, 160, 16, 16 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 64
@@ -37,9 +37,6 @@ margin_right = -145.5
 rect_min_size = Vector2( 78, 0 )
 texture = SubResource( 1 )
 stretch_mode = 5
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="Amount" type="Label" parent="."]
 anchor_left = 0.5

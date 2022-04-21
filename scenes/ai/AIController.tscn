@@ -1,0 +1,96 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://scripts/ai/AIController.gd" type="Script" id=1]
+[ext_resource path="res://scripts/ai/sensors/SpatialSensor.gd" type="Script" id=2]
+[ext_resource path="res://scripts/ai/sensors/ItemSensor.gd" type="Script" id=3]
+[ext_resource path="res://scripts/ai/sensors/MineralSensor.gd" type="Script" id=4]
+[ext_resource path="res://scripts/ai/sensors/EntityAvoider.gd" type="Script" id=5]
+[ext_resource path="res://scripts/ai/sensors/EntitySensor.gd" type="Script" id=6]
+[ext_resource path="res://scripts/ai/sensors/ThreatDetector.gd" type="Script" id=7]
+[ext_resource path="res://assets/fonts/matchup_pro.ttf" type="DynamicFontData" id=8]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 70.0
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 150.0
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 50.0
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 20.0
+
+[sub_resource type="DynamicFont" id=3]
+outline_size = 1
+font_data = ExtResource( 8 )
+
+[node name="AIController" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="SpatialSensor" type="Node2D" parent="."]
+script = ExtResource( 2 )
+
+[node name="MineralSensor" type="Node2D" parent="."]
+script = ExtResource( 4 )
+
+[node name="ItemSensor" type="Area2D" parent="."]
+visible = false
+collision_layer = 8
+collision_mask = 8
+script = ExtResource( 3 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ItemSensor"]
+shape = SubResource( 1 )
+
+[node name="EntitySensor" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 6 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntitySensor"]
+shape = SubResource( 2 )
+
+[node name="ThreatDetector" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 7 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ThreatDetector"]
+shape = SubResource( 4 )
+
+[node name="EntityAvoider" type="Area2D" parent="."]
+visible = false
+collision_layer = 2
+collision_mask = 2
+script = ExtResource( 5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EntityAvoider"]
+shape = SubResource( 5 )
+
+[node name="Status" type="Label" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -59.0
+margin_top = 15.0
+margin_right = 111.0
+margin_bottom = 55.0
+rect_scale = Vector2( 0.7, 0.7 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_fonts/font = SubResource( 3 )
+text = "IDLE"
+align = 1
+
+[connection signal="body_entered" from="ItemSensor" to="ItemSensor" method="_on_ItemSensor_body_entered"]
+[connection signal="body_entered" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_entered"]
+[connection signal="body_exited" from="EntitySensor" to="EntitySensor" method="_on_EntitySensor_body_exited"]
+[connection signal="entity_out_of_sight" from="EntitySensor" to="ThreatDetector" method="_on_EntitySensor_entity_out_of_sight"]
+[connection signal="entity_spotted" from="EntitySensor" to="ThreatDetector" method="_on_EntitySensor_entity_spotted"]
+[connection signal="body_entered" from="ThreatDetector" to="ThreatDetector" method="_on_ThreatDetector_body_entered"]
+[connection signal="body_entered" from="EntityAvoider" to="EntityAvoider" method="_on_EntityAvoidanceSensor_body_entered"]
+[connection signal="body_exited" from="EntityAvoider" to="EntityAvoider" method="_on_EntityAvoidanceSensor_body_exited"]
