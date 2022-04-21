@@ -67,7 +67,7 @@ __meta__ = {
 }
 
 [node name="FreeForAllButton" type="Button" parent="Console/Menu" groups=["button"]]
-margin_right = 411.0
+margin_right = 362.0
 margin_bottom = 50.0
 rect_min_size = Vector2( 0, 50 )
 theme = ExtResource( 2 )
@@ -81,7 +81,7 @@ align = 0
 
 [node name="TrainingButton" type="Button" parent="Console/Menu" groups=["button"]]
 margin_top = 60.0
-margin_right = 411.0
+margin_right = 362.0
 margin_bottom = 110.0
 rect_min_size = Vector2( 0, 50 )
 theme = ExtResource( 2 )
@@ -96,7 +96,7 @@ align = 0
 
 [node name="AdvancedButton" type="Button" parent="Console/Menu" groups=["button"]]
 margin_top = 120.0
-margin_right = 411.0
+margin_right = 362.0
 margin_bottom = 170.0
 rect_min_size = Vector2( 0, 50 )
 theme = ExtResource( 2 )
@@ -111,7 +111,7 @@ align = 0
 
 [node name="BackButton" type="Button" parent="Console/Menu" groups=["button"]]
 margin_top = 180.0
-margin_right = 411.0
+margin_right = 362.0
 margin_bottom = 230.0
 rect_min_size = Vector2( 0, 50 )
 theme = ExtResource( 2 )

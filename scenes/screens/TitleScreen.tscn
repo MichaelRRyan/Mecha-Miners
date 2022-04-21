@@ -1,0 +1,114 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://assets/fonts/hope_gold.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=2]
+[ext_resource path="res://scenes/screens/UIScreenBackground.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/images/ui_sheet.png" type="Texture" id=4]
+[ext_resource path="res://scripts/screens/TitleScreen.gd" type="Script" id=5]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 4 )
+region = Rect2( 240, 16, 272, 32 )
+
+[sub_resource type="DynamicFont" id=2]
+size = 64
+outline_size = 4
+outline_color = Color( 0, 0, 0, 1 )
+extra_spacing_char = 6
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxEmpty" id=3]
+
+[node name="TitleScreen" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = 512.0
+margin_bottom = 300.0
+theme = ExtResource( 2 )
+script = ExtResource( 5 )
+
+[node name="UIScreenBackground" parent="." instance=ExtResource( 3 )]
+anchor_left = -0.5
+anchor_top = -0.5
+anchor_right = 1.5
+anchor_bottom = 1.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Title" type="TextureRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.4
+anchor_right = 0.5
+anchor_bottom = 0.4
+margin_left = -397.0
+margin_top = -72.0
+margin_right = 397.0
+margin_bottom = 48.0
+texture = SubResource( 1 )
+expand = true
+stretch_mode = 5
+
+[node name="Options" type="VBoxContainer" parent="."]
+anchor_left = 0.3
+anchor_top = 0.5
+anchor_right = 0.7
+anchor_bottom = 0.8
+alignment = 1
+
+[node name="StartButton" type="Button" parent="Options"]
+margin_top = 9.0
+margin_right = 409.0
+margin_bottom = 60.0
+size_flags_vertical = 0
+custom_colors/font_color_focus = Color( 0.92549, 0.533333, 0.376471, 1 )
+custom_colors/font_color = Color( 0.909804, 0.423529, 0.227451, 1 )
+custom_colors/font_color_hover = Color( 0.92549, 0.533333, 0.376471, 1 )
+custom_colors/font_color_pressed = Color( 0.92549, 0.643137, 0.529412, 1 )
+custom_fonts/font = SubResource( 2 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+text = "START"
+
+[node name="OptionsButton" type="Button" parent="Options"]
+margin_top = 64.0
+margin_right = 409.0
+margin_bottom = 115.0
+size_flags_vertical = 0
+custom_colors/font_color_focus = Color( 0.92549, 0.533333, 0.376471, 1 )
+custom_colors/font_color = Color( 0.909804, 0.423529, 0.227451, 1 )
+custom_colors/font_color_hover = Color( 0.92549, 0.533333, 0.376471, 1 )
+custom_colors/font_color_pressed = Color( 0.92549, 0.643137, 0.529412, 1 )
+custom_fonts/font = SubResource( 2 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+text = "OPTIONS"
+
+[node name="ExitButton" type="Button" parent="Options"]
+margin_top = 119.0
+margin_right = 409.0
+margin_bottom = 170.0
+size_flags_vertical = 0
+custom_colors/font_color_focus = Color( 0.92549, 0.533333, 0.376471, 1 )
+custom_colors/font_color = Color( 0.909804, 0.423529, 0.227451, 1 )
+custom_colors/font_color_hover = Color( 0.92549, 0.533333, 0.376471, 1 )
+custom_colors/font_color_pressed = Color( 0.92549, 0.643137, 0.529412, 1 )
+custom_fonts/font = SubResource( 2 )
+custom_styles/hover = SubResource( 3 )
+custom_styles/pressed = SubResource( 3 )
+custom_styles/focus = SubResource( 3 )
+custom_styles/normal = SubResource( 3 )
+text = "EXIT"
+
+[connection signal="pressed" from="Options/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="Options/OptionsButton" to="." method="_on_OptionsButton_pressed"]
+[connection signal="pressed" from="Options/ExitButton" to="." method="_on_ExitButton_pressed"]
