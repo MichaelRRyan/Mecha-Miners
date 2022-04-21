@@ -3,7 +3,6 @@ extends "res://scripts/items/ItemObject.gd"
 export var gravity = 200.0
 export var friction_multiplier = 0.96
 
-var velocity = Vector2.ZERO
 var was_on_floor = false
 
 

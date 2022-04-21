@@ -31,6 +31,8 @@ var respawning = false
 var was_on_floor = false
 var _target = Vector2.ZERO
 var direction : float = 0.0
+var _vacuumed_items = []
+var _item_vacuum_speed = 5.0
 
 var inventory : Inventory = Inventory.new()
 var equipped : Array = [] # Array<Tool>
@@ -156,6 +158,8 @@ func _process(delta):
 	# Don't process if online and not the network master, is updated instead.
 	if Network.is_online and not is_network_master():
 		return
+		
+	_handle_item_vacuuming(delta)
 	
 	_handle_vertical_movement(delta)
 	_handle_horizontal_movement(delta)
@@ -307,6 +311,30 @@ func _create_landing_particles():
 		particle.position = $Feet.global_position
 		var impact_direction = Vector3.DOWN
 		particle.process_material.direction = impact_direction
-		
-		
+
+
+# -----------------------------------------------------------------------------
+func _handle_item_vacuuming(delta):
+	var radius = $ItemVacuum/CollisionShape2D.shape.radius
+	var one_over_radius_sq = 1.0 / (radius * radius)
+	
+	for item in _vacuumed_items:
+		var dist = global_position - item.global_position
+		var strength = 1.0 - (dist.length_squared() * one_over_radius_sq)
+		var speed = (strength * _item_vacuum_speed)
+		item.accelerate(dist * (speed * speed) * delta)
+
+
+# -----------------------------------------------------------------------------
+func _on_ItemVacuum_body_entered(body):
+	if not _vacuumed_items.has(body):
+		_vacuumed_items.append(body)
+
+
+# -----------------------------------------------------------------------------
+func _on_ItemVacuum_body_exited(body):
+	if _vacuumed_items.has(body):
+		_vacuumed_items.erase(body)
+
+
 # -----------------------------------------------------------------------------
