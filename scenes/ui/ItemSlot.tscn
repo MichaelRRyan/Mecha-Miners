@@ -5,7 +5,6 @@
 [ext_resource path="res://assets/fonts/matchup_pro.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://scripts/ui/ItemSlot.gd" type="Script" id=4]
 
-
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 1 )
 region = Rect2( 0, 192, 16, 16 )
@@ -20,7 +19,7 @@ region = Rect2( 16, 192, 16, 16 )
 
 [sub_resource type="AtlasTexture" id=4]
 atlas = ExtResource( 1 )
-region = Rect2( 144, 80, 16, 16 )
+region = Rect2( 144, 160, 16, 16 )
 margin = Rect2( 0.5, 0.5, 0, 0 )
 
 [sub_resource type="DynamicFont" id=5]
@@ -41,9 +40,6 @@ texture_hover = SubResource( 2 )
 expand = true
 stretch_mode = 5
 script = ExtResource( 4 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="ItemTexture" type="TextureRect" parent="."]
 anchor_right = 1.0

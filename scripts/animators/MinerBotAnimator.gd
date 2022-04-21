@@ -31,7 +31,7 @@ func _set_animation(id):
 
 
 # -----------------------------------------------------------------------------
-func _on_MinerBot_damage_taken(health):
+func _on_MinerBot_damage_taken(health, _source):
 	if health > 0.0:
 		_set_animation(AnimationName.Hurt)
 		yield(self, "animation_finished")

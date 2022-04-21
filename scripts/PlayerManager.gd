@@ -101,6 +101,18 @@ func _on_respawn_timer_timout(player : Node2D, respawn_timer : Timer):
 # -----------------------------------------------------------------------------
 func get_player_by_peer_id(peer_id):
 	return players[peer_id]
+	
+
+# -----------------------------------------------------------------------------
+func get_entity_by_rid(rid):
+	var matching_entity = null
+	
+	for entity in _entities:
+		if entity.get_rid() == rid:
+			matching_entity = entity
+			break
+			
+	return matching_entity
 
 
 #-------------------------------------------------------------------------------

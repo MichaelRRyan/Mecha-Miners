@@ -3,7 +3,7 @@ extends KinematicBody2D
 tool
 
 signal died()
-signal damage_taken(health)
+signal damage_taken(health, source)
 signal crystal_amount_changed(total_crystals)
 signal new_velocity(velocity)
 signal respawn_complete()
@@ -241,10 +241,10 @@ puppet func set_puppet_state(state):
 	
 	
 # -----------------------------------------------------------------------------
-func take_damage(damage):
+func take_damage(damage, source = null):
 	health -= damage
 	
-	emit_signal("damage_taken", health)
+	emit_signal("damage_taken", health, source)
 	
 	if health <= 0:
 		die()

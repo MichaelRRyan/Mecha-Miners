@@ -1,10 +1,14 @@
 extends Area2D
 
-var _entity_sensor = null
 var _brain : AIBrain = null
-var _has_weapon = false
-var _fight_or_flight : FightOrFlight.DecisionNode = null # A decision tree.
+var _player_manager = null
+
+# Decision trees.
+var _fight_or_flight : FightOrFlight.DecisionNode = null
+var _agitated_fight_or_flight : FightOrFlight.DecisionNode = null
+
 var _threats = []
+var _attacker_rids = []
 
 
 #-------------------------------------------------------------------------------
@@ -16,6 +20,11 @@ func add_threat(entity):
 #-------------------------------------------------------------------------------
 func get_threats() -> Array:
 	return _threats
+	
+	
+#-------------------------------------------------------------------------------
+func get_attacker_rids() -> Array:
+	return _attacker_rids
 
 
 #-------------------------------------------------------------------------------
@@ -25,22 +34,35 @@ func _ready():
 	if parent != null and parent is AIBrain:
 		_brain = parent
 		
-		_entity_sensor = _brain.find_node("EntitySensor")
+		var managers = get_tree().get_nodes_in_group("player_manager")
+		if managers and not managers.empty():
+			_player_manager = managers.front()
+		else:
+			print_debug("Can't find the player manager.")
 		
-		if _entity_sensor == null:
-			print_debug("Can't find EntitySensor.")
-		
-		_construct_decision_tree()
-		call_deferred("_check_for_guns")
-		
+		_construct_decision_trees()
+		call_deferred("_connect_to_damage_signal")
+
 
 #-------------------------------------------------------------------------------
-func _check_for_guns():
-	var weapon_count = _brain.subject.get_gun_count()
-	if weapon_count > 0:
-		_has_weapon = true
+func _connect_to_damage_signal():
+	var _r = _brain.subject.connect("damage_taken", self, "_on_subject_damage_taken")
 
 
+#-------------------------------------------------------------------------------
+func _on_subject_damage_taken(_damage, source):
+	if source != null and source.get("ignore_rid") != null:
+		var rid = source.ignore_rid
+		if not _attacker_rids.has(rid):
+			_attacker_rids.append(source.ignore_rid)
+		
+		var entity = _player_manager.get_entity_by_rid(rid)
+		if entity:
+			_agitated_fight_or_flight.make_decision(_brain, entity)
+		else:
+			print_debug("No entity found with an RID of " + str(rid))
+	
+	
 #-------------------------------------------------------------------------------
 func _on_EntitySensor_entity_spotted(entity):
 	_fight_or_flight.make_decision(_brain, entity)
@@ -71,7 +93,7 @@ func _on_entity_died(entity):
 	
 	
 #-------------------------------------------------------------------------------
-func _construct_decision_tree():
+func _construct_decision_trees():
 	
 	# Takes a shorthand alias of the class.
 	var fof = FightOrFlight
@@ -124,6 +146,25 @@ func _construct_decision_tree():
 				.map(fof.Values.HIGH, fof.Attack.new())) \
 			.map(fof.Values.MEDIUM, second_branch) \
 			.map(fof.Values.HIGH, second_branch))
+	
+	# Creates the agitated fight or flight tree.
+	_agitated_fight_or_flight = fof.HasWeapon.new() \
+		.map(false, fof.Flee.new()) \
+		.map(true, fof.HasLowHealth.new() \
+			.map(true, fof.Flee.new()) \
+			.map(false, fof.AssessRisk.new() \
+				.map(fof.Values.LOW, fof.Attack.new()) \
+				.map(fof.Values.MEDIUM, fof.Attack.new()) \
+				.map(fof.Values.HIGH, fof.AssessPotentialReward.new() \
+					.map(fof.Values.LOW, fof.CalculateBravado.new(0.2) \
+						.map(false, fof.Flee.new()) \
+						.map(true, fof.Attack.new())) \
+					.map(fof.Values.MEDIUM, fof.CalculateBravado.new(0.5) \
+						.map(false, fof.Flee.new()) \
+						.map(true, fof.Attack.new())) \
+					.map(fof.Values.HIGH, fof.CalculateBravado.new(0.8) \
+						.map(false, fof.Flee.new()) \
+						.map(true, fof.Attack.new())))))
 
 
 #-------------------------------------------------------------------------------

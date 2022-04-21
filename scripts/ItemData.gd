@@ -7,7 +7,7 @@ enum ItemType {
 
 var data = {
 	ItemType.GEM: {
-		texture_region = Rect2(144, 80, 16, 16),
+		texture_region = Rect2(144, 160, 16, 16),
 		texture_margin = Rect2(0.5, 0.5, 0, 0),
 		max_quantity = 80,
 	}

@@ -57,13 +57,17 @@ class AssessThreatLevel:
 			_branch(Values.LOW, brain, entity)
 			
 		else:
+			var threat_detector = brain.find_node("ThreatDetector")
+			var has_attacked = (threat_detector != null 
+				and threat_detector.get_attacker_rids().has(entity.get_rid()))
+				
 			var dist = entity.global_position - brain.subject.global_position
 			var dist_sq = dist.length_squared()
 			
-			if dist_sq > DANGER_DISTANCE_SQ:
-				_branch(Values.MEDIUM, brain, entity)
-			else:
+			if has_attacked or dist_sq < DANGER_DISTANCE_SQ:
 				_branch(Values.HIGH, brain, entity)
+			else:				
+				_branch(Values.MEDIUM, brain, entity)
 
 
 # ------------------------------------------------------------------------------
