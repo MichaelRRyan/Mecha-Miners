@@ -62,7 +62,7 @@ _global_script_classes=[ {
 "base": "Reference",
 "class": "Inventory",
 "language": "GDScript",
-"path": "res://scripts/Inventory.gd"
+"path": "res://scripts/misc/Inventory.gd"
 }, {
 "base": "Node",
 "class": "ProceduralGenerator",
@@ -77,12 +77,12 @@ _global_script_classes=[ {
 "base": "Node2D",
 "class": "Terrain",
 "language": "GDScript",
-"path": "res://scripts/Terrain.gd"
+"path": "res://scripts/world/Terrain.gd"
 }, {
 "base": "TileSet",
 "class": "Tile",
 "language": "GDScript",
-"path": "res://scripts/misc/TerrainTiles.gd"
+"path": "res://scripts/world/TerrainTiles.gd"
 }, {
 "base": "Node2D",
 "class": "Tool",
@@ -112,16 +112,17 @@ _global_script_class_icons={
 
 config/name="Mecha-Miners"
 config/description="Descend into the depths of volatile planets to claim the crypto treasures of its core before it explodes!"
-run/main_scene="res://scenes/world/World.tscn"
+run/main_scene="res://scenes/ui/screens/TitleScreen.tscn"
 config/icon="res://assets/images/icon/icon.png"
 config/windows_native_icon="res://assets/images/icon/icon.ico"
 
 [autoload]
 
-Network="*res://scripts/Network.gd"
-GameState="*res://scripts/GameState.gd"
-ItemData="*res://scripts/ItemData.gd"
-Utility="*res://scripts/Utility.gd"
+Network="*res://scripts/misc/Network.gd"
+GameState="*res://scripts/misc/GameState.gd"
+ItemData="*res://scripts/misc/ItemData.gd"
+Utility="*res://scripts/misc/Utility.gd"
+UserPreferences="*res://scripts/misc/UserPreferences.gd"
 
 [display]
 
@@ -224,6 +225,7 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
+2d/snapping/use_gpu_pixel_snap=true
 quality/subsurface_scattering/quality=2
 environment/default_clear_color=Color( 0.898039, 0.670588, 0.572549, 1 )
 environment/default_environment="res://default_env.tres"

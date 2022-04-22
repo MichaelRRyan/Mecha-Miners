@@ -1,0 +1,90 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=2]
+[ext_resource path="res://scripts/ui/screens/TitleScreen.gd" type="Script" id=3]
+[ext_resource path="res://scenes/ui/screens/UIScreenBackground.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/images/ui_sheet.png" type="Texture" id=5]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 5 )
+region = Rect2( 240, 16, 272, 32 )
+
+[node name="TitleScreen" type="Control"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -512.0
+margin_top = -300.0
+margin_right = 512.0
+margin_bottom = 300.0
+theme = ExtResource( 2 )
+script = ExtResource( 3 )
+
+[node name="UIScreenBackground" parent="." instance=ExtResource( 4 )]
+anchor_left = -0.5
+anchor_top = -0.5
+anchor_right = 1.5
+anchor_bottom = 1.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Title" type="TextureRect" parent="."]
+anchor_left = 0.5
+anchor_top = 0.4
+anchor_right = 0.5
+anchor_bottom = 0.4
+margin_left = -397.0
+margin_top = -72.0
+margin_right = 397.0
+margin_bottom = 48.0
+texture = SubResource( 1 )
+expand = true
+stretch_mode = 5
+
+[node name="Subtitle" type="Label" parent="Title"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -418.0
+margin_top = -26.0
+rect_scale = Vector2( 0.9, 0.9 )
+custom_colors/font_color = Color( 0.945098, 0.631373, 0.552941, 1 )
+custom_colors/font_outline_modulate = Color( 0.94902, 0.760784, 5.06667, 1 )
+text = "Made by Michael Rainsford Ryan"
+
+[node name="Options" type="VBoxContainer" parent="."]
+anchor_left = 0.3
+anchor_top = 0.5
+anchor_right = 0.7
+anchor_bottom = 0.8
+custom_constants/separation = 10
+alignment = 1
+
+[node name="StartButton" type="Button" parent="Options"]
+margin_top = 23.0
+margin_right = 409.0
+margin_bottom = 61.0
+size_flags_vertical = 0
+text = "START"
+
+[node name="OptionsButton" type="Button" parent="Options"]
+margin_top = 71.0
+margin_right = 409.0
+margin_bottom = 109.0
+size_flags_vertical = 0
+text = "OPTIONS"
+
+[node name="ExitButton" type="Button" parent="Options"]
+margin_top = 119.0
+margin_right = 409.0
+margin_bottom = 157.0
+size_flags_vertical = 0
+text = "EXIT"
+
+[connection signal="pressed" from="Options/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="Options/OptionsButton" to="." method="_on_OptionsButton_pressed"]
+[connection signal="pressed" from="Options/ExitButton" to="." method="_on_ExitButton_pressed"]

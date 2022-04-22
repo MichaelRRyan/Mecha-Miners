@@ -2,6 +2,7 @@ extends "res://scripts/ai/AIController.gd"
 
 var _hover = true
 
+
 #-------------------------------------------------------------------------------
 func _ready():
 	call_deferred("_equip_laser")

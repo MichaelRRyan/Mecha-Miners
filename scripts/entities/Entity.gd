@@ -39,7 +39,7 @@ var equipped : Array = [] # Array<Tool>
 var _drills : Array = [] # Array<Tool>
 var _guns : Array = [] # Array<Tool>
 
-onready var LandingParticleScene = preload("res://scenes/BulletHitParticle.tscn")
+onready var LandingParticleScene = preload("res://scenes/vfx/BulletHitParticle.tscn")
 
 var sync_data = {}
 
