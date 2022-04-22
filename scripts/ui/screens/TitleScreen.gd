@@ -4,7 +4,7 @@ extends Control
 # ------------------------------------------------------------------------------
 func _on_StartButton_pressed():
 	if get_tree().change_scene("res://scenes/ui/screens/LoginScreen.tscn") != OK:
-		print_debug("Cannot change scene to OptionsScreen.")
+		print_debug("Cannot change scene to LoginScreen.")
 	
 	
 # ------------------------------------------------------------------------------

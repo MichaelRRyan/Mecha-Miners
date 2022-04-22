@@ -1,13 +1,15 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=2]
 
 [ext_resource path="res://scenes/ui/screens/UIScreenBackground.tscn" type="PackedScene" id=1]
 [ext_resource path="res://resources/fonts/ScreenTitleFont.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=3]
+[ext_resource path="res://scripts/ui/screens/LoginScreen.gd" type="Script" id=4]
 
 [node name="LoginScreen" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 theme = ExtResource( 3 )
+script = ExtResource( 4 )
 
 [node name="UIScreenBackground" parent="." instance=ExtResource( 1 )]
 anchor_left = -0.5
@@ -46,12 +48,12 @@ margin_top = -24.0
 margin_right = 4.0
 margin_bottom = 24.0
 
-[node name="Login" type="Tabs" parent="TabContainer"]
+[node name="Login with Enjin" type="Tabs" parent="TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_top = 36.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login with Enjin"]
 anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
@@ -59,45 +61,50 @@ anchor_bottom = 0.9
 custom_constants/separation = 10
 alignment = 1
 
-[node name="UsernameLabel" type="Label" parent="TabContainer/Login/VBoxContainer"]
-margin_top = 8.0
+[node name="UsernameLabel" type="Label" parent="TabContainer/Login with Enjin/VBoxContainer"]
 margin_right = 497.0
-margin_bottom = 34.0
-text = "Username"
+margin_bottom = 26.0
+text = "Email"
 align = 1
 
-[node name="UsernameField" type="LineEdit" parent="TabContainer/Login/VBoxContainer"]
-margin_top = 44.0
+[node name="EmailField" type="LineEdit" parent="TabContainer/Login with Enjin/VBoxContainer"]
+margin_top = 36.0
 margin_right = 497.0
-margin_bottom = 74.0
+margin_bottom = 66.0
 align = 1
 
-[node name="PasswordLabel" type="Label" parent="TabContainer/Login/VBoxContainer"]
-margin_top = 84.0
+[node name="PasswordLabel" type="Label" parent="TabContainer/Login with Enjin/VBoxContainer"]
+margin_top = 76.0
 margin_right = 497.0
-margin_bottom = 139.0
+margin_bottom = 131.0
 text = "
 Password"
 align = 1
 
-[node name="PasswordField" type="LineEdit" parent="TabContainer/Login/VBoxContainer"]
-margin_top = 149.0
+[node name="PasswordField" type="LineEdit" parent="TabContainer/Login with Enjin/VBoxContainer"]
+margin_top = 141.0
 margin_right = 497.0
-margin_bottom = 179.0
+margin_bottom = 171.0
 align = 1
 secret = true
 
-[node name="LoginButton" type="Button" parent="TabContainer/Login/VBoxContainer"]
-margin_top = 189.0
+[node name="ErrorLabel" type="Label" parent="TabContainer/Login with Enjin/VBoxContainer"]
+margin_top = 181.0
 margin_right = 497.0
-margin_bottom = 240.0
+margin_bottom = 207.0
+custom_colors/font_color = Color( 1, 0.286275, 0.286275, 1 )
+align = 1
+
+[node name="LoginButton" type="Button" parent="TabContainer/Login with Enjin/VBoxContainer"]
+margin_top = 217.0
+margin_right = 497.0
+margin_bottom = 255.0
 text = "Login"
 
-[node name="Register" type="Tabs" parent="TabContainer"]
+[node name="Getting Started" type="Tabs" parent="TabContainer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 4.0
-margin_top = 44.0
-margin_right = -4.0
-margin_bottom = -4.0
+margin_top = 36.0
+
+[connection signal="pressed" from="TabContainer/Login with Enjin/VBoxContainer/LoginButton" to="." method="_on_LoginButton_pressed"]
