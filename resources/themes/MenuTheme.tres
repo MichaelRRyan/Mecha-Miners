@@ -1,4 +1,4 @@
-[gd_resource type="Theme" load_steps=10 format=2]
+[gd_resource type="Theme" load_steps=15 format=2]
 
 [ext_resource path="res://assets/fonts/hope_gold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://resources/fonts/ButtonFont.tres" type="DynamicFont" id=2]
@@ -14,6 +14,30 @@ region = Rect2( 288, 64, 48, 48 )
 atlas = ExtResource( 3 )
 region = Rect2( 240, 64, 48, 48 )
 
+[sub_resource type="StyleBoxFlat" id=11]
+bg_color = Color( 0.768627, 0.498039, 0.388235, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.517647, 0.270588, 0.0745098, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="StyleBoxFlat" id=10]
+bg_color = Color( 0.698039, 0.423529, 0.313726, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color( 0.447059, 0.219608, 0.0392157, 1 )
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
 [sub_resource type="StyleBoxFlat" id=5]
 bg_color = Color( 0.447059, 0.219608, 0.0392157, 1 )
 corner_radius_top_left = 10
@@ -27,6 +51,29 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 0.94902, 0.639216, 0.513726, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id=9]
+bg_color = Color( 0.698039, 0.423529, 0.313726, 1 )
+border_width_left = 20
+border_width_right = 20
+border_color = Color( 0.698039, 0.423529, 0.313726, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+
+[sub_resource type="StyleBoxFlat" id=8]
+bg_color = Color( 0.94902, 0.639216, 0.513726, 1 )
+border_width_left = 20
+border_width_right = 20
+border_color = Color( 0.94902, 0.639216, 0.513726, 1 )
+corner_radius_top_left = 10
+corner_radius_top_right = 10
 
 [sub_resource type="DynamicFont" id=1]
 size = 32
@@ -48,6 +95,14 @@ Button/styles/pressed = SubResource( 2 )
 CheckBox/icons/checked = SubResource( 4 )
 CheckBox/icons/unchecked = SubResource( 3 )
 Label/colors/font_color = Color( 0.933333, 0.545098, 0.392157, 1 )
+LineEdit/colors/font_color = Color( 0.933333, 0.545098, 0.392157, 1 )
+LineEdit/styles/focus = SubResource( 11 )
+LineEdit/styles/normal = SubResource( 10 )
 ProgressBar/colors/font_color = Color( 0.94902, 0.639216, 0.513726, 1 )
 ProgressBar/styles/bg = SubResource( 5 )
 ProgressBar/styles/fg = SubResource( 6 )
+TabContainer/colors/font_color_bg = Color( 0.678431, 0.419608, 0.317647, 1 )
+TabContainer/colors/font_color_fg = Color( 0.933333, 0.545098, 0.392157, 1 )
+TabContainer/styles/panel = SubResource( 7 )
+TabContainer/styles/tab_bg = SubResource( 9 )
+TabContainer/styles/tab_fg = SubResource( 8 )
