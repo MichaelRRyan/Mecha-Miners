@@ -48,5 +48,13 @@ func run(variables: Dictionary):
 
 
 func set_bearer(bearer : String) -> void:
-	headers.append("Authorization: Bearer " + bearer)
-
+	var found = false
+	
+	for i in headers.size():
+		if headers[i].begins_with("Authorization"):
+			headers[i] = "Authorization: Bearer " + bearer
+			found = true
+			break
+	
+	if not found:
+		headers.append("Authorization: Bearer " + bearer)

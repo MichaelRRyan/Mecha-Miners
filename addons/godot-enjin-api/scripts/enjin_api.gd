@@ -98,10 +98,10 @@ func _login_response(result):
 
 #-------------------------------------------------------------------------------
 func _get_user_data_response(result):
-	var data = result.data.EnjinIdentities
+	var info = result.data.EnjinUser
 	
-	if data != null:
-		emit_signal("get_user_info_response", data, null)
+	if info != null:
+		emit_signal("get_user_info_response", info, null)
 		
 	elif result.has("errors"):
 		emit_signal("get_user_info_response", null, result.errors)

@@ -19,16 +19,26 @@ onready var login_query = GraphQL.query("Login", {
 #-------------------------------------------------------------------------------
 onready var get_user_info = GraphQL.query("GetUserInfo", {
 		"id": "Int!",
-	}, GQLQuery.new("EnjinIdentities").set_args({ 
+	}, GQLQuery.new("EnjinUser").set_args({ 
 		"id": "id",
 	}).set_props([
-		"id",
-		GQLQuery.new("user").set_props([
+		"name",
+		"createdAt",
+		"updatedAt",
+		"isPlayer",
+		GQLQuery.new("identities").set_props([
+			"id",
+			GQLQuery.new("app").set_props([
+				"id",
+				"name"
+			]),
+			GQLQuery.new("wallet").set_props([
+				"ethAddress",
+			]),
+		]),
+		GQLQuery.new("items").set_props([
 			"id",
 			"name",
-		]),
-		GQLQuery.new("wallet").set_props([
-			"ethAddress",
 		]),
 	]))
 
