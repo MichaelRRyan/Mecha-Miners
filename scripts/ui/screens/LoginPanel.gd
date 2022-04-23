@@ -1,6 +1,7 @@
 extends Control
 
 signal user_logged_in()
+signal user_logged_out()
 
 onready var _email_field : LineEdit = find_node("EmailField")
 onready var _password_field : LineEdit = find_node("PasswordField")
@@ -62,11 +63,21 @@ func _display_logging_in_dialog() -> void:
 
 
 # ------------------------------------------------------------------------------
-func display_logged_in_dialog(user_name : String, wallet_linked : bool) -> void:
+func display_logged_in_dialog(user_name : String, identity_id : int) -> void:
 	$LoggingInDialog.hide()
 	$LoggedInDialog.show()
 	$LoggedInDialog/CurrentUser/Name.text = user_name
-	$LoggedInDialog/LinkWalletLabel.visible = not wallet_linked
+	$LoggedInDialog/LinkWalletLabel.visible = identity_id == -1
+	$LoggedInDialog/WalletLinkedLabel.visible = false
+	$LoggedInDialog/PlayButton.disabled = identity_id == -1
+	Network.notify_of_login(Enjin.get_current_user_id(), identity_id)
+	
+	
+# ------------------------------------------------------------------------------
+func display_wallet_linked():
+	$LoggedInDialog/LinkWalletLabel.visible = false
+	$LoggedInDialog/WalletLinkedLabel.visible = true
+	$LoggedInDialog/PlayButton.disabled = false
 	
 	
 # ------------------------------------------------------------------------------
@@ -75,9 +86,12 @@ func _on_LogoutButton_pressed():
 	$LoggedInDialog.hide()
 	$LoginDialog.show()
 	
+	_email_field.grab_focus()
 	_email_field.text = ""
 	_password_field.text = ""
 	_error_label.text = ""
 
+	emit_signal("user_logged_out")
+	
 
 # ------------------------------------------------------------------------------

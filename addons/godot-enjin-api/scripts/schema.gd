@@ -55,8 +55,13 @@ onready var create_identity = GraphQL.mutation("CreateIdentity", {
 	}).set_props([
 		"id",
 		"createdAt",
+		"linkingCode",
+		"linkingCodeQr",
 		GQLQuery.new("wallet").set_props([
 			"ethAddress",
+		]),
+		GQLQuery.new("user").set_props([
+			"id",
 		]),
 	]))
 

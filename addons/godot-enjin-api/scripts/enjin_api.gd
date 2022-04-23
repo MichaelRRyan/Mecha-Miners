@@ -129,7 +129,7 @@ func _create_identity_response(result):
 		emit_signal("create_identity_response", null, result.errors)
 		
 	else:
-		var info = result.data.EnjinUser
+		var info = result.data.CreateEnjinIdentity
 		if info != null:
 			emit_signal("create_identity_response", info, null)
 
