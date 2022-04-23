@@ -6,6 +6,7 @@ export_presets.cfg
 # Project specific ignores
 builds/
 android/
+secret.json
 
 # Mono-specific ignores
 .mono/

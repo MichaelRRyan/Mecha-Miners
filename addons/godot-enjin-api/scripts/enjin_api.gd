@@ -2,12 +2,14 @@ extends Node
 
 signal login_response(successful, errors)
 signal get_user_info_response(info, errors)
+signal create_identity_response(info, errors)
 
-const APP_ID : int = 6018
+const APP_ID : int = 6145
 
 enum RequestType {
 	LOGIN,
 	GET_USER_INFO,
+	CREATE_IDENTITY,
 }
 
 var print_response = true
@@ -43,25 +45,39 @@ func login(username : String, password : String):
 
 
 #-------------------------------------------------------------------------------
+func logout():
+	_schema.remove_bearer()
+	_bearer = ""
+	_user_id = -1
+	
+
+#-------------------------------------------------------------------------------
 func get_current_user_id() -> int:
 	return _user_id
 
 
 #-------------------------------------------------------------------------------
 # Gets the info for the logged in user.
-func get_current_user_info():
+func get_current_user_info() -> void:
 	if _user_id != -1:
-		_execute("get_user_info", {
-			"id": _user_id,
-		})
+		get_user_info(_user_id)
 	else:
 		print("Error: No user signed in while trying to access current user data.")
 
 
 #-------------------------------------------------------------------------------
-func get_user_info(id : int):
+func get_user_info(id : int) -> void:
 	_execute("get_user_info", {
 		"id": id,
+	})
+
+
+#-------------------------------------------------------------------------------
+func create_identity(user_id : int, eth_address : String) -> void:
+	_execute("create_identity", {
+		"appId": APP_ID,
+		"userId": user_id,
+		"ethAddress": eth_address,
 	})
 
 
@@ -77,36 +93,47 @@ func _request_response(result, request_type):
 			_login_response(result)
 		RequestType.GET_USER_INFO:
 			_get_user_data_response(result)
+		RequestType.CREATE_IDENTITY:
+			_create_identity_response(result)
 			
 
 #-------------------------------------------------------------------------------
 func _login_response(result):
-	var auth = result.data.EnjinOauth
-	if auth != null:
-		_user_id = auth.id
-		_bearer = auth.accessTokens[0].accessToken
-		_schema.set_bearer(_bearer)
+	if result.has("errors"):
+		emit_signal("login_response", false, result.errors)
 		
-		emit_signal("login_response", true, null)
 	else:
-		var error = null
-		if result.has("errors"):
-			error = result.errors
+		var auth = result.data.EnjinOauth
+		if auth != null:
+			_user_id = auth.id
+			_bearer = auth.accessTokens[0].accessToken
+			_schema.set_bearer(_bearer)
 			
-		emit_signal("login_response", false, error)
+			emit_signal("login_response", true, null)
 	
 
 #-------------------------------------------------------------------------------
 func _get_user_data_response(result):
-	var info = result.data.EnjinUser
-	
-	if info != null:
-		emit_signal("get_user_info_response", info, null)
-		
-	elif result.has("errors"):
+	if result.has("errors"):
 		emit_signal("get_user_info_response", null, result.errors)
 		
-	
+	else:
+		var info = result.data.EnjinUser
+		if info != null:
+			emit_signal("get_user_info_response", info, null)
+		
+		
+#-------------------------------------------------------------------------------
+func _create_identity_response(result):
+	if result.has("errors"):
+		emit_signal("create_identity_response", null, result.errors)
+		
+	else:
+		var info = result.data.EnjinUser
+		if info != null:
+			emit_signal("create_identity_response", info, null)
+
+
 #-------------------------------------------------------------------------------
 func _get_app_secret_response(result):
 	var secret = result.data.EnjinApps[0].secret
@@ -145,10 +172,10 @@ func _setup():
 		# Connects the queries and mutations' signals to methods.
 		_schema.login_query.connect("graphql_response", self, "_request_response", [ RequestType.LOGIN ])
 		_schema.get_user_info.connect("graphql_response", self, "_request_response", [ RequestType.GET_USER_INFO ])
+		_schema.create_identity.connect("graphql_response", self, "_request_response", [ RequestType.CREATE_IDENTITY ])
 		
 		_schema.get_app_secret_query.connect("graphql_response", self, "_get_app_secret_response")
 		_schema.retrieve_app_access_token_query.connect("graphql_response", self, "_retrieve_app_access_token_response")
-		_schema.create_player_mutation.connect("graphql_response", self, "_create_player_response")
 		
 		_initialised = true
 		

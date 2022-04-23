@@ -58,3 +58,9 @@ func set_bearer(bearer : String) -> void:
 	
 	if not found:
 		headers.append("Authorization: Bearer " + bearer)
+
+
+func remove_bearer() -> void:
+	for i in headers.size():
+		if headers[i].begins_with("Authorization"):
+			headers.remove(i)

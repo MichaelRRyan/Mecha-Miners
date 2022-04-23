@@ -44,6 +44,24 @@ onready var get_user_info = GraphQL.query("GetUserInfo", {
 
 
 #-------------------------------------------------------------------------------
+onready var create_identity = GraphQL.mutation("CreateIdentity", {
+		"userId": "Int!",
+		"appId": "Int!",
+		"ethAddress": "String!",
+	}, GQLQuery.new("CreateEnjinIdentity").set_args({ 
+		"userId": "userId",
+		"appId": "appId",
+		"ethAddress": "ethAddress",
+	}).set_props([
+		"id",
+		"createdAt",
+		GQLQuery.new("wallet").set_props([
+			"ethAddress",
+		]),
+	]))
+
+
+#-------------------------------------------------------------------------------
 onready var get_app_secret_query = GraphQL.query("GetAppSecret", {
 		"id": "Int!",
 	}, GQLQuery.new("EnjinApps").set_args({ 
@@ -64,25 +82,15 @@ onready var retrieve_app_access_token_query = GraphQL.query("RetrieveAppAccessTo
 		"accessToken",
 		"expiresIn",
 	]))
-	
-
-#-------------------------------------------------------------------------------
-onready var create_player_mutation = GraphQL.mutation("CreatePlayer", {
-		"playerId": "String!",
-	}, GQLQuery.new("CreatePlayer").set_args({ 
-		"playerId": "id",
-	}).set_props([
-		"accessToken",
-	]))
 
 
 #-------------------------------------------------------------------------------
 onready var queries = [
 	login_query,
 	get_user_info,
+	create_identity,
 	get_app_secret_query,
 	retrieve_app_access_token_query,
-	create_player_mutation,
 ]
 
 
@@ -92,6 +100,12 @@ func set_bearer(bearer : String) -> void:
 		query.set_bearer(bearer)
 
 
+#-------------------------------------------------------------------------------
+func remove_bearer() -> void:
+	for query in queries:
+		query.remove_bearer()
+	
+	
 #-------------------------------------------------------------------------------
 func _ready() -> void:
 	for query in queries:
