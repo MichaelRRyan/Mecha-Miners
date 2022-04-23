@@ -110,4 +110,7 @@ anchor_bottom = 1.0
 margin_top = 36.0
 
 [connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
+[connection signal="user_logged_in" from="TabContainer/Login with Enjin" to="." method="_on_LoginPanel_user_logged_in"]
+[connection signal="text_entered" from="TabContainer/Login with Enjin/VBoxContainer/EmailField" to="TabContainer/Login with Enjin" method="_on_EmailField_text_entered"]
+[connection signal="text_entered" from="TabContainer/Login with Enjin/VBoxContainer/PasswordField" to="TabContainer/Login with Enjin" method="_on_PasswordField_text_entered"]
 [connection signal="pressed" from="TabContainer/Login with Enjin/VBoxContainer/LoginButton" to="TabContainer/Login with Enjin" method="_on_LoginButton_pressed"]
