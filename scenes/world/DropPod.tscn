@@ -1,7 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=1]
 [ext_resource path="res://scripts/world/DropPod.gd" type="Script" id=2]
+[ext_resource path="res://assets/images/particle.png" type="Texture" id=5]
+[ext_resource path="res://assets/images/particle_small.png" type="Texture" id=6]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 24, 29.5 )
@@ -9,9 +11,52 @@ extents = Vector2( 24, 29.5 )
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 32, 32 )
 
+[sub_resource type="Gradient" id=4]
+colors = PoolColorArray( 1, 1, 1, 1, 0.625, 0.625, 0.625, 0 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=8]
+emission_shape = 2
+emission_box_extents = Vector3( 7, 0, 0 )
+flag_disable_z = true
+direction = Vector3( 0, 1, 0 )
+spread = 20.0
+gravity = Vector3( 0, -10, 0 )
+initial_velocity = 440.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 80.0
+color = Color( 1, 0.219608, 0, 0.768627 )
+color_ramp = SubResource( 5 )
+hue_variation = 0.45
+hue_variation_random = 0.5
+
+[sub_resource type="Gradient" id=6]
+colors = PoolColorArray( 1, 1, 1, 1, 0.625, 0.625, 0.625, 0 )
+
+[sub_resource type="GradientTexture" id=7]
+gradient = SubResource( 6 )
+
+[sub_resource type="ParticlesMaterial" id=9]
+emission_shape = 2
+emission_box_extents = Vector3( 7, 0, 0 )
+flag_disable_z = true
+direction = Vector3( 0, 1, 0 )
+spread = 20.0
+gravity = Vector3( 0, -10, 0 )
+initial_velocity = 440.0
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+damping = 80.0
+color = Color( 1, 0.219608, 0, 0.768627 )
+color_ramp = SubResource( 7 )
+hue_variation = 0.45
+hue_variation_random = 0.5
+
 [node name="DropPod" type="KinematicBody2D"]
 pause_mode = 2
-position = Vector2( 64, 98 )
 z_index = -50
 collision_layer = 0
 script = ExtResource( 2 )
@@ -31,6 +76,45 @@ visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
 shape = SubResource( 2 )
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+cast_to = Vector2( 0, 500 )
+
+[node name="ParticlesLarge" type="Particles2D" parent="."]
+position = Vector2( 0, 30 )
+z_index = -120
+z_as_relative = false
+amount = 15
+local_coords = false
+process_material = SubResource( 8 )
+texture = ExtResource( 5 )
+
+[node name="ParticlesSmall" type="Particles2D" parent="."]
+position = Vector2( 0, 30 )
+z_index = -120
+z_as_relative = false
+amount = 15
+local_coords = false
+process_material = SubResource( 9 )
+texture = ExtResource( 6 )
+
+[node name="Raycasts" type="Node2D" parent="."]
+
+[node name="RayCast1" type="RayCast2D" parent="Raycasts"]
+position = Vector2( -24, 30 )
+cast_to = Vector2( 0, 8 )
+
+[node name="RayCast2" type="RayCast2D" parent="Raycasts"]
+position = Vector2( -8, 30 )
+cast_to = Vector2( 0, 8 )
+
+[node name="RayCast3" type="RayCast2D" parent="Raycasts"]
+position = Vector2( 8, 30 )
+cast_to = Vector2( 0, 8 )
+
+[node name="RayCast4" type="RayCast2D" parent="Raycasts"]
+position = Vector2( 24, 30 )
+cast_to = Vector2( 0, 8 )
 
 [connection signal="body_entered" from="PlayerDetector" to="." method="_on_PlayerDetector_body_entered"]
 [connection signal="body_exited" from="PlayerDetector" to="." method="_on_PlayerDetector_body_exited"]

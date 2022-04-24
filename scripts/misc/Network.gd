@@ -158,7 +158,7 @@ func _peer_connected(peer_id):
 # ------------------------------------------------------------------------------
 func _peer_disconnected(peer_id):
 	# TODO: Remove player instance.
-	_player_data.erase(peer_id)
+	var _r = _player_data.erase(peer_id)
 	emit_signal("player_disconnected", peer_id)
 	print("Peer " + str(peer_id) + " Disconnected")
 
