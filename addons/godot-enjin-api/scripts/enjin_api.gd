@@ -5,12 +5,16 @@ signal get_user_info_response(info, errors)
 signal create_identity_response(info, errors)
 
 const APP_ID : int = 6145
+const ELIXIRITE_ID = "3000000000003af5"
+const MECHA_MINERS_WALLET = "0xc1511fc654Fe62F4e9FEDF07270C18085F9a182F"
+const MECHA_MINERS_IDENTITY_ID = 23950
 
 enum RequestType {
 	LOGIN,
 	GET_USER_INFO,
 	CREATE_IDENTITY,
-	MINT_TOKEN,
+	MINT_TOKENS,
+	SEND_TOKENS,
 }
 
 var print_response = true
@@ -105,8 +109,19 @@ func create_identity(user_id : int, eth_address : String) -> void:
 
 
 #-------------------------------------------------------------------------------
-func mint_token(identity_id : int, app_id : int, token_id : String, recipient_address : String, value : int) -> void:
-	_execute("mint_token", {
+func mint_tokens(identity_id : int, app_id : int, token_id : String, recipient_address : String, value : int) -> void:
+	_execute("mint_tokens", {
+		"identityId": identity_id, 
+		"appId": app_id, 
+		"tokenId": token_id,
+		"recipientAddress": recipient_address,
+		"value": value
+	})
+
+
+#-------------------------------------------------------------------------------
+func send_tokens(identity_id : int, app_id : int, token_id : String, recipient_address : String, value : int) -> void:
+	_execute("send_tokens", {
 		"identityId": identity_id, 
 		"appId": app_id, 
 		"tokenId": token_id,
@@ -129,9 +144,8 @@ func _request_response(result, request_type):
 			_get_user_data_response(result)
 		RequestType.CREATE_IDENTITY:
 			_create_identity_response(result)
-		RequestType.MINT_TOKEN:
+		RequestType.MINT_TOKENS:
 			pass
-			#print(JSON.print(result, "\t"))
 			
 
 #-------------------------------------------------------------------------------
@@ -219,13 +233,19 @@ func _setup():
 		_schema = _SchemaScene.instance()
 		root.add_child(_schema)
 		
-		# Connects the queries and mutations' signals to methods.
-		_schema.login_query.connect("graphql_response", self, "_request_response", [ RequestType.LOGIN ])
-		_schema.get_user_info.connect("graphql_response", self, "_request_response", [ RequestType.GET_USER_INFO ])
-		_schema.create_identity.connect("graphql_response", self, "_request_response", [ RequestType.CREATE_IDENTITY ])
-		_schema.mint_token.connect("graphql_response", self, "_request_response", [ RequestType.MINT_TOKEN ])
+		var query_objects = [
+			{ "query": _schema.login_query, "RequestType": RequestType.LOGIN },
+			{ "query": _schema.get_user_info, "RequestType": RequestType.GET_USER_INFO },
+			{ "query": _schema.create_identity, "RequestType": RequestType.CREATE_IDENTITY },
+			{ "query": _schema.mint_tokens, "RequestType": RequestType.MINT_TOKENS },
+			{ "query": _schema.send_tokens, "RequestType": RequestType.SEND_TOKENS },
+		]
 		
-		_schema.get_app_secret_query.connect("graphql_response", self, "_get_app_secret_response")
+		# Connects the queries and mutations' signals to methods.
+		for query_obj in query_objects:
+			query_obj["query"].connect("graphql_response", self, "_request_response", [ query_obj["RequestType"] ])
+				
+		# TODO: Modify and use the below query.
 		_schema.retrieve_app_access_token_query.connect("graphql_response", self, "_retrieve_app_access_token_response")
 		
 		_initialised = true

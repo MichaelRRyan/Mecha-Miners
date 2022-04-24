@@ -120,7 +120,15 @@ remote func login_registered(user_id : int, identity_id : int) -> void:
 	var peer_id = get_tree().get_rpc_sender_id()
 	_player_data[peer_id]["user_id"] = user_id
 	_player_data[peer_id]["identity_id"] = identity_id
+	
+	print("Peer " + str(peer_id) + " logged in as user " + str(user_id))
 
+
+# ------------------------------------------------------------------------------
+remote func mint_me_some_tokens(eth_address : String) -> void:
+	var identity_id = Enjin.MECHA_MINERS_IDENTITY_ID
+	Enjin.mint_tokens(identity_id, Enjin.APP_ID, Enjin.ELIXIRITE_ID, eth_address, 1)
+		
 
 # ------------------------------------------------------------------------------
 func _on_Enjin_create_identity_response(data, _errors) -> void:
@@ -137,7 +145,7 @@ func _on_Enjin_create_identity_response(data, _errors) -> void:
 	if not _create_identity_queue.empty():
 		var item = _create_identity_queue.front()
 		Enjin.create_identity(item.user_id, item.eth_address)	
-		
+
 
 # ------------------------------------------------------------------------------
 func _peer_connected(peer_id):
@@ -185,6 +193,14 @@ remote func create_identity_response(identity) -> void:
 func notify_of_login(user_id, identity_id):
 	if state == State.Connected:
 		rpc_id(SERVER_ID, "login_registered", user_id, identity_id)
+	else:
+		print_debug("Error: Not connected to a server.")
+
+
+# ------------------------------------------------------------------------------
+func mint_tokens(eth_address : String) -> void:
+	if state == State.Connected:
+		rpc_id(SERVER_ID, "mint_me_some_tokens", eth_address)
 	else:
 		print_debug("Error: Not connected to a server.")
 

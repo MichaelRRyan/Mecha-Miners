@@ -72,7 +72,7 @@ onready var create_identity = GraphQL.mutation("CreateIdentity", {
 
 
 #-------------------------------------------------------------------------------
-onready var mint_token = GraphQL.mutation("MintToken", {
+onready var mint_tokens = GraphQL.mutation("MintToken", {
 		"identityId": "Int!", 
 		"appId": "Int!", 
 		"tokenId": "String!",
@@ -95,12 +95,25 @@ onready var mint_token = GraphQL.mutation("MintToken", {
 
 
 #-------------------------------------------------------------------------------
-onready var get_app_secret_query = GraphQL.query("GetAppSecret", {
-		"id": "Int!",
-	}, GQLQuery.new("EnjinApps").set_args({ 
-		"id": "$id",
+onready var send_tokens = GraphQL.mutation("SendToken", {
+		"identityId": "Int!", 
+		"appId": "Int!", 
+		"tokenId": "String!",
+		"recipientAddress": "String!",
+		"value": "Int!"
+	}, GQLQuery.new("CreateEnjinRequest").set_args({ 
+		"identityId": "$identityId",
+		"appId": "$appId",
+		"type": "SEND",
+		"send_token_data": { 
+			"token_id": "$tokenId",
+			"recipient_address": "$recipientAddress",
+			"value": "$value"
+		}
 	}).set_props([
-		"secret",
+		"id",
+		"encodedData",
+		"error",
 	]))
 	
 
@@ -122,9 +135,9 @@ onready var queries = [
 	login_query,
 	get_user_info,
 	create_identity,
-	get_app_secret_query,
 	retrieve_app_access_token_query,
-	mint_token,
+	mint_tokens,
+	send_tokens,
 ]
 
 

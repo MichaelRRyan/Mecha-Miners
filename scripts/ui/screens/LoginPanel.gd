@@ -72,9 +72,6 @@ func display_logged_in_dialog(user_name : String, identity_id : int) -> void:
 	$LoggedInDialog/PlayButton.disabled = identity_id == -1
 	Network.notify_of_login(Enjin.get_current_user_id(), identity_id)
 	
-#	if identity_id != -1:
-#		Enjin.mint_token(identity_id, Enjin.APP_ID, "3000000000003af5", "0xc1511fc654Fe62F4e9FEDF07270C18085F9a182F", 1)
-	
 	
 # ------------------------------------------------------------------------------
 func display_wallet_linked():
