@@ -7,8 +7,8 @@ onready var login_query = GraphQL.query("Login", {
 		"email": "String!",
 		"password": "String!",
 	}, GQLQuery.new("EnjinOauth").set_args({ 
-		"email": "email",
-		"password": "password",
+		"email": "$email",
+		"password": "$password",
 	}).set_props([
 		"id",
 		"name",
@@ -20,7 +20,7 @@ onready var login_query = GraphQL.query("Login", {
 onready var get_user_info = GraphQL.query("GetUserInfo", {
 		"id": "Int!",
 	}, GQLQuery.new("EnjinUser").set_args({ 
-		"id": "id",
+		"id": "$id",
 	}).set_props([
 		"name",
 		"createdAt",
@@ -49,9 +49,9 @@ onready var create_identity = GraphQL.mutation("CreateIdentity", {
 		"appId": "Int!",
 		"ethAddress": "String!",
 	}, GQLQuery.new("CreateEnjinIdentity").set_args({ 
-		"userId": "userId",
-		"appId": "appId",
-		"ethAddress": "ethAddress",
+		"userId": "$userId",
+		"appId": "$appId",
+		"ethAddress": "$ethAddress",
 	}).set_props([
 		"id",
 		"createdAt",
@@ -67,10 +67,33 @@ onready var create_identity = GraphQL.mutation("CreateIdentity", {
 
 
 #-------------------------------------------------------------------------------
+onready var mint_token = GraphQL.mutation("MintToken", {
+		"identityId": "Int!", 
+		"appId": "Int!", 
+		"tokenId": "String!",
+		"recipientAddress": "String!",
+		"value": "Int!"
+	}, GQLQuery.new("CreateEnjinRequest").set_args({ 
+		"identityId": "$identityId",
+		"appId": "$appId",
+		"type": "MINT",
+		"mint_token_data": { 
+			"token_id": "$tokenId",
+			"recipient_address_array": "[$recipientAddress]",
+			"value_array": "[$value]"
+		}
+	}).set_props([
+		"id",
+		"encodedData",
+		"error",
+	]))
+
+
+#-------------------------------------------------------------------------------
 onready var get_app_secret_query = GraphQL.query("GetAppSecret", {
 		"id": "Int!",
 	}, GQLQuery.new("EnjinApps").set_args({ 
-		"id": "id",
+		"id": "$id",
 	}).set_props([
 		"secret",
 	]))
@@ -81,8 +104,8 @@ onready var retrieve_app_access_token_query = GraphQL.query("RetrieveAppAccessTo
 		"appId": "Int!",
 		"appSecret": "String!",
 	}, GQLQuery.new("AuthApp").set_args({ 
-		"appId": "id",
-		"appSecret": "secret",
+		"id": "$appId",
+		"secret": "$appSecret",
 	}).set_props([
 		"accessToken",
 		"expiresIn",
@@ -96,6 +119,7 @@ onready var queries = [
 	create_identity,
 	get_app_secret_query,
 	retrieve_app_access_token_query,
+	mint_token,
 ]
 
 

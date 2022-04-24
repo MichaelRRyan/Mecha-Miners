@@ -72,6 +72,9 @@ func display_logged_in_dialog(user_name : String, identity_id : int) -> void:
 	$LoggedInDialog/PlayButton.disabled = identity_id == -1
 	Network.notify_of_login(Enjin.get_current_user_id(), identity_id)
 	
+#	if identity_id != -1:
+#		Enjin.mint_token(identity_id, Enjin.APP_ID, "3000000000003af5", "0xc1511fc654Fe62F4e9FEDF07270C18085F9a182F", 1)
+	
 	
 # ------------------------------------------------------------------------------
 func display_wallet_linked():
@@ -93,5 +96,11 @@ func _on_LogoutButton_pressed():
 
 	emit_signal("user_logged_out")
 	
+
+# ------------------------------------------------------------------------------
+func _on_PlayButton_pressed():
+	if get_tree().change_scene("res://scenes/ui/screens/ShipScreen.tscn") != OK:
+		print_debug("Unable to switch scene to ShipScreen.")
+
 
 # ------------------------------------------------------------------------------

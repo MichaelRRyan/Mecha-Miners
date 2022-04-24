@@ -188,3 +188,4 @@ text = "Play"
 [connection signal="text_entered" from="LoginDialog/PasswordField" to="." method="_on_PasswordField_text_entered"]
 [connection signal="pressed" from="LoginDialog/LoginButton" to="." method="_on_LoginButton_pressed"]
 [connection signal="pressed" from="LoggedInDialog/LogoutButton" to="." method="_on_LogoutButton_pressed"]
+[connection signal="pressed" from="LoggedInDialog/PlayButton" to="." method="_on_PlayButton_pressed"]

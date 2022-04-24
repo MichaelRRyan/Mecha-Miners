@@ -10,6 +10,7 @@ enum RequestType {
 	LOGIN,
 	GET_USER_INFO,
 	CREATE_IDENTITY,
+	MINT_TOKEN,
 }
 
 var print_response = true
@@ -23,6 +24,7 @@ var _initialised = false
 
 var _bearer : String = ""
 var _user_id : int = -1
+var _user_name : String = ""
 
 
 #-------------------------------------------------------------------------------
@@ -49,11 +51,16 @@ func logout():
 	_schema.remove_bearer()
 	_bearer = ""
 	_user_id = -1
-	
+
 
 #-------------------------------------------------------------------------------
 func get_current_user_id() -> int:
 	return _user_id
+	
+	
+#-------------------------------------------------------------------------------
+func get_current_user_name() -> String:
+	return _user_name
 
 
 #-------------------------------------------------------------------------------
@@ -82,11 +89,22 @@ func create_identity(user_id : int, eth_address : String) -> void:
 
 
 #-------------------------------------------------------------------------------
+func mint_token(identity_id : int, app_id : int, token_id : String, recipient_address : String, value : int) -> void:
+	_execute("mint_token", {
+		"identityId": identity_id, 
+		"appId": app_id, 
+		"tokenId": token_id,
+		"recipientAddress": recipient_address,
+		"value": value
+	})
+
+
+#-------------------------------------------------------------------------------
 # Response methods
 #-------------------------------------------------------------------------------
 func _request_response(result, request_type):
-	if print_response:
-		print(JSON.print(result, "\t"))
+#	if print_response:
+#		print(JSON.print(result, "\t"))
 	
 	match (request_type):
 		RequestType.LOGIN:
@@ -95,6 +113,8 @@ func _request_response(result, request_type):
 			_get_user_data_response(result)
 		RequestType.CREATE_IDENTITY:
 			_create_identity_response(result)
+		RequestType.MINT_TOKEN:
+			print(JSON.print(result, "\t"))
 			
 
 #-------------------------------------------------------------------------------
@@ -106,6 +126,7 @@ func _login_response(result):
 		var auth = result.data.EnjinOauth
 		if auth != null:
 			_user_id = auth.id
+			_user_name = auth.name
 			_bearer = auth.accessTokens[0].accessToken
 			_schema.set_bearer(_bearer)
 			
@@ -173,6 +194,7 @@ func _setup():
 		_schema.login_query.connect("graphql_response", self, "_request_response", [ RequestType.LOGIN ])
 		_schema.get_user_info.connect("graphql_response", self, "_request_response", [ RequestType.GET_USER_INFO ])
 		_schema.create_identity.connect("graphql_response", self, "_request_response", [ RequestType.CREATE_IDENTITY ])
+		_schema.mint_token.connect("graphql_response", self, "_request_response", [ RequestType.MINT_TOKEN ])
 		
 		_schema.get_app_secret_query.connect("graphql_response", self, "_get_app_secret_response")
 		_schema.retrieve_app_access_token_query.connect("graphql_response", self, "_retrieve_app_access_token_response")
