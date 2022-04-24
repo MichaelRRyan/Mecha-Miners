@@ -25,12 +25,22 @@ var port = 1909
 var max_players = 50
 var is_online = false # Stored as an alternative to state for quick checks.
 
-# 	[peer_id]: {
-# 		"user_id": [user_id],
-#		"identity_id": [identity_id],
-# 	}
-var _player_data = {
-}
+# _player_data = { 
+#	 [peer_id]: {
+# 		 "user_id": [user_id],
+#		 "identity_id": [identity_id],
+# 	 },
+# }
+var _player_data : Dictionary = {}
+
+# _create_identity_queue = [ 
+#	 { 
+#		 "peer_id": [ peer_id ], 
+#		 "identity_id": [ identity_id ], 
+#		 "eth_address": [ eth_address ],
+#	 },
+# ]
+var _create_identity_queue : Array = []
 
 
 # ------------------------------------------------------------------------------
@@ -59,6 +69,8 @@ func _setup_server():
 		# Logs in with the secret.
 		var secret = json.result
 		Enjin.login(secret.username, secret.password)
+		
+		var _r = Enjin.connect("create_identity_response", self, "_on_Enjin_create_identity_response")
 		
 	else:
 		print_debug("Error loading secret.json")
@@ -91,12 +103,16 @@ func close_connection():
 remote func identity_requested(user_id : int, eth_address : String) -> void:
 	var peer_id = get_tree().get_rpc_sender_id()
 	
-	if Enjin.is_connected("create_identity_response", self, "_on_Enjin_create_identity_response"):
-		Enjin.disconnect("create_identity_response", self, "_on_Enjin_create_identity_response")
-		
-	var _r = Enjin.connect("create_identity_response", self, "_on_Enjin_create_identity_response", [peer_id])
+	# Creates the identity if there's nothing on the queue.
+	if _create_identity_queue.empty():
+		Enjin.create_identity(user_id, eth_address)	
 	
-	Enjin.create_identity(user_id, eth_address)
+	# Adds the data to the queue.
+	_create_identity_queue.append({
+		"peer_id": peer_id,
+		"user_id": user_id,
+		"eth_address": eth_address,
+	})
 
 
 # ------------------------------------------------------------------------------
@@ -107,11 +123,20 @@ remote func login_registered(user_id : int, identity_id : int) -> void:
 
 
 # ------------------------------------------------------------------------------
-func _on_Enjin_create_identity_response(data, _errors, peer_id) -> void:
+func _on_Enjin_create_identity_response(data, _errors) -> void:
+	# Takes the peer id from the top element and pops it.
+	var peer_id = _create_identity_queue.pop_front().peer_id
+	
+	# Returns the appropriate response.
 	if data != null:
-		rpc_id(peer_id, "create_identity_response", data.id)
+		rpc_id(peer_id, "create_identity_response", data)
 	else:
-		rpc_id(peer_id, "create_identity_response", -1)
+		rpc_id(peer_id, "create_identity_response", null)
+	
+	# If the queue has more items, create the next identity.
+	if not _create_identity_queue.empty():
+		var item = _create_identity_queue.front()
+		Enjin.create_identity(item.user_id, item.eth_address)	
 		
 
 # ------------------------------------------------------------------------------
@@ -151,9 +176,9 @@ func request_identity(user_id : int, eth_address : String) -> void:
 	
 	
 # ------------------------------------------------------------------------------
-remote func create_identity_response(identity_id : int) -> void:
+remote func create_identity_response(identity) -> void:
 	if get_tree().get_rpc_sender_id() == SERVER_ID:
-		emit_signal("create_identity_response", identity_id)
+		emit_signal("create_identity_response", identity)
 
 
 # ------------------------------------------------------------------------------

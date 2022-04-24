@@ -23,6 +23,7 @@ onready var get_user_info = GraphQL.query("GetUserInfo", {
 		"id": "$id",
 	}).set_props([
 		"name",
+		"id",
 		"createdAt",
 		"updatedAt",
 		"isPlayer",
@@ -57,6 +58,10 @@ onready var create_identity = GraphQL.mutation("CreateIdentity", {
 		"createdAt",
 		"linkingCode",
 		"linkingCodeQr",
+		GQLQuery.new("app").set_props([
+			"id",
+			"name"
+		]),
 		GQLQuery.new("wallet").set_props([
 			"ethAddress",
 		]),

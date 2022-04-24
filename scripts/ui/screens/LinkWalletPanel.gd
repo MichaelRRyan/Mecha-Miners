@@ -20,11 +20,12 @@ func _on_LinkButton_pressed() -> void:
 
 
 # ------------------------------------------------------------------------------
-func _on_Network_create_identity_response(identity_id):
-	if identity_id == -1:
+func _on_Network_create_identity_response(identity):
+	if identity == null:
 		_display_error_message("Not a valid wallet address.")
 		
 	else:
+		Enjin.set_app_identity(identity)
 		_hide_all()
 		$AlreadyLinkedDialog.show()
 		emit_signal("wallet_linked_successfully")

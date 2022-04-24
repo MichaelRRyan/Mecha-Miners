@@ -25,6 +25,7 @@ var _initialised = false
 var _bearer : String = ""
 var _user_id : int = -1
 var _user_name : String = ""
+var _app_identity : Dictionary = { }
 
 
 #-------------------------------------------------------------------------------
@@ -59,8 +60,23 @@ func get_current_user_id() -> int:
 	
 	
 #-------------------------------------------------------------------------------
+func get_current_identity_id() -> int:
+	return _app_identity.id if not _app_identity.empty() else -1
+	
+	
+#-------------------------------------------------------------------------------
 func get_current_user_name() -> String:
 	return _user_name
+
+
+#-------------------------------------------------------------------------------
+func get_current_wallet_address() -> String:
+	return _app_identity.wallet.ethAddress if not _app_identity.empty() else ""
+
+
+#-------------------------------------------------------------------------------
+func set_app_identity(identity):
+	_app_identity = identity
 
 
 #-------------------------------------------------------------------------------
@@ -103,8 +119,8 @@ func mint_token(identity_id : int, app_id : int, token_id : String, recipient_ad
 # Response methods
 #-------------------------------------------------------------------------------
 func _request_response(result, request_type):
-#	if print_response:
-#		print(JSON.print(result, "\t"))
+	if print_response:
+		print(JSON.print(result, "\t"))
 	
 	match (request_type):
 		RequestType.LOGIN:
@@ -114,7 +130,8 @@ func _request_response(result, request_type):
 		RequestType.CREATE_IDENTITY:
 			_create_identity_response(result)
 		RequestType.MINT_TOKEN:
-			print(JSON.print(result, "\t"))
+			pass
+			#print(JSON.print(result, "\t"))
 			
 
 #-------------------------------------------------------------------------------
@@ -141,6 +158,13 @@ func _get_user_data_response(result):
 	else:
 		var info = result.data.EnjinUser
 		if info != null:
+			
+			# Finds the user's app identity if they're the current user.
+			if info.id == _user_id:
+				for identity in info.identities:
+					if identity.app.id == Enjin.APP_ID:
+						_app_identity = identity.duplicate()
+			
 			emit_signal("get_user_info_response", info, null)
 		
 		
@@ -152,6 +176,11 @@ func _create_identity_response(result):
 	else:
 		var info = result.data.CreateEnjinIdentity
 		if info != null:
+			
+			# If the new identity is for the current user in this app.
+			if info.user.id == _user_id and info.app.id == APP_ID:
+				_app_identity = info.duplicate()
+				
 			emit_signal("create_identity_response", info, null)
 
 

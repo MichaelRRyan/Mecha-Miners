@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://scenes/ui/screens/UIHelper.tscn" type="PackedScene" id=1]
 [ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=2]
@@ -6,52 +6,11 @@
 [ext_resource path="res://scenes/ui/screens/UIScreenBackground.tscn" type="PackedScene" id=4]
 [ext_resource path="res://assets/images/sprite_sheet.png" type="Texture" id=5]
 [ext_resource path="res://resources/fonts/ScreenTitleFont.tres" type="DynamicFont" id=6]
-[ext_resource path="res://resources/fonts/RegularFont.tres" type="DynamicFont" id=7]
 [ext_resource path="res://resources/fonts/SubtitleFont.tres" type="DynamicFont" id=8]
-
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 0.12549, 0.0823529, 0.176471, 0.588235 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0.449295, 0.420089, 0.494336, 0.705882 )
-
-[sub_resource type="StyleBoxFlat" id=7]
-draw_center = false
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color( 0.933333, 0.545098, 0.392157, 1 )
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id=11]
-draw_center = false
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color( 0.984314, 0.772549, 0.690196, 1 )
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
-expand_margin_left = 2.0
-expand_margin_right = 2.0
-expand_margin_top = 2.0
-expand_margin_bottom = 2.0
-
-[sub_resource type="StyleBoxFlat" id=8]
-bg_color = Color( 0.12549, 0.0823529, 0.176471, 0.588235 )
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color( 0.449295, 0.420089, 0.494336, 0.705882 )
+[ext_resource path="res://resources/style_boxes/ConsolePanel.tres" type="StyleBox" id=9]
+[ext_resource path="res://scenes/ui/components/ConsolePanel.tscn" type="PackedScene" id=10]
+[ext_resource path="res://resources/fonts/DescriptionFont.tres" type="DynamicFont" id=11]
+[ext_resource path="res://resources/themes/ShipMenuTheme.tres" type="Theme" id=12]
 
 [sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0.12549, 0.0823529, 0.176471, 0.588235 )
@@ -77,52 +36,49 @@ script = ExtResource( 3 )
 
 [node name="UIHelper" parent="." instance=ExtResource( 1 )]
 
-[node name="Console" type="Panel" parent="."]
-anchor_left = 0.1
-anchor_top = 0.1
-anchor_right = 0.9
-anchor_bottom = 0.9
-custom_styles/panel = SubResource( 6 )
+[node name="ConsolePanel" parent="." instance=ExtResource( 10 )]
 
-[node name="LeftPanel" type="VBoxContainer" parent="Console"]
+[node name="LeftPanel" type="VBoxContainer" parent="ConsolePanel"]
 anchor_left = 0.07
-anchor_top = 0.1
+anchor_top = 0.05
 anchor_right = 0.5
-anchor_bottom = 0.9
+anchor_bottom = 0.95
+margin_left = 3.8147e-06
 custom_constants/separation = 20
 
-[node name="Title" type="Label" parent="Console/LeftPanel"]
+[node name="Title" type="Label" parent="ConsolePanel/LeftPanel"]
 margin_right = 352.0
 margin_bottom = 38.0
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 8 )
 text = "Ship Control Panel"
+align = 1
 
-[node name="WelcomeMessage" type="HBoxContainer" parent="Console/LeftPanel"]
+[node name="WelcomeMessage" type="HBoxContainer" parent="ConsolePanel/LeftPanel"]
 margin_top = 58.0
 margin_right = 352.0
 margin_bottom = 84.0
 
-[node name="WelcomeLabel" type="Label" parent="Console/LeftPanel/WelcomeMessage"]
+[node name="WelcomeLabel" type="Label" parent="ConsolePanel/LeftPanel/WelcomeMessage"]
 margin_right = 172.0
 margin_bottom = 26.0
 size_flags_vertical = 1
 text = "Welcome back, "
 
-[node name="NameLabel" type="Label" parent="Console/LeftPanel/WelcomeMessage"]
+[node name="NameLabel" type="Label" parent="ConsolePanel/LeftPanel/WelcomeMessage"]
 margin_left = 176.0
 margin_right = 266.0
 margin_bottom = 26.0
 custom_colors/font_color = Color( 0.913725, 0.411765, 0.215686, 1 )
 text = "Captain"
 
-[node name="SentanceEndLabel" type="Label" parent="Console/LeftPanel/WelcomeMessage"]
+[node name="SentanceEndLabel" type="Label" parent="ConsolePanel/LeftPanel/WelcomeMessage"]
 margin_left = 270.0
 margin_right = 276.0
 margin_bottom = 26.0
 text = "!"
 
-[node name="WelcomeText2" type="Label" parent="Console/LeftPanel"]
+[node name="WelcomeText2" type="Label" parent="ConsolePanel/LeftPanel"]
 margin_top = 104.0
 margin_right = 352.0
 margin_bottom = 130.0
@@ -130,81 +86,87 @@ size_flags_vertical = 1
 text = "What would you like to do?"
 autowrap = true
 
-[node name="Menu" type="VBoxContainer" parent="Console/LeftPanel"]
+[node name="Menu" type="VBoxContainer" parent="ConsolePanel/LeftPanel"]
 margin_top = 150.0
 margin_right = 352.0
-margin_bottom = 384.0
+margin_bottom = 432.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource( 12 )
 custom_constants/separation = 10
 alignment = 1
 
-[node name="NavigateButton" type="Button" parent="Console/LeftPanel/Menu" groups=["button"]]
-margin_top = 32.0
+[node name="NavigateButton" type="Button" parent="ConsolePanel/LeftPanel/Menu" groups=["button"]]
+margin_top = 12.0
 margin_right = 352.0
-margin_bottom = 82.0
+margin_bottom = 62.0
 rect_min_size = Vector2( 0, 50 )
-theme = ExtResource( 2 )
-custom_fonts/font = ExtResource( 7 )
-custom_styles/hover = SubResource( 7 )
-custom_styles/focus = SubResource( 11 )
-custom_styles/normal = SubResource( 7 )
+focus_neighbour_top = NodePath("../ExitButton")
+focus_previous = NodePath("../ExitButton")
 text = "  Navigate"
 align = 0
 
-[node name="ShopButton" type="Button" parent="Console/LeftPanel/Menu" groups=["button"]]
-margin_top = 92.0
+[node name="ShopButton" type="Button" parent="ConsolePanel/LeftPanel/Menu" groups=["button"]]
+margin_top = 72.0
 margin_right = 352.0
-margin_bottom = 142.0
+margin_bottom = 122.0
 rect_min_size = Vector2( 0, 50 )
-theme = ExtResource( 2 )
-custom_fonts/font = ExtResource( 7 )
-custom_styles/hover = SubResource( 7 )
-custom_styles/focus = SubResource( 11 )
-custom_styles/normal = SubResource( 7 )
 text = "  Shop"
 align = 0
 
-[node name="EquipmentButton" type="Button" parent="Console/LeftPanel/Menu" groups=["button"]]
-margin_top = 152.0
+[node name="EquipmentButton" type="Button" parent="ConsolePanel/LeftPanel/Menu" groups=["button"]]
+margin_top = 132.0
 margin_right = 352.0
-margin_bottom = 202.0
+margin_bottom = 182.0
 rect_min_size = Vector2( 0, 50 )
-theme = ExtResource( 2 )
-custom_fonts/font = ExtResource( 7 )
-custom_styles/hover = SubResource( 7 )
-custom_styles/focus = SubResource( 11 )
-custom_styles/normal = SubResource( 7 )
 text = "  Equipment"
 align = 0
 
-[node name="RightPanel" type="Panel" parent="Console"]
+[node name="Spacing" type="Label" parent="ConsolePanel/LeftPanel/Menu"]
+margin_top = 192.0
+margin_right = 352.0
+margin_bottom = 209.0
+custom_fonts/font = ExtResource( 11 )
+
+[node name="ExitButton" type="Button" parent="ConsolePanel/LeftPanel/Menu" groups=["button"]]
+margin_top = 219.0
+margin_right = 352.0
+margin_bottom = 269.0
+rect_min_size = Vector2( 0, 50 )
+focus_neighbour_bottom = NodePath("../NavigateButton")
+focus_next = NodePath("../NavigateButton")
+text = "  Exit"
+align = 0
+
+[node name="RightPanel" type="Panel" parent="ConsolePanel"]
 anchor_left = 0.55
 anchor_top = 0.05
 anchor_right = 0.97
 anchor_bottom = 0.95
-custom_styles/panel = SubResource( 8 )
+margin_left = 3.05176e-05
+margin_right = 6.10352e-05
+custom_styles/panel = ExtResource( 9 )
 
-[node name="Content" type="Control" parent="Console/RightPanel"]
+[node name="Content" type="Control" parent="ConsolePanel/RightPanel"]
 anchor_left = 0.07
 anchor_top = 0.05
 anchor_right = 0.93
 anchor_bottom = 0.75
 
-[node name="Console" type="Panel" parent="Console/RightPanel"]
+[node name="Console" type="Panel" parent="ConsolePanel/RightPanel"]
 anchor_top = 0.8
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_styles/panel = SubResource( 9 )
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Console/RightPanel/Console"]
+[node name="HBoxContainer" type="HBoxContainer" parent="ConsolePanel/RightPanel/Console"]
 anchor_left = 0.05
 anchor_top = 0.1
 anchor_right = 0.95
 anchor_bottom = 0.9
 alignment = 1
 
-[node name="ElixiriteIcon" type="TextureRect" parent="Console/RightPanel/Console/HBoxContainer"]
+[node name="ElixiriteIcon" type="TextureRect" parent="ConsolePanel/RightPanel/Console/HBoxContainer"]
 margin_left = 34.0
 margin_right = 134.0
 margin_bottom = 69.0
@@ -213,7 +175,7 @@ size_flags_vertical = 3
 texture = SubResource( 10 )
 stretch_mode = 6
 
-[node name="QuantityLabel" type="Label" parent="Console/RightPanel/Console/HBoxContainer"]
+[node name="QuantityLabel" type="Label" parent="ConsolePanel/RightPanel/Console/HBoxContainer"]
 margin_left = 138.0
 margin_top = 9.0
 margin_right = 274.0
@@ -221,6 +183,7 @@ margin_bottom = 60.0
 custom_fonts/font = ExtResource( 6 )
 text = "* 1000"
 
-[connection signal="pressed" from="Console/LeftPanel/Menu/NavigateButton" to="." method="_on_NavigateButton_pressed"]
-[connection signal="pressed" from="Console/LeftPanel/Menu/ShopButton" to="." method="_on_ShopButton_pressed"]
-[connection signal="pressed" from="Console/LeftPanel/Menu/EquipmentButton" to="." method="_on_EquipmentButton_pressed"]
+[connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/NavigateButton" to="." method="_on_NavigateButton_pressed"]
+[connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/ShopButton" to="." method="_on_ShopButton_pressed"]
+[connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/EquipmentButton" to="." method="_on_EquipmentButton_pressed"]
+[connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/ExitButton" to="." method="_on_ExitButton_pressed"]

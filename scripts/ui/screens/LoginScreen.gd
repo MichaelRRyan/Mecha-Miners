@@ -31,31 +31,15 @@ func _on_Enjin_get_user_info_response(info, _error) -> void:
 	
 	# Checks the returned data is not null.
 	if info != null:
-		var identities = info.identities
+		var identity_id = Enjin.get_current_identity_id()
 		
-		# Checks if the user has any identities.
-		if identities.empty():
+		if identity_id != -1 and not Enjin.get_current_wallet_address().empty():
+			_login_tab.display_logged_in_dialog(info.name, identity_id)
+			_link_wallet_tab.display_already_linked_dialog()
+		else:
 			_login_tab.display_logged_in_dialog(info.name, -1)
 			_link_wallet_tab.display_connect_wallet_dialog(info.name)
 			$TabContainer.current_tab = 2
-		
-		else:
-			# Searches for an identity for this app.
-			var app_identity = null
-			for identity in identities:
-				if identity.app.id == Enjin.APP_ID:
-					app_identity = identity
-					break
-			
-			# Checks if an identity was found.
-			if app_identity != null and app_identity.wallet.ethAddress != null:
-				_login_tab.display_logged_in_dialog(info.name, app_identity.id)
-				_link_wallet_tab.display_already_linked_dialog()
-					
-			else:
-				_login_tab.display_logged_in_dialog(info.name, -1)
-				_link_wallet_tab.display_connect_wallet_dialog(info.name)
-				$TabContainer.current_tab = 2
 
 
 # ------------------------------------------------------------------------------
