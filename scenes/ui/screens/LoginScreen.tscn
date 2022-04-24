@@ -1,9 +1,15 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://scenes/ui/screens/UIScreenBackground.tscn" type="PackedScene" id=1]
 [ext_resource path="res://resources/fonts/ScreenTitleFont.tres" type="DynamicFont" id=2]
 [ext_resource path="res://resources/themes/MenuTheme.tres" type="Theme" id=3]
 [ext_resource path="res://scripts/ui/screens/LoginScreen.gd" type="Script" id=4]
+[ext_resource path="res://scenes/ui/screens/LoginPanel.tscn" type="PackedScene" id=5]
+[ext_resource path="res://resources/fonts/DescriptionFont.tres" type="DynamicFont" id=6]
+[ext_resource path="res://scenes/ui/screens/LinkWalletPanel.tscn" type="PackedScene" id=7]
+[ext_resource path="res://resources/fonts/LinkFont.tres" type="DynamicFont" id=8]
+[ext_resource path="res://resources/fonts/TabFont.tres" type="DynamicFont" id=9]
+[ext_resource path="res://scripts/ui/screens/GettingStartedPanel.gd" type="Script" id=10]
 
 [node name="LoginScreen" type="Control"]
 anchor_right = 1.0
@@ -47,64 +53,110 @@ margin_left = -4.0
 margin_top = -24.0
 margin_right = 4.0
 margin_bottom = 24.0
-
-[node name="Login with Enjin" type="Tabs" parent="TabContainer"]
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_top = 36.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Login with Enjin"]
-anchor_left = 0.1
-anchor_top = 0.1
-anchor_right = 0.9
-anchor_bottom = 0.9
-custom_constants/separation = 10
-alignment = 1
-
-[node name="UsernameLabel" type="Label" parent="TabContainer/Login with Enjin/VBoxContainer"]
-margin_right = 497.0
-margin_bottom = 26.0
-text = "Email"
-align = 1
-
-[node name="EmailField" type="LineEdit" parent="TabContainer/Login with Enjin/VBoxContainer"]
-margin_top = 36.0
-margin_right = 497.0
-margin_bottom = 66.0
-align = 1
-
-[node name="PasswordLabel" type="Label" parent="TabContainer/Login with Enjin/VBoxContainer"]
-margin_top = 76.0
-margin_right = 497.0
-margin_bottom = 131.0
-text = "
-Password"
-align = 1
-
-[node name="PasswordField" type="LineEdit" parent="TabContainer/Login with Enjin/VBoxContainer"]
-margin_top = 141.0
-margin_right = 497.0
-margin_bottom = 171.0
-align = 1
-secret = true
-
-[node name="ErrorLabel" type="Label" parent="TabContainer/Login with Enjin/VBoxContainer"]
-margin_top = 181.0
-margin_right = 497.0
-margin_bottom = 207.0
-custom_colors/font_color = Color( 1, 0.286275, 0.286275, 1 )
-align = 1
-
-[node name="LoginButton" type="Button" parent="TabContainer/Login with Enjin/VBoxContainer"]
-margin_top = 217.0
-margin_right = 497.0
-margin_bottom = 255.0
-text = "Login"
+custom_fonts/font = ExtResource( 9 )
 
 [node name="Getting Started" type="Tabs" parent="TabContainer"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = 36.0
+margin_top = 29.0
+script = ExtResource( 10 )
 
-[connection signal="pressed" from="TabContainer/Login with Enjin/VBoxContainer/LoginButton" to="." method="_on_LoginButton_pressed"]
+[node name="VBoxContainer" type="VBoxContainer" parent="TabContainer/Getting Started"]
+anchor_left = 0.1
+anchor_top = 0.08
+anchor_right = 0.9
+anchor_bottom = 0.9
+alignment = 1
+
+[node name="Label" type="Label" parent="TabContainer/Getting Started/VBoxContainer"]
+margin_right = 497.0
+margin_bottom = 77.0
+custom_fonts/font = ExtResource( 6 )
+text = "To play online, you'll need an Enjin account on the Kovan network and a wallet. Start by signing up for an Enjin account at the link below:
+"
+autowrap = true
+
+[node name="LinkContainer" type="HBoxContainer" parent="TabContainer/Getting Started/VBoxContainer"]
+margin_top = 81.0
+margin_right = 497.0
+margin_bottom = 100.0
+alignment = 1
+
+[node name="RegisterLink" type="Button" parent="TabContainer/Getting Started/VBoxContainer/LinkContainer"]
+margin_left = 157.0
+margin_right = 339.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 182, 0 )
+hint_tooltip = "https://kovan.cloud.enjin.io/signup"
+custom_colors/font_color_focus = Color( 0.545098, 0.772549, 0.984314, 1 )
+custom_colors/font_color = Color( 0.431373, 0.709804, 0.964706, 1 )
+custom_colors/font_color_hover = Color( 0.545098, 0.772549, 0.984314, 1 )
+custom_colors/font_color_pressed = Color( 0.678431, 0.823529, 0.952941, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Register with Enjin"
+
+[node name="Label3" type="Label" parent="TabContainer/Getting Started/VBoxContainer"]
+margin_top = 104.0
+margin_right = 497.0
+margin_bottom = 201.0
+custom_fonts/font = ExtResource( 6 )
+text = "
+Then download the Enjin Wallet app and create a wallet, you'll need that later. Click the appropriate link below to download the app for your device:
+"
+autowrap = true
+
+[node name="LinkContainer2" type="HBoxContainer" parent="TabContainer/Getting Started/VBoxContainer"]
+margin_top = 205.0
+margin_right = 497.0
+margin_bottom = 224.0
+custom_constants/separation = 40
+alignment = 1
+
+[node name="AndroidLink" type="Button" parent="TabContainer/Getting Started/VBoxContainer/LinkContainer2"]
+margin_left = 172.0
+margin_right = 250.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 78, 0 )
+hint_tooltip = "https://play.google.com/store/apps/details?id=com.enjin.mobile.wallet&referrer=utm_source%3Dorganic_software_wallet%26utm_medium%3DOrganic%26utm_term%3Dsoftware_wallet_LP%26utm_content%3DDownload_Icon"
+custom_colors/font_color_focus = Color( 0.545098, 0.772549, 0.984314, 1 )
+custom_colors/font_color = Color( 0.431373, 0.709804, 0.964706, 1 )
+custom_colors/font_color_hover = Color( 0.545098, 0.772549, 0.984314, 1 )
+custom_colors/font_color_pressed = Color( 0.678431, 0.823529, 0.952941, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "Android"
+
+[node name="IOSLink" type="Button" parent="TabContainer/Getting Started/VBoxContainer/LinkContainer2"]
+margin_left = 290.0
+margin_right = 325.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 35, 0 )
+hint_tooltip = "https://apps.apple.com/us/app/enjin-cryptocurrency-wallet/id1349078375?ls=1"
+custom_colors/font_color_focus = Color( 0.545098, 0.772549, 0.984314, 1 )
+custom_colors/font_color = Color( 0.431373, 0.709804, 0.964706, 1 )
+custom_colors/font_color_hover = Color( 0.545098, 0.772549, 0.984314, 1 )
+custom_colors/font_color_pressed = Color( 0.678431, 0.823529, 0.952941, 1 )
+custom_fonts/font = ExtResource( 8 )
+text = "IOS"
+
+[node name="Label4" type="Label" parent="TabContainer/Getting Started/VBoxContainer"]
+margin_top = 228.0
+margin_right = 497.0
+margin_bottom = 265.0
+custom_fonts/font = ExtResource( 6 )
+text = "
+Once all that's done, head over to the 'Login with Enjin' tab!"
+autowrap = true
+
+[node name="Login with Enjin" parent="TabContainer" instance=ExtResource( 5 )]
+visible = false
+
+[node name="Link Wallet" parent="TabContainer" instance=ExtResource( 7 )]
+visible = false
+
+[connection signal="pressed" from="BackButton" to="." method="_on_BackButton_pressed"]
+[connection signal="pressed" from="TabContainer/Getting Started/VBoxContainer/LinkContainer/RegisterLink" to="TabContainer/Getting Started" method="_on_RegisterLink_pressed"]
+[connection signal="pressed" from="TabContainer/Getting Started/VBoxContainer/LinkContainer2/AndroidLink" to="TabContainer/Getting Started" method="_on_AndroidLink_pressed"]
+[connection signal="pressed" from="TabContainer/Getting Started/VBoxContainer/LinkContainer2/IOSLink" to="TabContainer/Getting Started" method="_on_IOSLink_pressed"]
+[connection signal="user_logged_in" from="TabContainer/Login with Enjin" to="." method="_on_LoginPanel_user_logged_in"]
+[connection signal="user_logged_out" from="TabContainer/Login with Enjin" to="." method="_on_LoginPanel_user_logged_out"]
+[connection signal="wallet_linked_successfully" from="TabContainer/Link Wallet" to="." method="_on_LinkWalletPanel_wallet_linked_successfully"]
