@@ -32,16 +32,6 @@ section:nth-child(even) .outline-button:hover {
     color: var(--landing-background-color);
 }
 
-#about-me-section .outline-button {
-    color: var(--about-me-text-color);
-    border-color: var(--about-me-text-color);
-}
-
-#about-me-section .outline-button:hover {
-    color: var(--about-me-background-color) !important;
-    background-color: var(--about-me-text-color);
-}
-
 .tag-button {
     color: var(--tag-button-color);
     padding: 12px 12px;
@@ -102,11 +92,6 @@ section:nth-child(odd) .section-button {
 
 #landing-section .section-button {
     color: var(--landing-background-color);
-    
-}
-
-#about-me-section .section-button {
-    color: var(--about-me-background-color);
     
 }
 

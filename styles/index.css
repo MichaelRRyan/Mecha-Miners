@@ -150,18 +150,10 @@ h3 {
 }
 
 #about-me-section {
-    font-family: 'Indie Flower', cursive;
     font-size: 1.5em;
-    background-color: var(--about-me-background-color);
-    color: var(--about-me-text-color);
-}
-
-#about-me-section a {
-    color: var(--landing-background-color);
 }
 
 #references-section {
-    font-family: 'Indie Flower', cursive;
     font-size: 1.4em;
 }
 
