@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/world/Terrain.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ui/components/Cursor.tscn" type="PackedScene" id=2]
@@ -7,7 +7,25 @@
 [ext_resource path="res://scenes/world/WorldGenerator.tscn" type="PackedScene" id=7]
 [ext_resource path="res://scenes/ui/components/GUIManager.tscn" type="PackedScene" id=9]
 
+[sub_resource type="QuadMesh" id=1]
+size = Vector2( 100, 100 )
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.253112, 0.518672, 0.746888, 1 )
+colors = PoolColorArray( 0.187003, 0.111379, 0.236523, 1, 0.39668, 0.203841, 0.373554, 1, 0.67793, 0.223902, 0.474504, 1, 0.898039, 0.670588, 0.572549, 1, 1, 0.304384, 0.0177736, 1 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
 [node name="World" type="Node2D"]
+
+[node name="BackgroundGradient" type="MeshInstance2D" parent="."]
+position = Vector2( 1204.17, -756.695 )
+rotation = 1.5708
+scale = Vector2( 38.3013, 27.8617 )
+z_index = -4096
+mesh = SubResource( 1 )
+texture = SubResource( 3 )
 
 [node name="GUIManager" parent="." groups=["gui_manager"] instance=ExtResource( 9 )]
 

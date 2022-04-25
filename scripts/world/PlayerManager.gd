@@ -49,8 +49,8 @@ func _ready():
 		_main_camera.limit_top = int(drop_height + camera_buffer)
 	
 	# If offline, spawn the first few entities.
-	if Network.state == Network.State.Offline:
-		_spawn_first_entities()
+	#if Network.state == Network.State.Offline:
+	_spawn_first_entities()
 	
 	
 # ------------------------------------------------------------------------------
