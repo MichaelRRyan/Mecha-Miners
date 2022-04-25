@@ -40,14 +40,19 @@ func _ready() -> void:
 	if not terrain_container.empty():
 		_terrain = terrain_container.front()
 	
-		var cell_pos = _terrain.world_to_map(global_position)
-		_queue.append(cell_pos)
-		_check_surroundings()
+		call_deferred("_setup_cells")
 	
 	# Gets the parent as the brain if it's an AI brain.
 	var parent = get_parent()
 	if parent != null and parent is AIBrain:
 		_brain = parent 
+
+
+#-------------------------------------------------------------------------------
+func _setup_cells():
+	var cell_pos = _terrain.world_to_map(global_position)
+	_queue.append(cell_pos)
+	_check_surroundings()
 
 
 #-------------------------------------------------------------------------------
