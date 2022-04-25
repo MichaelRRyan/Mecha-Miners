@@ -397,7 +397,6 @@ func _set_camera_bounds():
 	if cams and not cams.empty():
 		var cam : Camera2D = cams.front()
 		
-		cam.limit_top = -100
 		cam.limit_left = 0
 		cam.limit_right = width * 16
 		cam.limit_bottom = (cave_height + ground_height) * 16

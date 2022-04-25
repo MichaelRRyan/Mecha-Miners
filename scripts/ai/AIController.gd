@@ -143,7 +143,7 @@ func _disable(behaviour : Behaviour) -> void:
 func _ready() -> void:
 	subject = get_parent()
 	var _r = subject.connect("died", self, "_on_subject_died")
-	add_behaviour(IdleBehaviour.new())
+	call_deferred("add_behaviour", IdleBehaviour.new())
 	
 	# Uses noise to get a random number that tends towards a middle point of 0.5.
 	var noise = OpenSimplexNoise.new()
@@ -187,4 +187,11 @@ func _process(delta):
 		
 		
 #-------------------------------------------------------------------------------
-	
+func _on_Entity_drop_pod_landed():
+	if subject == null:
+		subject = get_parent()
+		
+	subject.drop_pod.exit()
+
+		
+#-------------------------------------------------------------------------------

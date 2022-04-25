@@ -9,6 +9,7 @@ signal new_velocity(velocity)
 signal respawn_complete()
 signal sync_began(sync_data)
 signal sync_data_recieved(sync_data)
+signal drop_pod_landed()
 
 export var health : float = 5.0
 
@@ -34,6 +35,7 @@ var direction : float = 0.0
 var _vacuumed_items = []
 var _item_vacuum_speed = 5.0
 
+var drop_pod = null
 var inventory : Inventory = Inventory.new()
 var equipped : Array = [] # Array<Tool>
 var _drills : Array = [] # Array<Tool>
@@ -335,6 +337,11 @@ func _on_ItemVacuum_body_entered(body):
 func _on_ItemVacuum_body_exited(body):
 	if _vacuumed_items.has(body):
 		_vacuumed_items.erase(body)
+
+
+# -----------------------------------------------------------------------------
+func _on_DropPod_landed():
+	emit_signal("drop_pod_landed")
 
 
 # -----------------------------------------------------------------------------

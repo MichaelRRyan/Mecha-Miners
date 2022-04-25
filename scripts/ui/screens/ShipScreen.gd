@@ -11,8 +11,8 @@ func _ready():
 
 # ------------------------------------------------------------------------------
 func _on_NavigateButton_pressed():
-	if get_tree().change_scene("res://scenes/ui/screens/PlanetNavigationScreen.tscn") != OK:
-		print("Error changing to PlanetNavigationScreen.")
+	if get_tree().change_scene("res://scenes/world/World.tscn") != OK:
+		print("Error changing to World.")
 	
 
 # ------------------------------------------------------------------------------

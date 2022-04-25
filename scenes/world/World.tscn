@@ -1,20 +1,33 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://scenes/world/Terrain.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scenes/ui/components/Cursor.tscn" type="PackedScene" id=2]
-[ext_resource path="res://scenes/entities/BattleMinerBot.tscn" type="PackedScene" id=3]
 [ext_resource path="res://scripts/world/PlayerManager.gd" type="Script" id=4]
 [ext_resource path="res://scripts/world/BulletManager.gd" type="Script" id=5]
-[ext_resource path="res://scenes/entities/Player.tscn" type="PackedScene" id=6]
 [ext_resource path="res://scenes/world/WorldGenerator.tscn" type="PackedScene" id=7]
-[ext_resource path="res://scripts/misc/FollowPoint.gd" type="Script" id=8]
 [ext_resource path="res://scenes/ui/components/GUIManager.tscn" type="PackedScene" id=9]
-[ext_resource path="res://scenes/world/DropPod.tscn" type="PackedScene" id=10]
-[ext_resource path="res://scenes/entities/MinerBot.tscn" type="PackedScene" id=11]
+
+[sub_resource type="QuadMesh" id=1]
+size = Vector2( 100, 100 )
+
+[sub_resource type="Gradient" id=2]
+offsets = PoolRealArray( 0, 0.253112, 0.518672, 0.746888, 1 )
+colors = PoolColorArray( 0.187003, 0.111379, 0.236523, 1, 0.39668, 0.203841, 0.373554, 1, 0.67793, 0.223902, 0.474504, 1, 0.898039, 0.670588, 0.572549, 1, 1, 0.304384, 0.0177736, 1 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
 
 [node name="World" type="Node2D"]
 
-[node name="GUIManager" parent="." instance=ExtResource( 9 )]
+[node name="BackgroundGradient" type="MeshInstance2D" parent="."]
+position = Vector2( 1204.17, -756.695 )
+rotation = 1.5708
+scale = Vector2( 38.3013, 27.8617 )
+z_index = -4096
+mesh = SubResource( 1 )
+texture = SubResource( 3 )
+
+[node name="GUIManager" parent="." groups=["gui_manager"] instance=ExtResource( 9 )]
 
 [node name="Terrain" parent="." instance=ExtResource( 1 )]
 
@@ -26,51 +39,17 @@ script = ExtResource( 4 )
 [node name="SpawnPoint" type="Node2D" parent="PlayerManager"]
 position = Vector2( 957, -42 )
 
-[node name="Player" parent="PlayerManager" instance=ExtResource( 6 )]
-_max_speed = 100.0
-
-[node name="FollowPoint" type="Node2D" parent="PlayerManager/Player"]
-script = ExtResource( 8 )
-dampener = 0.25
-
-[node name="Camera2D" type="Camera2D" parent="PlayerManager/Player/FollowPoint" groups=["main_camera"]]
+[node name="Camera2D" type="Camera2D" parent="PlayerManager" groups=["main_camera"]]
 scale = Vector2( 2, 2 )
 current = true
 zoom = Vector2( 0.75, 0.75 )
 limit_left = 0
-limit_top = -100
+limit_top = -2900
 limit_right = 2400
 limit_bottom = 5600
 limit_smoothed = true
 smoothing_enabled = true
 smoothing_speed = 3.8
-
-[node name="BattleMinerBot" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 327, 43 )
-
-[node name="BattleMinerBot2" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 863, 55 )
-
-[node name="BattleMinerBot3" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 1389, 89 )
-
-[node name="BattleMinerBot4" parent="PlayerManager" instance=ExtResource( 3 )]
-position = Vector2( 2065, 69 )
-
-[node name="MinerBot" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 2257, 45 )
-
-[node name="MinerBot2" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 161, 57 )
-
-[node name="MinerBot3" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 575, 39 )
-
-[node name="MinerBot4" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 1067, 67 )
-
-[node name="MinerBot5" parent="PlayerManager" instance=ExtResource( 11 )]
-position = Vector2( 1705, 93 )
 
 [node name="BulletManager" type="Node2D" parent="." groups=["bullet_manager"]]
 script = ExtResource( 5 )
@@ -80,10 +59,4 @@ pause_mode = 2
 
 [node name="Particles" type="Node2D" parent="." groups=["particle_container"]]
 
-[node name="DropPod" parent="." instance=ExtResource( 10 )]
-position = Vector2( 960, -53 )
-
 [connection signal="menu_toggled" from="GUIManager" to="Cursor" method="_on_GUIManager_menu_toggled"]
-[connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
-[connection signal="new_velocity" from="PlayerManager/Player" to="PlayerManager/Player/FollowPoint" method="_on_Player_new_velocity"]
-[connection signal="menu_toggled" from="DropPod" to="GUIManager" method="_on_DropPod_menu_toggled"]
