@@ -2,14 +2,19 @@ extends KinematicBody2D
 
 signal new_velocity()
 signal menu_toggled()
+signal player_exited(player)
 
 export var gravity = 60.0
 export var max_vertical_speed = 400.0
+
+var player = null
+var follow_point = null
 
 var velocity = Vector2.ZERO
 var player_in_range = false
 var ground_height = -1
 var _landed = false
+var _driver_inside = true
 
 var _terrain : Terrain = null
 
@@ -36,8 +41,18 @@ func _on_PlayerDetector_body_exited(body):
 
 # ------------------------------------------------------------------------------
 func _input(event):
-	if event.is_action_pressed("interact"):
-		emit_signal("menu_toggled")
+	if _landed and event.is_action_pressed("interact"):
+		if _driver_inside:
+			_driver_inside = false
+			emit_signal("player_exited", player)
+			player.position = position
+			remove_child(follow_point)
+			player.add_child(follow_point)
+			follow_point.position = Vector2.ZERO
+			player.connect("new_velocity", follow_point, "_on_Target_new_velocity")
+			
+		elif player_in_range:
+			emit_signal("menu_toggled")
 
 
 # ------------------------------------------------------------------------------

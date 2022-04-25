@@ -2,13 +2,14 @@ extends Node2D
 
 onready var PlayerScene = preload("res://scenes/entities/Player.tscn")
 onready var FollowPointScene = preload("res://scenes/entities/FollowPoint.tscn")
-
 onready var BattleMinerBotScene = preload("res://scenes/entities/BattleMinerBot.tscn")
 onready var MinerBotScene = preload("res://scenes/entities/MinerBot.tscn")
-
 onready var DropPodScene = preload("res://scenes/world/DropPod.tscn")
 
 export var base_player_health : float = 5.0
+export var drop_height : float = -2000.0
+export var camera_buffer : float = 100.0
+export var level_top : float = -100.0
 
 var spawn_point : Vector2 = Vector2.ZERO
 var players = {} # Peer id: player instance
@@ -47,6 +48,7 @@ func _ready():
 	var main_cameras = get_tree().get_nodes_in_group("main_camera")
 	if main_cameras != null and not main_cameras.empty():
 		_main_camera = main_cameras.front()
+		_main_camera.limit_top = int(drop_height + camera_buffer)
 	
 	# If offline, spawn the first few entities.
 	if Network.state == Network.State.Offline:
@@ -62,19 +64,22 @@ func _spawn_first_entities():
 	# Defines the world width and left/right buffer.
 	var world_width = 150
 	var buffer = 10
-	var spawn_height = -3000
 	
 	# Spawns and positions the drop pod.
 	_local_drop_pod = DropPodScene.instance()
 	add_child(_local_drop_pod)
+	_local_drop_pod.connect("player_exited", self, "_on_DropPod_player_exited")
 	
 	var x = randi() % (world_width - buffer * 2) + buffer
-	_local_drop_pod.position = Vector2(x * 16.0, spawn_height)
+	_local_drop_pod.position = Vector2(x * 16.0, drop_height)
 	
 	# Spawns the follow point and adds it to the drop pod.
 	_local_follow_point = FollowPointScene.instance()
 	_local_drop_pod.add_child(_local_follow_point)
 	_local_drop_pod.connect("new_velocity", _local_follow_point, "_on_Target_new_velocity")
+	
+	_local_drop_pod.player = _local_player
+	_local_drop_pod.follow_point = _local_follow_point
 	
 	# Adds the camera to the drop pod's follow point.
 	remove_child(_main_camera)
@@ -184,5 +189,10 @@ func _input(event):
 						next_entity.add_child(_main_camera)
 						_main_camera.position = Vector2.ZERO
 						
+
+#-------------------------------------------------------------------------------
+func _on_DropPod_player_exited(player):
+	add_child(player)
+
 
 #-------------------------------------------------------------------------------
