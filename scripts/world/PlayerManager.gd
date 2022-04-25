@@ -12,7 +12,7 @@ onready var DropPodScene = preload("res://scenes/world/DropPod.tscn")
 export var base_player_health : float = 5.0
 export var drop_height : float = -2000.0
 export var camera_buffer : float = 100.0
-export var level_top : float = -100.0
+export var level_top : int = -100
 
 var spawn_point : Vector2 = Vector2.ZERO
 var players = {} # Peer id: player instance
@@ -21,7 +21,7 @@ var _main_camera : Camera2D = null
 var _focused_entity_id = 0
 
 var _local_player = null
-var _local_follow_point = null
+var _cam_follow_point = null
 var _local_drop_pod = null
 
 var _free_drop_positons = []
@@ -65,16 +65,18 @@ func _spawn_first_entities():
 	_spawn_entity_and_drop(_local_player, _local_drop_pod)
 	
 	# Spawns the follow point and adds it to the drop pod.
-	_local_follow_point = FollowPointScene.instance()
-	add_child(_local_follow_point)
-	_local_follow_point.set_target(_local_drop_pod)
-	_local_drop_pod.follow_point = _local_follow_point
+	_cam_follow_point = FollowPointScene.instance()
+	add_child(_cam_follow_point)
+	_cam_follow_point.set_target(_local_drop_pod)
+	_local_drop_pod.follow_point = _cam_follow_point
 	_local_drop_pod.is_local = true
 	
 	# Adds the camera to the drop pod's follow point.
 	remove_child(_main_camera)
-	_local_follow_point.add_child(_main_camera)
+	_cam_follow_point.add_child(_main_camera)
 	_main_camera.position = Vector2.ZERO
+	
+	_local_drop_pod.connect("landed", self, "_on_local_DropPod_landed")
 	
 	# Gets the main camera.
 	var gui_managers = get_tree().get_nodes_in_group("gui_manager")
@@ -100,6 +102,7 @@ func _spawn_entity_and_drop(entity, drop_pod):
 	add_child(drop_pod)
 	drop_pod.connect("player_exited", self, "_on_DropPod_player_exited")
 	drop_pod.connect("player_entered", self, "_on_DropPod_player_entered")
+	drop_pod.connect("landed", entity, "_on_DropPod_landed")
 	
 	# Positions the drop pod in an empty spot.
 	var x = _free_drop_positons[randi() % _free_drop_positons.size()]
@@ -169,7 +172,9 @@ func create_player(peer_id):
 
 # ------------------------------------------------------------------------------
 func _on_player_died(player : Node2D):
-	player.position = spawn_point
+	remove_child(player)
+	_cam_follow_point.set_target(_local_drop_pod)
+	player.position = player.drop_pod.position
 	player.health = base_player_health
 	
 	var respawn_timer = Timer.new()
@@ -181,8 +186,10 @@ func _on_player_died(player : Node2D):
 
 # ------------------------------------------------------------------------------
 func _on_respawn_timer_timout(player : Node2D, respawn_timer : Timer):
+	add_child(player)
 	player.respawn_complete()
 	respawn_timer.queue_free()
+	_cam_follow_point.set_target(player)
 
 
 # ------------------------------------------------------------------------------
@@ -233,4 +240,9 @@ func _on_DropPod_player_entered(player):
 	remove_child(player)
 	
 	
+#-------------------------------------------------------------------------------
+func _on_local_DropPod_landed():
+	_main_camera.limit_top = level_top
+
+
 #-------------------------------------------------------------------------------

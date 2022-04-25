@@ -5,6 +5,7 @@ signal menu_opened()
 signal menu_closed()
 signal player_entered(player)
 signal player_exited(player)
+signal landed()
 
 const EXIT_TEXT = "Press 'E' to exit the Drop Pod"
 const ENTER_TEXT = "Press 'E' to enter the Drop Pod"
@@ -24,6 +25,8 @@ var _driver_inside = true
 
 var _terrain : Terrain = null
 
+onready var _instructions : Label = get_node("Holder/InstructionLabel")
+
 
 # -----------------------------------------------------------------------------
 func _ready():
@@ -39,8 +42,8 @@ func _on_PlayerDetector_body_entered(body):
 		player_in_range = true
 		
 		if is_local:
-			$InstructionLabel.text = ENTER_TEXT
-			$InstructionLabel.show()
+			_instructions.text = ENTER_TEXT
+			_instructions.show()
 	
 
 # ------------------------------------------------------------------------------
@@ -50,7 +53,7 @@ func _on_PlayerDetector_body_exited(body):
 		player_in_range = false
 		
 		if is_local:
-			$InstructionLabel.hide()
+			_instructions.hide()
 
 
 # ------------------------------------------------------------------------------
@@ -134,11 +137,11 @@ func _handle_rays():
 		_landed = true
 		$ParticlesLarge.emitting = false
 		$ParticlesSmall.emitting = false
-		player.on_drop_pod_landed()
+		emit_signal("landed")
 		
 		if is_local:
-			$InstructionLabel.text = EXIT_TEXT
-			$InstructionLabel.show()
+			_instructions.text = EXIT_TEXT
+			_instructions.show()
 	
 	
 # ------------------------------------------------------------------------------

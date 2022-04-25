@@ -122,7 +122,10 @@ cast_to = Vector2( 0, 8 )
 position = Vector2( 24, 30 )
 cast_to = Vector2( 0, 8 )
 
-[node name="InstructionLabel" type="Label" parent="."]
+[node name="Holder" type="Node2D" parent="."]
+z_index = 4096
+
+[node name="InstructionLabel" type="Label" parent="Holder"]
 visible = false
 anchor_left = 0.5
 anchor_right = 0.5

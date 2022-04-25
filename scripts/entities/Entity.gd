@@ -340,7 +340,7 @@ func _on_ItemVacuum_body_exited(body):
 
 
 # -----------------------------------------------------------------------------
-func on_drop_pod_landed():
+func _on_DropPod_landed():
 	emit_signal("drop_pod_landed")
 
 
