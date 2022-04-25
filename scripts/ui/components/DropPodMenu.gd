@@ -1,6 +1,7 @@
 extends Control
 
 signal gems_amount_changed(amount)
+signal return_to_ship()
 
 signal menu_closed
 
@@ -53,6 +54,13 @@ func _on_WithdrawAll_pressed():
 
 # ------------------------------------------------------------------------------
 func _on_ReturnToShip_pressed():
+	emit_signal("return_to_ship")
+
+
+# ------------------------------------------------------------------------------
+func _on_DropPod_left_planet():
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	
 	# Moves the contents of the drop pod to the ship.
 	var size = drop_pod_inventory.size
 	for i in range(0, size):

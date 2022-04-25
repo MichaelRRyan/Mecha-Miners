@@ -10,8 +10,8 @@ onready var MinerBotScene = preload("res://scenes/entities/MinerBot.tscn")
 onready var DropPodScene = preload("res://scenes/world/DropPod.tscn")
 
 export var base_player_health : float = 5.0
-export var drop_height : float = -2000.0
-export var camera_buffer : float = 100.0
+export var drop_height : float = -2800.0
+export var camera_buffer : float = 800.0
 export var level_top : int = -100
 
 var spawn_point : Vector2 = Vector2.ZERO
@@ -84,7 +84,11 @@ func _spawn_first_entities():
 		var gui_manager = gui_managers.front()
 		var _r = _local_drop_pod.connect("menu_opened", gui_manager, "_on_DropPod_menu_opened")
 		_r = _local_drop_pod.connect("menu_closed", gui_manager, "_on_DropPod_menu_closed")
+		_r = _local_drop_pod.connect("left_planet", gui_manager, "_on_DropPod_left_planet")
+		_r = gui_manager.connect("return_to_ship", _local_drop_pod, "_on_DropPodMenu_return_to_ship")
+		_r = gui_manager.connect("return_to_ship", self, "_on_DropPodMenu_return_to_ship")
 		_r = _local_player.connect("crystal_amount_changed", gui_manager, "_on_Player_crystal_amount_changed")
+		
 	
 	# Spawns 2 to 5 bots.
 	var num_bots = randi() % 4 + 2
@@ -112,6 +116,7 @@ func _spawn_entity_and_drop(entity, drop_pod):
 	# Assigned the necessary references.
 	drop_pod.player = entity
 	entity.drop_pod = drop_pod
+	drop_pod.max_height = drop_height
 	
 	_entities.append(entity)
 	var _r = entity.connect("died", self, "_on_player_died", [entity])
@@ -123,7 +128,7 @@ func _mark_drop_pos_taken(x_cell):
 	var world_min = SPAWN_BUFFER
 	var world_max = WORLD_WIDTH - SPAWN_BUFFER * 2
 	
-	for x in range(max(world_min, x_cell - 3), min(world_max, x_cell + 2)):
+	for x in range(max(world_min, x_cell - 3), min(world_max, x_cell + 3)):
 		if _free_drop_positons.has(x):
 			_free_drop_positons.erase(x)
 	
@@ -172,8 +177,10 @@ func create_player(peer_id):
 
 # ------------------------------------------------------------------------------
 func _on_player_died(player : Node2D):
+	if player == _local_player:
+		_cam_follow_point.set_target(_local_drop_pod)
+	
 	remove_child(player)
-	_cam_follow_point.set_target(_local_drop_pod)
 	player.position = player.drop_pod.position
 	player.health = base_player_health
 	
@@ -189,7 +196,9 @@ func _on_respawn_timer_timout(player : Node2D, respawn_timer : Timer):
 	add_child(player)
 	player.respawn_complete()
 	respawn_timer.queue_free()
-	_cam_follow_point.set_target(player)
+	
+	if player == _local_player:
+		_cam_follow_point.set_target(player)
 
 
 # ------------------------------------------------------------------------------
@@ -245,4 +254,9 @@ func _on_local_DropPod_landed():
 	_main_camera.limit_top = level_top
 
 
+#-------------------------------------------------------------------------------
+func _on_DropPodMenu_return_to_ship():
+	_main_camera.limit_top = int(drop_height + camera_buffer)
+	
+	
 #-------------------------------------------------------------------------------
