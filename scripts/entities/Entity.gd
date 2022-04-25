@@ -9,6 +9,7 @@ signal new_velocity(velocity)
 signal respawn_complete()
 signal sync_began(sync_data)
 signal sync_data_recieved(sync_data)
+signal drop_pod_landed()
 
 export var health : float = 5.0
 
@@ -336,6 +337,11 @@ func _on_ItemVacuum_body_entered(body):
 func _on_ItemVacuum_body_exited(body):
 	if _vacuumed_items.has(body):
 		_vacuumed_items.erase(body)
+
+
+# -----------------------------------------------------------------------------
+func on_drop_pod_landed():
+	emit_signal("drop_pod_landed")
 
 
 # -----------------------------------------------------------------------------

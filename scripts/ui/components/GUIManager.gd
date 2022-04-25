@@ -12,14 +12,8 @@ func _on_Player_crystal_amount_changed(total_crystals):
 
 
 # -----------------------------------------------------------------------------
-func _on_DropPod_menu_toggled():
-	# Switch screen if no currently selected screen, switches to drop pod menu.
-	if _current_screen == null:
-		_switch_screen($DropPodMenu)
-	
-	# If the drop pod menu is active, disables it.
-	elif _current_screen == $DropPodMenu:
-		_switch_screen(null)
+func _on_DropPod_menu_opened():
+	_switch_screen($DropPodMenu)
 
 
 # -----------------------------------------------------------------------------

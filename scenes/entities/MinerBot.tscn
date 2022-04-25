@@ -30,5 +30,6 @@ velocity_multiplier = 3.0
 [node name="MiningLaser" parent="." index="5" instance=ExtResource( 6 )]
 
 [connection signal="damage_taken" from="." to="AnimatedSprite" method="_on_MinerBot_damage_taken"]
+[connection signal="drop_pod_landed" from="." to="MinerBotController" method="_on_Entity_drop_pod_landed"]
 [connection signal="sync_began" from="." to="AnimatedSprite" method="_on_MinerBot_sync_began"]
 [connection signal="sync_data_recieved" from="." to="AnimatedSprite" method="_on_MinerBot_sync_data_recieved"]

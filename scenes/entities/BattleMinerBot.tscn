@@ -21,3 +21,5 @@ region_rect = Rect2( 160, 48, 32, 16 )
 region_rect = Rect2( 160, 32, 32, 16 )
 
 [node name="AIController" parent="." index="5" instance=ExtResource( 2 )]
+
+[connection signal="drop_pod_landed" from="." to="AIController" method="_on_Entity_drop_pod_landed"]

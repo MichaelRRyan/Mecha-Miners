@@ -10,7 +10,7 @@ func set_target(new_target : Node2D):
 		_target.disconnect("new_velocity", self, "_on_Target_new_velocity")
 	
 	_target = new_target
-	_target.connect("new_velocity", self, "_on_Target_new_velocity")
+	var _r = _target.connect("new_velocity", self, "_on_Target_new_velocity")
 	position = _target.position
 	
 	

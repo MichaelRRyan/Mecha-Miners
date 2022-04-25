@@ -1,5 +1,8 @@
 extends Node2D
 
+const WORLD_WIDTH = 150
+const SPAWN_BUFFER = 10
+
 onready var PlayerScene = preload("res://scenes/entities/Player.tscn")
 onready var FollowPointScene = preload("res://scenes/entities/FollowPoint.tscn")
 onready var BattleMinerBotScene = preload("res://scenes/entities/BattleMinerBot.tscn")
@@ -21,6 +24,7 @@ var _local_player = null
 var _local_follow_point = null
 var _local_drop_pod = null
 
+var _free_drop_positons = []
 
 # ------------------------------------------------------------------------------
 func get_local_player():
@@ -29,13 +33,7 @@ func get_local_player():
 
 # ------------------------------------------------------------------------------
 func _ready():
-#	_entities = get_tree().get_nodes_in_group("entity")
-#	for entity in _entities:
-#		var _r = entity.connect("died", self, "_on_player_died", [entity])
-	
 	spawn_point = $SpawnPoint.position
-	#local_player = $Player
-	#local_player.position = spawn_point
 	
 	# Connects to the networking signals.
 	var _r
@@ -58,41 +56,73 @@ func _ready():
 # ------------------------------------------------------------------------------
 func _spawn_first_entities():
 	
-	# Spawns the player.
+	for x in range(SPAWN_BUFFER, WORLD_WIDTH - SPAWN_BUFFER * 2):
+		_free_drop_positons.append(x)
+	
+	# Spawns the player and drop pod and sets them up. 
 	_local_player = PlayerScene.instance()
-	
-	# Defines the world width and left/right buffer.
-	var world_width = 150
-	var buffer = 10
-	
-	# Spawns and positions the drop pod.
 	_local_drop_pod = DropPodScene.instance()
-	add_child(_local_drop_pod)
-	_local_drop_pod.connect("player_exited", self, "_on_DropPod_player_exited")
-	_local_drop_pod.connect("player_entered", self, "_on_DropPod_player_entered")
-	
-	var x = randi() % (world_width - buffer * 2) + buffer
-	_local_drop_pod.position = Vector2(x * 16.0, drop_height)
+	_spawn_entity_and_drop(_local_player, _local_drop_pod)
 	
 	# Spawns the follow point and adds it to the drop pod.
 	_local_follow_point = FollowPointScene.instance()
 	add_child(_local_follow_point)
-	
 	_local_follow_point.set_target(_local_drop_pod)
-	
-	_local_drop_pod.player = _local_player
 	_local_drop_pod.follow_point = _local_follow_point
-	_local_player.drop_pod = _local_drop_pod
+	_local_drop_pod.is_local = true
 	
 	# Adds the camera to the drop pod's follow point.
 	remove_child(_main_camera)
 	_local_follow_point.add_child(_main_camera)
 	_main_camera.position = Vector2.ZERO
 	
-	# TODO: Spawn the bots.
-	var num_bots = randi() % 5 + 1
-	for i in num_bots:
-		pass
+	# Gets the main camera.
+	var gui_managers = get_tree().get_nodes_in_group("gui_manager")
+	if gui_managers != null and not gui_managers.empty():
+		var gui_manager = gui_managers.front()
+		var _r = _local_drop_pod.connect("menu_opened", gui_manager, "_on_DropPod_menu_opened")
+		_r = _local_drop_pod.connect("menu_closed", gui_manager, "_on_DropPod_menu_closed")
+		_r = _local_player.connect("crystal_amount_changed", gui_manager, "_on_Player_crystal_amount_changed")
+	
+	# Spawns 2 to 5 bots.
+	var num_bots = randi() % 4 + 2
+	for _i in num_bots:
+		
+		var bot = (MinerBotScene.instance() if randi() % 2 == 0 
+			else BattleMinerBotScene.instance())
+		_spawn_entity_and_drop(bot, DropPodScene.instance())
+	
+	
+# ------------------------------------------------------------------------------
+func _spawn_entity_and_drop(entity, drop_pod):
+	
+	# Adds the drop pod as a child and connects its signals.
+	add_child(drop_pod)
+	drop_pod.connect("player_exited", self, "_on_DropPod_player_exited")
+	drop_pod.connect("player_entered", self, "_on_DropPod_player_entered")
+	
+	# Positions the drop pod in an empty spot.
+	var x = _free_drop_positons[randi() % _free_drop_positons.size()]
+	_mark_drop_pos_taken(x)
+	drop_pod.position = Vector2(x * 16.0, drop_height)
+	
+	# Assigned the necessary references.
+	drop_pod.player = entity
+	entity.drop_pod = drop_pod
+	
+	_entities.append(entity)
+	var _r = entity.connect("died", self, "_on_player_died", [entity])
+
+
+# ------------------------------------------------------------------------------
+# Checks the area around the position to ensure it's clear.
+func _mark_drop_pos_taken(x_cell):
+	var world_min = SPAWN_BUFFER
+	var world_max = WORLD_WIDTH - SPAWN_BUFFER * 2
+	
+	for x in range(max(world_min, x_cell - 3), min(world_max, x_cell + 2)):
+		if _free_drop_positons.has(x):
+			_free_drop_positons.erase(x)
 	
 	
 # ------------------------------------------------------------------------------
