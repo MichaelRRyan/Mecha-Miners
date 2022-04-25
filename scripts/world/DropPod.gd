@@ -2,6 +2,7 @@ extends KinematicBody2D
 
 signal new_velocity()
 signal menu_toggled()
+signal player_entered(player)
 signal player_exited(player)
 
 export var gravity = 60.0
@@ -21,10 +22,9 @@ var _terrain : Terrain = null
 
 # -----------------------------------------------------------------------------
 func _on_PlayerDetector_body_entered(body):
-	# Checks if the body is a non remote player.
-	if (body.is_in_group("player") 
-		and (not Network.is_online or body.is_network_master())):
-			player_in_range = true
+	# Checks if the body is the owner of the drop pod.
+	if body == player:
+		player_in_range = true
 	
 	var terrains = get_tree().get_nodes_in_group("terrain")
 	if terrains and not terrains.empty():
@@ -33,10 +33,9 @@ func _on_PlayerDetector_body_entered(body):
 
 # ------------------------------------------------------------------------------
 func _on_PlayerDetector_body_exited(body):
-	# Checks if the body is a non remote player.
-	if (body.is_in_group("player") 
-		and (not Network.is_online or body.is_network_master())):
-			player_in_range = false
+	# Checks if the body is the owner of the drop pod.
+	if body == player:
+		player_in_range = false
 
 
 # ------------------------------------------------------------------------------
@@ -46,12 +45,12 @@ func _input(event):
 			_driver_inside = false
 			emit_signal("player_exited", player)
 			player.position = position
-			remove_child(follow_point)
-			player.add_child(follow_point)
-			follow_point.position = Vector2.ZERO
-			player.connect("new_velocity", follow_point, "_on_Target_new_velocity")
+			follow_point.set_target(player)
 			
 		elif player_in_range:
+			_driver_inside = true
+			follow_point.set_target(self)
+			emit_signal("player_entered", player)
 			emit_signal("menu_toggled")
 
 
@@ -79,7 +78,9 @@ func _physics_process(delta):
 		if velocity.y > max_vertical_speed:
 			velocity.y = max_vertical_speed
 		
-		emit_signal("new_velocity", velocity)
+		if not _landed:
+			emit_signal("new_velocity", velocity)
+			
 		velocity = move_and_slide(velocity, Vector2.UP)
 		
 

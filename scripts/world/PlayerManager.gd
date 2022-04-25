@@ -69,17 +69,20 @@ func _spawn_first_entities():
 	_local_drop_pod = DropPodScene.instance()
 	add_child(_local_drop_pod)
 	_local_drop_pod.connect("player_exited", self, "_on_DropPod_player_exited")
+	_local_drop_pod.connect("player_entered", self, "_on_DropPod_player_entered")
 	
 	var x = randi() % (world_width - buffer * 2) + buffer
 	_local_drop_pod.position = Vector2(x * 16.0, drop_height)
 	
 	# Spawns the follow point and adds it to the drop pod.
 	_local_follow_point = FollowPointScene.instance()
-	_local_drop_pod.add_child(_local_follow_point)
-	_local_drop_pod.connect("new_velocity", _local_follow_point, "_on_Target_new_velocity")
+	add_child(_local_follow_point)
+	
+	_local_follow_point.set_target(_local_drop_pod)
 	
 	_local_drop_pod.player = _local_player
 	_local_drop_pod.follow_point = _local_follow_point
+	_local_player.drop_pod = _local_drop_pod
 	
 	# Adds the camera to the drop pod's follow point.
 	remove_child(_main_camera)
@@ -195,4 +198,9 @@ func _on_DropPod_player_exited(player):
 	add_child(player)
 
 
+#-------------------------------------------------------------------------------
+func _on_DropPod_player_entered(player):
+	remove_child(player)
+	
+	
 #-------------------------------------------------------------------------------

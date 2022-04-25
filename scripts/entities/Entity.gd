@@ -34,6 +34,7 @@ var direction : float = 0.0
 var _vacuumed_items = []
 var _item_vacuum_speed = 5.0
 
+var drop_pod = null
 var inventory : Inventory = Inventory.new()
 var equipped : Array = [] # Array<Tool>
 var _drills : Array = [] # Array<Tool>
