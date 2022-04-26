@@ -20,3 +20,9 @@ func _on_ExitButton_pressed():
 
 
 # ------------------------------------------------------------------------------
+func _on_OfflineButton_pressed():
+	if get_tree().change_scene("res://scenes/ui/screens/ShipScreen.tscn") != OK:
+		print_debug("Cannot change scene to ShipScreen.")
+
+
+# ------------------------------------------------------------------------------
