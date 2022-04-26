@@ -3,6 +3,7 @@ extends Node
 signal login_response(successful, errors)
 signal get_user_info_response(info, errors)
 signal create_identity_response(info, errors)
+signal request_token_balance_response(info, errors)
 
 const APP_ID : int = 6145
 const ELIXIRITE_ID = "3000000000003af5"
@@ -15,6 +16,7 @@ enum RequestType {
 	CREATE_IDENTITY,
 	MINT_TOKENS,
 	SEND_TOKENS,
+	REQUEST_TOKEN_BALANCE,
 }
 
 var print_response = true
@@ -131,6 +133,14 @@ func send_tokens(identity_id : int, app_id : int, token_id : String, recipient_a
 
 
 #-------------------------------------------------------------------------------
+func request_token_balance(eth_address : String, token_id : String) -> void:
+	_execute("request_token_balance", {
+		"ethAddress": eth_address,
+		"tokenId": token_id,
+	})
+
+
+#-------------------------------------------------------------------------------
 # Response methods
 #-------------------------------------------------------------------------------
 func _request_response(result, request_type):
@@ -146,6 +156,8 @@ func _request_response(result, request_type):
 			_create_identity_response(result)
 		RequestType.MINT_TOKENS:
 			pass
+		RequestType.REQUEST_TOKEN_BALANCE:
+			_request_token_balance_response(result)
 			
 
 #-------------------------------------------------------------------------------
@@ -196,22 +208,19 @@ func _create_identity_response(result):
 				_app_identity = info.duplicate()
 				
 			emit_signal("create_identity_response", info, null)
-
+		
 
 #-------------------------------------------------------------------------------
-func _get_app_secret_response(result):
-	var secret = result.data.EnjinApps[0].secret
-	if secret != null:
-		_schema.retrieve_app_access_token_query.set_bearer(_bearer)
-		_schema.retrieve_app_access_token_query.run({
-			"appId": APP_ID,
-			"appSecret": secret,
-		})
-		
-		_schema.create_player_mutation.set_bearer(_bearer)
-		_schema.create_player_mutation.run({ "playerId": "Michael" })
-
-
+func _request_token_balance_response(result):
+	if result.has("errors"):
+		emit_signal("request_token_balance_response", null, result.errors)
+	
+	else:
+		var balances = result.data.EnjinBalances
+		var data = balances[0] if not balances.empty() else null
+		emit_signal("request_token_balance_response", data, null)
+	
+	
 #-------------------------------------------------------------------------------
 func _retrieve_app_access_token_response(result):
 	#var secret = result.data.EnjinApps[0].secret
@@ -239,6 +248,7 @@ func _setup():
 			{ "query": _schema.create_identity, "RequestType": RequestType.CREATE_IDENTITY },
 			{ "query": _schema.mint_tokens, "RequestType": RequestType.MINT_TOKENS },
 			{ "query": _schema.send_tokens, "RequestType": RequestType.SEND_TOKENS },
+			{ "query": _schema.request_token_balance, "RequestType": RequestType.REQUEST_TOKEN_BALANCE },
 		]
 		
 		# Connects the queries and mutations' signals to methods.

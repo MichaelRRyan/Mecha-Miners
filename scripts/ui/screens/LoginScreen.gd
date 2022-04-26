@@ -6,7 +6,7 @@ onready var _link_wallet_tab = get_node("TabContainer/Link Wallet")
 
 # ------------------------------------------------------------------------------
 func _ready():
-	Network.connect_to_server("127.0.0.1")
+	Network.connect_to_server(UserPreferences.get_default_ip())
 	var _r = Enjin.connect("get_user_info_response", self, "_on_Enjin_get_user_info_response")
 	
 
