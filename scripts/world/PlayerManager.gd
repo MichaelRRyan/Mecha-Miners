@@ -28,6 +28,7 @@ var _entities = []
 var _entity_data = []
 var _main_camera : Camera2D = null
 var _focused_entity_id = 0
+var _terrain = null
 
 var _local_player = null
 var _cam_follow_point = null
@@ -49,6 +50,11 @@ func _ready():
 	if main_cameras != null and not main_cameras.empty():
 		_main_camera = main_cameras.front()
 		_main_camera.limit_top = int(drop_height + camera_buffer)
+		
+	# Gets the terrain.
+	var terrains = get_tree().get_nodes_in_group("terrain")
+	if terrains != null and not terrains.empty():
+		_terrain = terrains.front()
 	
 	# If offline or hosting, spawns the first few entities.
 	var net_state = Network.state
@@ -56,9 +62,26 @@ func _ready():
 		_spawn_first_entities()
 		
 	elif Network.State.Connected == net_state:
-		rpc_id(Network.SERVER_ID, "_request_entity_data")
+		rpc_id(Network.SERVER_ID, "_request_world_data")
 	
 
+# ------------------------------------------------------------------------------
+# SERVER METHOD.
+remote func _request_world_data():
+	if Network.State.Hosting == Network.state:
+		var peer_id = get_tree().get_rpc_sender_id()
+		rpc_id(peer_id, "_recieve_world_data", _terrain.get_world_data())
+
+
+# ------------------------------------------------------------------------------
+# CLIENT METHOD.
+remote func _recieve_world_data(world_data):
+	var sender_id = get_tree().get_rpc_sender_id()
+	if Network.SERVER_ID == sender_id:
+		_terrain.apply_world_data(world_data)
+		rpc_id(Network.SERVER_ID, "_request_entity_data")
+	
+	
 # ------------------------------------------------------------------------------
 # SERVER METHOD.
 remote func _request_entity_data():

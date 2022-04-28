@@ -141,6 +141,9 @@ func _disable(behaviour : Behaviour) -> void:
 
 #-------------------------------------------------------------------------------
 func _ready() -> void:
+	if Network.is_client():
+		queue_free()
+	
 	subject = get_parent()
 	var _r = subject.connect("died", self, "_on_subject_died")
 	call_deferred("add_behaviour", IdleBehaviour.new())

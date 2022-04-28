@@ -410,7 +410,7 @@ func _ready():
 	if Engine.editor_hint:
 		call_deferred("clear")
 
-	elif _get_tilemaps():
+	elif not Network.is_client() and _get_tilemaps():
 		generate()
 		_terrain.generate_pathfinding_grid(Vector2(-wall_buffer, -wall_buffer), 
 			Vector2(width + wall_buffer, cave_height + ground_height + wall_buffer))
