@@ -3,10 +3,10 @@ extends Node
 signal player_connected(peer_id)
 signal player_disconnected(peer_id)
 signal connection_succeeded
+signal connection_failed
 signal server_opened
 
 signal create_identity_response(identity_id)
-
 
 const IS_SERVER = false
 const SERVER_ID = 1
@@ -79,7 +79,7 @@ func _setup_server():
 		
 		# Logs in with the secret.
 		var secret = json.result
-		Enjin.login(secret.username, secret.password)
+		Enjin.request_app_access_token(secret.app_id, secret.secret)
 		
 		var _r = Enjin.connect("create_identity_response", self, "_on_Enjin_create_identity_response")
 		if get_tree().change_scene("res://scenes/world/World.tscn") != OK:
@@ -232,6 +232,7 @@ func _on_connection_succeeded():
 # ------------------------------------------------------------------------------
 func _on_connection_failed():
 	state = State.Offline
+	emit_signal("connection_failed")
 	print("Failed to Connect")
 
 

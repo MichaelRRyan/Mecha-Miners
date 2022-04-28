@@ -8,8 +8,13 @@ func _ready():
 	var user_name =  Enjin.get_current_user_name()
 	if not user_name.empty():
 		_name_label.text = user_name
-		
-	Network.connect_to_server()
+	
+	if Network.State.Connecting == Network.state:
+		var play_button = find_node("NavigateButton")
+		play_button.disabled = true
+		play_button.set_tooltip("Waiting for server to connect...")
+		var _r = Network.connect("connection_succeeded", self, "_on_Network_connection_succeeded")
+		_r = Network.connect("connection_failed", self, "_on_Network_connection_failed")
 	
 	if Enjin.get_current_user_id() != -1:
 		var _r = Enjin.connect("request_token_balance_response", self, 
@@ -68,4 +73,18 @@ func _on_Enjin_request_token_balance_response(data, _errors) -> void:
 	else:
 		_elixirite_quantity_label.text = str(0)
 
+# ------------------------------------------------------------------------------
+func _on_Network_connection_succeeded():
+	var play_button = find_node("NavigateButton")
+	play_button.disabled = false
+	play_button.set_tooltip("")
+	
+	
+# ------------------------------------------------------------------------------
+func _on_Network_connection_failed():
+	var play_button = find_node("NavigateButton")
+	play_button.disabled = false
+	play_button.set_tooltip("")
+	
+	
 # ------------------------------------------------------------------------------

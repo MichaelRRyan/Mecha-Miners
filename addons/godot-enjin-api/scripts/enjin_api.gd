@@ -4,6 +4,7 @@ signal login_response(successful, errors)
 signal get_user_info_response(info, errors)
 signal create_identity_response(info, errors)
 signal request_token_balance_response(info, errors)
+signal request_app_access_token_response(info, errors)
 
 const APP_ID : int = 6145
 const ELIXIRITE_ID = "3000000000003af5"
@@ -17,6 +18,7 @@ enum RequestType {
 	MINT_TOKENS,
 	SEND_TOKENS,
 	REQUEST_TOKEN_BALANCE,
+	REQUEST_APP_ACCESS_TOKEN,
 }
 
 var print_response = true
@@ -141,6 +143,14 @@ func request_token_balance(eth_address : String, token_id : String) -> void:
 
 
 #-------------------------------------------------------------------------------
+func request_app_access_token(app_id : int, secret : String) -> void:
+	_execute("retrieve_app_access_token_query", {
+		"appId": app_id,
+		"appSecret": secret,
+	})
+
+
+#-------------------------------------------------------------------------------
 # Response methods
 #-------------------------------------------------------------------------------
 func _request_response(result, request_type):
@@ -156,8 +166,12 @@ func _request_response(result, request_type):
 			_create_identity_response(result)
 		RequestType.MINT_TOKENS:
 			pass
+		RequestType.SEND_TOKENS:
+			pass
 		RequestType.REQUEST_TOKEN_BALANCE:
 			_request_token_balance_response(result)
+		RequestType.REQUEST_APP_ACCESS_TOKEN:
+			_retrieve_app_access_token_response(result)
 			
 
 #-------------------------------------------------------------------------------
@@ -223,8 +237,15 @@ func _request_token_balance_response(result):
 	
 #-------------------------------------------------------------------------------
 func _retrieve_app_access_token_response(result):
-	#var secret = result.data.EnjinApps[0].secret
-	print(JSON.print(result, "\t"))
+	if result.has("errors"):
+		emit_signal("request_app_access_token_response", null, result.errors)
+	
+	else:
+		var auth = result.data.AuthApp
+		if auth != null:
+			_bearer = auth.accessToken
+			_schema.set_bearer(_bearer)
+			emit_signal("request_app_access_token_response", result.data, null)
 
 
 #-------------------------------------------------------------------------------
@@ -249,15 +270,13 @@ func _setup():
 			{ "query": _schema.mint_tokens, "RequestType": RequestType.MINT_TOKENS },
 			{ "query": _schema.send_tokens, "RequestType": RequestType.SEND_TOKENS },
 			{ "query": _schema.request_token_balance, "RequestType": RequestType.REQUEST_TOKEN_BALANCE },
+			{ "query": _schema.retrieve_app_access_token_query, "RequestType": RequestType.REQUEST_APP_ACCESS_TOKEN },
 		]
 		
 		# Connects the queries and mutations' signals to methods.
 		for query_obj in query_objects:
 			query_obj["query"].connect("graphql_response", self, "_request_response", [ query_obj["RequestType"] ])
 				
-		# TODO: Modify and use the below query.
-		_schema.retrieve_app_access_token_query.connect("graphql_response", self, "_retrieve_app_access_token_response")
-		
 		_initialised = true
 		
 		# Runs any queued queries.
