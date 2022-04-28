@@ -81,6 +81,65 @@ func set_background(x : int, y : int) -> void:
 
 
 # -----------------------------------------------------------------------------
+func get_world_data():
+	var generator = get_node("WorldGenerator")
+	var width = generator.width
+	var height = generator.cave_height + generator.ground_height
+	
+	var foreground = $Foreground
+	var background = $Background
+	var details = $Details
+	
+	var tiles = []
+	tiles.resize(width)
+	for x in width:
+		tiles[x] = []
+		tiles[x].resize(height)
+		
+		for y in height:
+			tiles[x][y] = {
+				0: foreground.get_cell(x, y),
+				1: background.get_cell(x, y),
+			}
+	
+	var grass = {}
+	for x in width:
+		for y in generator.ground_height:
+			var type = details.get_cell(x, y)
+			if type != -1:
+				grass[Vector2(x, y)] = type
+	
+	return { "tiles": tiles, "grass": grass }
+	
+
+# -----------------------------------------------------------------------------
+func apply_world_data(world_data):
+	var generator = get_node("WorldGenerator")
+	var width = generator.width
+	var height = generator.cave_height + generator.ground_height
+	generator.clear()
+	
+	var foreground = $Foreground
+	var background = $Background
+	var details = $Details
+	
+	var tiles = world_data["tiles"]
+	var grass = world_data["grass"]
+	
+	for x in width:
+		for y in height:
+			foreground.set_cell(x, y, tiles[x][y][0])
+			background.set_cell(x, y, tiles[x][y][1])
+	
+	for cell in grass.keys():
+		details.set_cellv(cell, grass[cell])
+
+	generator._get_tilemaps()
+	generator._place_borders()
+	generator._update_autotiles()
+	
+
+# -----------------------------------------------------------------------------
 func _ready():
 	var containers = get_tree().get_nodes_in_group("crystal_container")
 	if containers and !containers.empty():
@@ -118,6 +177,10 @@ func _physics_process(_delta):
 
 # -----------------------------------------------------------------------------
 func damage_tile(tile_position : Vector2, damage : float):
+	if Network.is_client():
+		rpc_id(Network.SERVER_ID, "_request_damage_tile", tile_position, damage)
+		return
+	
 	# If the tile is not empty.
 	var tile_type = $Foreground.get_cellv(tile_position)
 	if (tile_type != TileType.Empty 
@@ -149,12 +212,26 @@ func damage_tile(tile_position : Vector2, damage : float):
 
 
 # -----------------------------------------------------------------------------
+remote func _request_damage_tile(tile_position : Vector2, damage : float):
+	if Network.is_host():
+		damage_tile(tile_position, damage)
+
+
+# -----------------------------------------------------------------------------
 func __set_damage_indicator(tile_position : Vector2):
 	var tile_type = $Foreground.get_cellv(tile_position)
 	var damage = damaged_tiles[tile_position].damage
 	var damage_stage = floor(damage / MAX_TILE_HEALTHS[tile_type] * DAMAGE_STAGES)
 	$DamageIndicators.set_cellv(tile_position, damage_stage)
+	
+	if Network.is_host():
+		for id in Network.setup_players:
+			rpc_id(id, "_remote_set_damage_indicator", tile_position, damage_stage)
 
+
+# -----------------------------------------------------------------------------
+remote func _remote_set_damage_indicator(tile_position, index):
+	$DamageIndicators.set_cellv(tile_position, index)
 
 # -----------------------------------------------------------------------------
 func __destroy_tile(tile_position : Vector2):
@@ -179,7 +256,20 @@ func __destroy_tile(tile_position : Vector2):
 	var centred_pos = map_to_world_centred(tile_position)
 	_pathfinding.add_point(new_point, centred_pos)
 	_update_pathfinding_connections(tile_position, new_point)
+	
+	if Network.is_host():
+		for id in Network.setup_players:
+			rpc_id(id, "_remove_cell", tile_position)
 
+
+# -----------------------------------------------------------------------------
+remote func _remove_cell(tile_position):
+	$Foreground.set_cellv(tile_position, -1)
+	set_background(int(tile_position.x), int(tile_position.y))
+	$Foreground.update_bitmask_area(tile_position)
+	$Details.set_cell(tile_position.x, tile_position.y - 1, -1)
+	$DamageIndicators.set_cellv(tile_position, -1)
+	
 
 # -----------------------------------------------------------------------------
 func spawn_crystals(_position, amount):

@@ -36,9 +36,6 @@ texture = SubResource( 3 )
 [node name="PlayerManager" type="Node2D" parent="." groups=["player_manager"]]
 script = ExtResource( 4 )
 
-[node name="SpawnPoint" type="Node2D" parent="PlayerManager"]
-position = Vector2( 957, -42 )
-
 [node name="Camera2D" type="Camera2D" parent="PlayerManager" groups=["main_camera"]]
 scale = Vector2( 2, 2 )
 current = true

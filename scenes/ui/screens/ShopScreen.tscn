@@ -137,6 +137,11 @@ margin_bottom = 60.0
 custom_fonts/font = ExtResource( 6 )
 text = "* 1000"
 
+[node name="BalanceTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
 [connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/MintButton" to="." method="_on_MintButton_pressed"]
 [connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/SentButton" to="." method="_on_SentButton_pressed"]
 [connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/BackButton" to="." method="_on_BackButton_pressed"]
+[connection signal="timeout" from="BalanceTimer" to="." method="_on_BalanceTimer_timeout"]

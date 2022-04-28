@@ -45,4 +45,3 @@ position = Vector2( 60, 99 )
 
 [connection signal="menu_toggled" from="GUIManager" to="Cursor" method="_on_GUIManager_menu_toggled"]
 [connection signal="crystal_amount_changed" from="PlayerManager/Player" to="GUIManager" method="_on_Player_crystal_amount_changed"]
-[connection signal="menu_toggled" from="DropPod" to="GUIManager" method="_on_DropPod_menu_toggled"]

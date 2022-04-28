@@ -3,10 +3,10 @@ extends Node
 signal player_connected(peer_id)
 signal player_disconnected(peer_id)
 signal connection_succeeded
+signal connection_failed
 signal server_opened
 
 signal create_identity_response(identity_id)
-
 
 const IS_SERVER = false
 const SERVER_ID = 1
@@ -24,6 +24,7 @@ var network = NetworkedMultiplayerENet.new()
 var port = 1909
 var max_players = 50
 var is_online = false # Stored as an alternative to state for quick checks.
+var setup_players = []
 
 # _player_data = { 
 #	 [peer_id]: {
@@ -43,6 +44,16 @@ var _player_data : Dictionary = {}
 var _create_identity_queue : Array = []
 
 
+# ------------------------------------------------------------------------------
+func is_client() -> bool:
+	return Network.State.Connected == Network.state
+
+
+# ------------------------------------------------------------------------------
+func is_host() -> bool:
+	return Network.State.Hosting == Network.state
+	
+	
 # ------------------------------------------------------------------------------
 func _ready():
 	network.connect("peer_connected", self, "_peer_connected")
@@ -68,9 +79,11 @@ func _setup_server():
 		
 		# Logs in with the secret.
 		var secret = json.result
-		Enjin.login(secret.username, secret.password)
+		Enjin.request_app_access_token(secret.app_id, secret.secret)
 		
 		var _r = Enjin.connect("create_identity_response", self, "_on_Enjin_create_identity_response")
+		if get_tree().change_scene("res://scenes/world/World.tscn") != OK:
+			print_debug("Unable to switch scene to World.")
 		
 	else:
 		print_debug("Error loading secret.json")
@@ -161,6 +174,9 @@ func _peer_disconnected(peer_id):
 	var _r = _player_data.erase(peer_id)
 	emit_signal("player_disconnected", peer_id)
 	print("Peer " + str(peer_id) + " Disconnected")
+	
+	if setup_players.has(peer_id):
+		setup_players.erase(peer_id)
 
 
 # ------------------------------------------------------------------------------
@@ -168,9 +184,9 @@ func _peer_disconnected(peer_id):
 # =========================== CLIENT FUNCTIONALITY =============================
 
 # ------------------------------------------------------------------------------
-func connect_to_server(ip : String):
+func connect_to_server():
 	if state == State.Offline:
-		network.create_client(ip, port)
+		network.create_client(UserPreferences.get_default_ip(), port)
 		get_tree().set_network_peer(network)
 		state = State.Connecting
 
@@ -216,6 +232,7 @@ func _on_connection_succeeded():
 # ------------------------------------------------------------------------------
 func _on_connection_failed():
 	state = State.Offline
+	emit_signal("connection_failed")
 	print("Failed to Connect")
 
 

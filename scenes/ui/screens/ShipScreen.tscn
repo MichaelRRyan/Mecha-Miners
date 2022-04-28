@@ -183,7 +183,11 @@ margin_bottom = 60.0
 custom_fonts/font = ExtResource( 6 )
 text = "* 1000"
 
+[connection signal="focus_entered" from="ConsolePanel/LeftPanel/Menu/NavigateButton" to="." method="_on_NavigateButton_focus_entered"]
 [connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/NavigateButton" to="." method="_on_NavigateButton_pressed"]
+[connection signal="focus_entered" from="ConsolePanel/LeftPanel/Menu/ShopButton" to="." method="_on_ShopButton_focus_entered"]
 [connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/ShopButton" to="." method="_on_ShopButton_pressed"]
+[connection signal="focus_entered" from="ConsolePanel/LeftPanel/Menu/EquipmentButton" to="." method="_on_EquipmentButton_focus_entered"]
 [connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/EquipmentButton" to="." method="_on_EquipmentButton_pressed"]
+[connection signal="focus_entered" from="ConsolePanel/LeftPanel/Menu/ExitButton" to="." method="_on_ExitButton_focus_entered"]
 [connection signal="pressed" from="ConsolePanel/LeftPanel/Menu/ExitButton" to="." method="_on_ExitButton_pressed"]

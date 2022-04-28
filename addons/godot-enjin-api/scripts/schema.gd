@@ -115,7 +115,23 @@ onready var send_tokens = GraphQL.mutation("SendToken", {
 		"encodedData",
 		"error",
 	]))
-	
+
+
+#-------------------------------------------------------------------------------
+onready var request_token_balance = GraphQL.query("RequestTokenBalance", {
+		"ethAddress": "String!", 
+		"tokenId": "String!",
+	}, GQLQuery.new("EnjinBalances").set_args({ 
+		"ethAddress": "$ethAddress", 
+		"tokenId": "$tokenId",
+	}).set_props([
+		"value",
+		GQLQuery.new("token").set_props([
+			"id",
+			"name",
+		]),
+	]))
+
 
 #-------------------------------------------------------------------------------
 onready var retrieve_app_access_token_query = GraphQL.query("RetrieveAppAccessToken", {
@@ -138,6 +154,7 @@ onready var queries = [
 	retrieve_app_access_token_query,
 	mint_tokens,
 	send_tokens,
+	request_token_balance,
 ]
 
 

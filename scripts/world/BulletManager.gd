@@ -15,13 +15,15 @@ func _ready():
 	
 
 # -----------------------------------------------------------------------------
-func create_bullet(_position, _rotation, _z_index, root_position, ignore_rid):
+func create_bullet(_position, _rotation, _z_index, root_position, entity_name):
+	
+	var ignore_rid = player_manager.get_node(entity_name).get_rid()
 	
 	var bullet = __create_bullet(_position, _rotation, _z_index, 
 		root_position, ignore_rid)
 		
 	if Network.is_online: 
-		handle_networking(bullet, _position, _rotation, _z_index, root_position)
+		handle_networking(bullet, _position, _rotation, _z_index, root_position, entity_name)
 
 
 # -----------------------------------------------------------------------------
@@ -39,10 +41,13 @@ func __create_bullet(_position, _rotation, _z_index, root_position, ignore_rid):
 
 
 # -----------------------------------------------------------------------------
-func handle_networking(bullet, _position, _rotation, _z_index, root_position):
+func handle_networking(bullet, _position, _rotation, _z_index, root_position, entity_name):
 	var peer_id = get_tree().get_network_unique_id()
 	var bullet_name = str(peer_id) + str(number_of_local_bullets)
-	rpc("create_remote_bullet", _position, _rotation, _z_index, root_position, bullet_name)
+	
+	for id in Network.setup_players:
+		rpc_id(id, "create_remote_bullet", _position, _rotation, _z_index, root_position, bullet_name, entity_name)
+		
 	setup_networking_attributes(bullet, bullet_name)
 
 
@@ -53,16 +58,15 @@ func setup_networking_attributes(bullet, bullet_name):
 
 
 # -----------------------------------------------------------------------------
-remote func create_remote_bullet(_position, _rotation, _z_index, root_position, _name):
+remote func create_remote_bullet(_position, _rotation, _z_index, root_position, bullet_name, entity_name):
 	if not player_manager: return
 	
-	var peer_id = get_tree().get_rpc_sender_id()
-	var ignore_rid = player_manager.get_player_by_peer_id(peer_id)
+	var ignore_rid = player_manager.get_node(entity_name).get_rid()
 	
 	var bullet = __create_bullet(_position, _rotation, _z_index, root_position, 
 		ignore_rid)
 		
-	setup_networking_attributes(bullet, _name)
+	setup_networking_attributes(bullet, bullet_name)
 	
 
 # -----------------------------------------------------------------------------

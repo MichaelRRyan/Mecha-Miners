@@ -231,7 +231,9 @@ func _handle_network_syncing():
 		}
 		
 		emit_signal("sync_began", sync_data)
-		rpc_unreliable("set_puppet_state", sync_data)
+		
+		for id in Network.setup_players:
+			rpc_unreliable_id(id, "set_puppet_state", sync_data)
 
 
 # -----------------------------------------------------------------------------

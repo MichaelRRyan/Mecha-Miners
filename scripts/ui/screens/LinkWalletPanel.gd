@@ -13,8 +13,12 @@ func _ready() -> void:
 func _on_LinkButton_pressed() -> void:
 	var eth_address = $LinkWalletDialog/WalletAddressField.text
 	if not eth_address.empty():
-		display_linking_dialog()
-		Network.request_identity(Enjin.get_current_user_id(), eth_address)
+		
+		if Network.is_online:
+			display_linking_dialog()
+			Network.request_identity(Enjin.get_current_user_id(), eth_address)
+		else:
+			_display_error_message("A server connection is necessary to create a new user.")
 	else:
 		_display_error_message("Wallet address field cannot be empty.")
 

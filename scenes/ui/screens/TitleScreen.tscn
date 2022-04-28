@@ -54,33 +54,40 @@ text = "Made by Michael Rainsford Ryan"
 
 [node name="Options" type="VBoxContainer" parent="."]
 anchor_left = 0.3
-anchor_top = 0.5
+anchor_top = 0.55
 anchor_right = 0.7
-anchor_bottom = 0.8
+anchor_bottom = 0.85
 custom_constants/separation = 10
 alignment = 1
 
 [node name="StartButton" type="Button" parent="Options"]
-margin_top = 23.0
 margin_right = 409.0
-margin_bottom = 61.0
+margin_bottom = 38.0
 size_flags_vertical = 0
 text = "START"
 
-[node name="OptionsButton" type="Button" parent="Options"]
-margin_top = 71.0
+[node name="OfflineButton" type="Button" parent="Options"]
+margin_top = 48.0
 margin_right = 409.0
-margin_bottom = 109.0
+margin_bottom = 86.0
+size_flags_vertical = 0
+text = "OFFLINE"
+
+[node name="OptionsButton" type="Button" parent="Options"]
+margin_top = 96.0
+margin_right = 409.0
+margin_bottom = 134.0
 size_flags_vertical = 0
 text = "OPTIONS"
 
 [node name="ExitButton" type="Button" parent="Options"]
-margin_top = 119.0
+margin_top = 144.0
 margin_right = 409.0
-margin_bottom = 157.0
+margin_bottom = 182.0
 size_flags_vertical = 0
 text = "EXIT"
 
 [connection signal="pressed" from="Options/StartButton" to="." method="_on_StartButton_pressed"]
+[connection signal="pressed" from="Options/OfflineButton" to="." method="_on_OfflineButton_pressed"]
 [connection signal="pressed" from="Options/OptionsButton" to="." method="_on_OptionsButton_pressed"]
 [connection signal="pressed" from="Options/ExitButton" to="." method="_on_ExitButton_pressed"]
