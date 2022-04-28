@@ -23,23 +23,6 @@ func _on_DropPod_menu_closed():
 
 
 # -----------------------------------------------------------------------------
-func _input(event):
-	if event is InputEventKey:
-		
-		# If the exit key was pressed, exits the game.
-		if event.is_action_pressed("exit"):
-			get_tree().quit()
-		
-		# Toggles the network panel if no other screen is active.
-		if event.is_action_pressed("toggle_network_panel"):
-			if _current_screen == null:
-				_switch_screen($NetworkPanel)
-			
-			elif _current_screen == $NetworkPanel:
-				_switch_screen(null)
-
-
-# -----------------------------------------------------------------------------
 func _switch_screen(new_screen):
 	var screen_is_valid = new_screen != null
 	
