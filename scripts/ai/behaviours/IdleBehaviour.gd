@@ -9,7 +9,7 @@ func _init():
 		
 #-------------------------------------------------------------------------------
 func _process(_delta):
-	if _active:
+	if _active and Network.State.Connected != Network.state:
 		var behaviour = ExploreBehaviour.new()
 		_brain.add_behaviour(behaviour)
 		

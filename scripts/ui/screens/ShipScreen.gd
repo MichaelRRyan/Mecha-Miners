@@ -8,6 +8,8 @@ func _ready():
 	var user_name =  Enjin.get_current_user_name()
 	if not user_name.empty():
 		_name_label.text = user_name
+		
+	Network.connect_to_server()
 	
 	if Enjin.get_current_user_id() != -1:
 		var _r = Enjin.connect("request_token_balance_response", self, 

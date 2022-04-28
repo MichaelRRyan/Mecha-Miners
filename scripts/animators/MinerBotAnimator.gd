@@ -21,7 +21,8 @@ func _on_MinerBot_sync_began(sync_data):
 
 # -----------------------------------------------------------------------------
 func _on_MinerBot_sync_data_recieved(sync_data):
-	_set_animation(sync_data.animation_id)
+	if sync_data.has("animation_id"):
+		_set_animation(sync_data["animation_id"])
 
 
 # ------------------------------------------------------------------------------

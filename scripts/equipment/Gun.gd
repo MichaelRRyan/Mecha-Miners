@@ -23,7 +23,7 @@ func activate():
 			$Tip.global_rotation, 
 			z_index - 1,
 			global_position,
-			_holder_rid)
+			_holder.name)
 		
 		$CooldownTimer.start(cooldown)
 

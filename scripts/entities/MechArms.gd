@@ -93,7 +93,8 @@ func _on_Player_sync_began(sync_data):
 
 # -----------------------------------------------------------------------------
 func _on_Player_sync_data_recieved(sync_data):
-	apply_sync_data(sync_data)
+	if sync_data.has("arms_data"):
+		apply_sync_data(sync_data["arms_data"])
 
 
 # -----------------------------------------------------------------------------
