@@ -149,6 +149,7 @@ Utility="*res://scripts/misc/Utility.gd"
 UserPreferences="*res://scripts/misc/UserPreferences.gd"
 GraphQL="*res://addons/GodotGraphQL/src/gql_client.gd"
 Enjin="*res://addons/godot-enjin-api/scripts/enjin_api.gd"
+AudioManager="*res://scripts/audio/AudioManager.gd"
 
 [display]
 

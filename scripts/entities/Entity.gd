@@ -261,6 +261,7 @@ func take_damage(damage, source = null):
 # -----------------------------------------------------------------------------
 func die():
 	respawning = true
+	AudioManager.play("res://assets/audio/sounds/explosion" + str(randi() % 4 + 1) + ".wav")
 	
 	set_process(false)
 	set_physics_process(false)
