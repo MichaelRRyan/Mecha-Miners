@@ -46,6 +46,8 @@ class Noise:
 
 
 # ------------------------------------------------------------------------------
+
+export var regenerate = false
 var noise_seed = 0
 
 # ------------------------------------------------------------------------------
@@ -78,10 +80,10 @@ func _set(property : String, value):
 		if noise_dict.has(noise_name):
 			noise_dict[noise_name]._set(prop_name, value)
 		
-		if Engine.editor_hint:
+		if Engine.editor_hint and regenerate:
 			generate()
 		
-	elif Engine.editor_hint:
+	elif Engine.editor_hint and regenerate:
 		if property == "clear":
 			clear()
 			

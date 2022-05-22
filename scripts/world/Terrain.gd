@@ -51,6 +51,11 @@ func is_mineral(cell_position : Vector2) -> bool:
 
 
 # -----------------------------------------------------------------------------
+func has_background(cell_position : Vector2) -> bool:
+	return 0 == $Background.get_cellv(cell_position)
+
+
+# -----------------------------------------------------------------------------
 func world_to_map(world_position : Vector2) -> Vector2:
 	return $Foreground.world_to_map(world_position)
 

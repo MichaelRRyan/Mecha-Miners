@@ -40,6 +40,7 @@ var noise_list = {
 }
 
 var _terrain : Terrain = null
+var _occlusion_map : TileMap = null
 
 
 # ------------------------------------------------------------------------------
@@ -129,15 +130,17 @@ func _set_minerals_upper_threshold(value : float) -> void:
 	minerals_upper_threshold = value
 	_consider_regenerating()
 
+# ------------------------------------------------------------------------------
 func _set_minerals_height_modifier_intensity(value : float) -> void:
 	minerals_height_modifier_intensity = value
 	_consider_regenerating()
+
 
 # ------------------------------------------------------------------------------
 # Regular Methods
 # ------------------------------------------------------------------------------
 func _consider_regenerating():
-	if Engine.editor_hint:
+	if Engine.editor_hint and regenerate:
 		generate()
 
 
@@ -152,6 +155,7 @@ func clear():
 		_background.clear()
 		_foreground.clear()
 		_details.clear()
+		_occlusion_map.clear()
 		
 
 
@@ -191,9 +195,13 @@ func _generate_ground_height():
 		# Appends the ground height.
 		surface.append(ground_y)
 		
+		_foreground.set_cell(x, ground_y, 0)
+		
 		# Fills in the ground from the ground height to the cave start.
-		for y in range(ground_y, ground_height):
+		for y in range(ground_y + 1, ground_height):
 			_foreground.set_cell(x, y, 0)
+			_background.set_cell(x, y, 0)
+			_occlusion_map.set_cell(x, y, 0)
 	
 	return surface
 
@@ -325,7 +333,6 @@ func _clear_circle(start_x, start_y, radius : int, surface : Array):
 			if (new_x >= 0 and new_x < width 
 				and new_y >= surface[new_x] - 1 and new_y < ground_height + cave_height):
 					_foreground.set_cell(new_x, new_y, -1)
-					_background.set_cell(new_x, new_y, 0)
 
 
 # ------------------------------------------------------------------------------
@@ -358,6 +365,8 @@ func _fill_area(top_left : Vector2, bottom_right: Vector2, value : int) -> void:
 	for x in range(top_left.x, bottom_right.x):
 		for y in range(top_left.y, bottom_right.y):
 			_foreground.set_cell(x, y, value)
+			_background.set_cell(x, y, 0)
+			_occlusion_map.set_cell(x, y, 0)			
 
 
 # ------------------------------------------------------------------------------
@@ -424,6 +433,9 @@ func _get_tilemaps() -> bool:
 		_background = parent.get_node("Background")
 		_foreground = parent.get_node("Foreground")
 		_details = parent.get_node("Details")
+		
+		_occlusion_map = get_tree().get_nodes_in_group("occlusion_map")[0]
+		
 		return _foreground and _background
 	else:
 		print_debug("No terrain parent")
