@@ -111,6 +111,7 @@ margin_top = 72.0
 margin_right = 352.0
 margin_bottom = 122.0
 rect_min_size = Vector2( 0, 50 )
+disabled = true
 text = "  Shop"
 align = 0
 
@@ -119,6 +120,7 @@ margin_top = 132.0
 margin_right = 352.0
 margin_bottom = 182.0
 rect_min_size = Vector2( 0, 50 )
+disabled = true
 text = "  Equipment"
 align = 0
 

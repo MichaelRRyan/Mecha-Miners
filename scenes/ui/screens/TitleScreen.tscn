@@ -61,29 +61,30 @@ custom_constants/separation = 10
 alignment = 1
 
 [node name="StartButton" type="Button" parent="Options"]
+visible = false
 margin_right = 409.0
 margin_bottom = 38.0
 size_flags_vertical = 0
 text = "START"
 
 [node name="OfflineButton" type="Button" parent="Options"]
-margin_top = 48.0
+margin_top = 23.0
 margin_right = 409.0
-margin_bottom = 86.0
+margin_bottom = 61.0
 size_flags_vertical = 0
-text = "OFFLINE"
+text = "START"
 
 [node name="OptionsButton" type="Button" parent="Options"]
-margin_top = 96.0
+margin_top = 71.0
 margin_right = 409.0
-margin_bottom = 134.0
+margin_bottom = 109.0
 size_flags_vertical = 0
 text = "OPTIONS"
 
 [node name="ExitButton" type="Button" parent="Options"]
-margin_top = 144.0
+margin_top = 119.0
 margin_right = 409.0
-margin_bottom = 182.0
+margin_bottom = 157.0
 size_flags_vertical = 0
 text = "EXIT"
 

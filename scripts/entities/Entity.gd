@@ -11,6 +11,9 @@ signal sync_began(sync_data)
 signal sync_data_recieved(sync_data)
 signal drop_pod_landed()
 
+
+const MINERAL_PICKUP_SOUND = "res://assets/audio/sounds/mineral_pickup.wav"
+
 export var health : float = 5.0
 
 # -- Configurable Properties --
@@ -261,7 +264,8 @@ func take_damage(damage, source = null):
 # -----------------------------------------------------------------------------
 func die():
 	respawning = true
-	AudioManager.play("res://assets/audio/sounds/explosion" + str(randi() % 4 + 1) + ".wav")
+	AudioManager.play_2d("res://assets/audio/sounds/explosion"
+		+ str(randi() % 4 + 1) + ".wav", global_position)
 	
 	set_process(false)
 	set_physics_process(false)
@@ -289,8 +293,10 @@ func pickup_crystal():
 			type = ItemData.ItemType.GEM,
 			quantity = 1,
 		})
+		
 		if remainder == null:
 			emit_signal("crystal_amount_changed", inventory.get_gem_count())
+			AudioManager.play_2d(MINERAL_PICKUP_SOUND, global_position)
 			return true
 	return false
 
